@@ -54,7 +54,6 @@ export default class CharacterService{
 	}
 	
 	getBag(id : BagID): InventoryStack[]{
-		console.log(typeof id);
 		switch (id){
 			case 0:
 				return this.st.body.inventory;

@@ -5,7 +5,7 @@ import ItemCollection, {ItemID} from './items';
 interface BagSlotProps{
 
 	sv: ServiceObject;
-	bag: BagID;
+	bagID: BagID;
 	index: number;
 
 }
@@ -37,8 +37,8 @@ export default function BagSlot(props){
 
 	let bag = props.sv.Character.getBag(props.bagID);
 	let item = bag[props.index];
-	if (item === undefined){
-		
+	if (item === undefined || item === null){
+		//console.log(props.sv.Character.getBag(BagID.Inventory)[0]);	
 		return(
 			<div className="inventoryLi"
 				onDragOver={allowDrag}
@@ -59,9 +59,9 @@ export default function BagSlot(props){
 			
 			<div className="inventoryLi" 
 				draggable="true" 
-				onDragStart={(ev)=>{drag(ev, props.bag, props.index)}} 
+				onDragStart={(ev)=>{drag(ev, props.bagID, props.index)}} 
 				onDragOver={allowDrag} 
-				onDrop={(ev)=>{dropSwapSlots(ev,props.bag,props.index)}}
+				onDrop={(ev)=>{dropSwapSlots(ev,props.bagID,props.index)}}
 			>
 				<span>
 					{ItemCollection[id].name}
