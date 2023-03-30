@@ -52,15 +52,15 @@ export function defenseFunction(inBody: number, inCunning: number): number{
 
 }
 
-export function calcDerivatives(inBod : Body): void{
+export function calcDerivatives(inBod): void{
 
 	let attr = inBod.attributes;
 
 	let tempAttack = attackFunction(attr.body.value, attr.cunning.value);
 	let tempDefense = attackFunction(attr.body.value, attr.cunning.value);
 	
-	inBod.derivatives.attack.value = tempAttack;
-	inBod.derivatives.defense.value = tempDefense;
+	inBod.derivatives.attack = {value: tempAttack};
+	inBod.derivatives.defense = {value: tempDefense};
 
 }
 
@@ -81,9 +81,17 @@ export type StatusObject = {
 
 }
 
+export enum BagID{
+
+	Inventory,
+	Equipment,
+
+}
+
 export type InventoryStack = {
 	
 	ID: ItemID;
+	bag: BagID;
 	amount: number;
 
 }
@@ -149,6 +157,8 @@ export function genBody(inJati:Jati): Body{
 		}
 
 	);
+	
+	calcDerivatives(tempBod);
 
 	return tempBod as Body; 
 

@@ -1,4 +1,4 @@
-import {Body,AttributeType, AttributeObject, StatusObject, InventoryStack, genBody, calcDerivatives} from './body';
+import {Body,AttributeType, AttributeObject, StatusObject, InventoryStack, genBody, calcDerivatives, BagID} from './body';
 import {GenerateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
 import {StateObject} from './state-service';
@@ -52,6 +52,20 @@ export default class CharacterService{
 		return this.st.body.money;
 
 	}
+	
+	getBag(id : BagID): InventoryStack[]{
+		console.log(typeof id);
+		switch (id){
+			case 0:
+				return this.st.body.inventory;
+			case 1:
+				return this.st.body.equipment;
+			default:
+				return [];
+
+		}
+
+	}
 
 	getInventory() : InventoryStack[]{
 
@@ -59,13 +73,16 @@ export default class CharacterService{
 
 	}
 
-	swapInventorySlots(slot1 : number, slot2 : number): void{
+	swapInventoryStacks(id1 : BagID, index1 : number, id2: BagID, index2 : number): void{
+		
+		console.log("bag1 + index1:" + id1 + index1);
+		console.log("bag2 + index2:" + id2 + index2);
+		let bag1 = this.getBag(id1);
+		let bag2 = this.getBag(id2);
 
-		let inv = this.st.body.inventory;
-
-		let tmp = inv[slot1];
-		inv[slot1] = inv[slot2]
-		inv[slot2] = tmp;
+		let tmp = JSON.parse(JSON.stringify(bag1[index1]));
+		bag1[index1] = bag2[index2]
+		bag2[index2] = tmp;
 
 	}
 

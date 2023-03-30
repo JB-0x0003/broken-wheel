@@ -48,7 +48,7 @@ body {
   margin: 0;
   font-size: 16px;
   scrollbar-width: thin;
-  --panelTabRadius: 10px;
+  --panelTabRadius: 12px;
 }
 .themeWrapperDark {
   --bg_h: #1d2021;
@@ -259,7 +259,7 @@ body {
   user-select: none;
   color: var(--panelTextHighlight);
   background: var(--panelBackground);
-  font-size: 14px;
+  font-size: 16px;
   padding: 0px 3px 0 3px;
   border-width: 2px 1px 2px 0px;
   border-style: solid;
@@ -278,7 +278,6 @@ body {
 .panelTab.selected {
   background: var(--bg1);
   color: var(--panelText);
-  border-color: var(--panelBorderLight);
   border-top: 3px solid var(--background);
 }
 .panel {

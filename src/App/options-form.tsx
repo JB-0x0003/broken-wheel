@@ -34,7 +34,7 @@ export default function OptionsForm(){
 			</label>
 			<div 
 				className="textButt"
-				onClick={sv.MainLoop.save}
+				onClick={()=>{sv.MainLoop.save()}}
 			>
 				Save Manually
 			</div>

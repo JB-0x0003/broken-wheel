@@ -17,7 +17,7 @@ export function pipeAge(inDays: number): string{
 
 export function pipeBigNum(num: number) : string{
 	
-	if (num === 0) return ":(";
+	if (num === 0) return "0";
 
 	const suffixArray = ['', 'k', 'M', 'B', 'T', 'q', 'Q', 's'];
 

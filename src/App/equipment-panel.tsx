@@ -3,25 +3,26 @@ import {Serv} from './global-service-provider';
 import {pipeBigNum} from './helpers';
 
 export default function EquipmentPanel(){
+
+
+	let [,dummyState] = React.useState({});
 	let sv = Serv()
 	
+	if (sv === undefined) return;
+	
 	let gold = sv.Character.getMoney();
-	let [,dummyState] = React.useState({});
 
 	function refresh(){
 		
 		dummyState({});
 
 	}
-
-	if (sv === undefined) return;
 	
 	sv.MainLoop.subscribeToTick(refresh);
 
-	/*	
-	const [sv, setSV] = React.useState(tmp);
-	setSV(Serv());
-	*/
+
+	let deriv = sv.Character.st.body.derivatives;
+	
 	return(
 
 		<div className="panel">
@@ -47,8 +48,8 @@ export default function EquipmentPanel(){
 					</div>
 				</span>
 				<span className="equipmentStatColumn">
-					<div className="equipmentStatsLi">Gayness: 200</div>
-					<div>Faggotry: 93920</div>
+					<div className="equipmentStatsLi">Attack: {deriv.attack.value}</div>
+					<div>Defense: {deriv.defense.value}</div>
 				</span>
 			</div>
 		</div>
