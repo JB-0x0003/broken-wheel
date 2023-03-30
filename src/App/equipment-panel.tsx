@@ -1,6 +1,8 @@
 import React from 'react';
+import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
 import {pipeBigNum} from './helpers';
+import {BagID} from './body';
 
 export default function EquipmentPanel(){
 
@@ -22,7 +24,17 @@ export default function EquipmentPanel(){
 
 
 	let deriv = sv.Character.st.body.derivatives;
+	let equipHTML = [];
 	
+	for (let i = 0; i < 5; ++i){
+		
+		equipHTML.push(
+			<BagSlot sv={sv} bagID={BagID.Equipment} index={i}/>
+
+		);
+
+	}
+
 	return(
 
 		<div className="panel">
@@ -31,21 +43,7 @@ export default function EquipmentPanel(){
 			</div>
 			<div className="inventoryFlexRow">
 				<span className="inventoryFlexColumn">
-					<div className="inventoryLi">
-						fuck
-					</div>
-					<div className="inventoryLi">
-						fuck
-					</div>
-					<div className="inventoryLi">
-						fuck
-					</div>
-					<div className="inventoryLi">
-						fuck
-					</div>
-					<div className="inventoryLi">
-						Gay
-					</div>
+					{equipHTML}
 				</span>
 				<span className="equipmentStatColumn">
 					<div className="equipmentStatsLi">Attack: {deriv.attack.value}</div>

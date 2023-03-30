@@ -10,7 +10,7 @@ interface BagSlotProps{
 
 }
 
-export default function BagSlot(props){
+export default function BagSlot(props : BagSlotProps){
 
 
 	function drag(ev, originBag : BagID, originIndex : number){
@@ -42,7 +42,7 @@ export default function BagSlot(props){
 		return(
 			<div className="inventoryLi"
 				onDragOver={allowDrag}
-				onDrop={(ev)=>{dropSwapSlots(ev,props.bag,props.index)}}
+				onDrop={(ev)=>{dropSwapSlots(ev,props.bagID,props.index)}}
 			>
 				<div className="rowCenter">
 					{"-------"}
