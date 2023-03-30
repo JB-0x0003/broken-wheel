@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './App.less';
+import './App.css';
 import EventOverlay from "./event-overlay";
 import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
