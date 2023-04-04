@@ -1,17 +1,18 @@
 import {Jati} from './reincarnation';
 import {ItemID} from './items';
+import {ItemMaskID, Bag} from './inventory'; 
 
 export const __INVENTORY_SLOTS = 30;
 
 export enum AttributeType{
 
-	body = "body",
-	cunning = "cunning",
-	learning = "learning",
-	charisma = "charisma",
-	nobility = "nobility",
-	shine = "shine",
-	summer = "summer",
+	Body = "body",
+	Cunning = "cunning",
+	Learning = "learning",
+	Charisma = "charisma",
+	Nobility = "nobility",
+	Shine = "shine",
+	Summer = "summer",
 
 }
 
@@ -26,73 +27,38 @@ export type AttributeObject = {
 
 export enum DerivativeType{
 
-	attack = "attack",
-	defense = "defense",
+	Attack = "attack",
+	Defense = "defense",
 
 }
 
 export type DerivativeObject = {
 	
-	[key in DerivativeType]:{
-		value: number;
+	[key in DerivativeType]: {
 
-	}
+		value: number,
+		base: number,
 
-}
-
-export function attackFunction(inBody: number, inCunning: number):number{
-	
-	return 2;
+	};
 
 }
 
-export function defenseFunction(inBody: number, inCunning: number): number{
 
-	return 2;
 
-}
+export enum ResourceType{
 
-export function calcDerivatives(inBod): void{
-
-	let attr = inBod.attributes;
-
-	let tempAttack = attackFunction(attr.body.value, attr.cunning.value);
-	let tempDefense = attackFunction(attr.body.value, attr.cunning.value);
-	
-	inBod.derivatives.attack = {value: tempAttack};
-	inBod.derivatives.defense = {value: tempDefense};
+	Stamina = "Stamina",
+	Health = "Health",
+	Life = "Lifespan",
 
 }
 
-export enum StatusType{
+export type ResourceObject = {
 
-	stamina = "Stamina",
-	health = "Health",
-	life = "Lifespan",
-
-}
-
-export type StatusObject = {
-
-	[key in StatusType]:{
+	[key in ResourceType]:{
 		value: number;
 		max: number;
 	}
-
-}
-
-export enum BagID{
-
-	Inventory,
-	Equipment,
-
-}
-
-export type InventoryStack = {
-	
-	ID: ItemID;
-	bag: BagID;
-	amount: number;
 
 }
 
@@ -100,10 +66,10 @@ export interface Body{
 
 	attributes: AttributeObject;
 	derivatives: DerivativeObject;
-	statuses: StatusObject;
+	resources: ResourceObject;
 	money: number;
-	inventory: InventoryStack[];
-	equipment: InventoryStack[];
+	inventory: Bag;
+	equipment: Bag;
 	jati: Jati;
 	age: number;
 
@@ -117,10 +83,19 @@ export function genBody(inJati:Jati): Body{
 		attributes: JSON.parse(JSON.stringify(inJati.initialAttributes)),
 		derivatives: {},
 		money: 0,
-		inventory : [],
-		equipment: [],
+		inventory : {
+			size: 30,
+			mask: {},
+			contents: [],
+		},
+		equipment: {
+			size: 5,
+			mask: {},
+			contents: [],
+
+		},
 		jati: inJati,
-		statuses : {
+		resources : {
 			
 			Stamina: {
 				value: 100,
@@ -140,8 +115,10 @@ export function genBody(inJati:Jati): Body{
 
 		age : 360 * 16,
 	};
+	
+	tempBod.inventory.mask[-1] = ItemMaskID.True;
 
-	tempBod.inventory.push(
+	tempBod.inventory.contents.push(
 		{
 			ID: ItemID.Rice,
 			amount: 300,
@@ -149,16 +126,27 @@ export function genBody(inJati:Jati): Body{
 		}
 
 	);
-	tempBod.inventory.push(
+	tempBod.inventory.contents.push(
 		{
 			ID: ItemID.Garbage,
 			amount: 300,
 
 		}
-
+	);	
+	tempBod.inventory.contents.push(
+		{
+			ID: ItemID.SharpenedStick,
+			amount: 1,
+		}
 	);
+
+	tempBod.equipment.mask[-1] = ItemMaskID.EquipGeneric;
+	tempBod.equipment.mask[0] = ItemMaskID.EquipWeapon;
 	
-	calcDerivatives(tempBod);
+	//TODO move this character-service
+	//it requipres st information, not just body information
+	
+
 
 	return tempBod as Body; 
 

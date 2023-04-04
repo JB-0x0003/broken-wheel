@@ -1,5 +1,4 @@
 import {ServiceObject} from './global-service-provider';
-import {StateObject} from './state-service';
 import {AttributeType} from './body';
 import {genericPowerFunction} from './helpers';
 
@@ -56,10 +55,10 @@ ActivityCollection[ActivityID.Oddjobs] = {
 	requirements: ()=>{return true},
 	consequence: [
 		(sv : ServiceObject) => {
-		sv.Character.trainAttribute(AttributeType.body,0.025);
-		sv.Character.trainAttribute(AttributeType.cunning,0.025);
-		sv.Character.trainAttribute(AttributeType.learning,0.025);
-		sv.Character.trainAttribute(AttributeType.charisma,0.025);
+		sv.Character.trainAttribute(AttributeType.Body,0.025);
+		sv.Character.trainAttribute(AttributeType.Cunning,0.025);
+		sv.Character.trainAttribute(AttributeType.Learning,0.025);
+		sv.Character.trainAttribute(AttributeType.Charisma,0.025);
 		
 
 		sv.Character.giveMoney(2);
@@ -80,7 +79,7 @@ ActivityCollection[ActivityID.Begging] = {
 	},
 	consequence: [
 		(sv : ServiceObject) => {
-		sv.Character.trainAttribute(AttributeType.charisma,0.1);
+		sv.Character.trainAttribute(AttributeType.Charisma,0.1);
 		sv.Character.st.body.attributes.nobility.value -= 0.1;
 	}],
 };
@@ -104,8 +103,8 @@ ActivityCollection[ActivityID.FieldLabor] = {
 		
 		sv.Character.giveMoney(workPower * 0.12);
 
-		sv.Character.trainAttribute(AttributeType.summer,0.01);
-		sv.Character.trainAttribute(AttributeType.body,0.12);
+		sv.Character.trainAttribute(AttributeType.Summer,0.01);
+		sv.Character.trainAttribute(AttributeType.Body,0.12);
 	}],
 };
 
@@ -122,9 +121,9 @@ ActivityCollection[ActivityID.Poetry] = {
 	},
 	consequence: [
 		(sv : ServiceObject) => {
-			sv.Character.trainAttribute(AttributeType.learning, 0.12);
-			sv.Character.trainAttribute(AttributeType.nobility, 0.01);
-			sv.Character.trainAttribute(AttributeType.shine, 0.01);
+			sv.Character.trainAttribute(AttributeType.Learning, 0.12);
+			sv.Character.trainAttribute(AttributeType.Nobility, 0.01);
+			sv.Character.trainAttribute(AttributeType.Shine, 0.01);
 
 
 	}],

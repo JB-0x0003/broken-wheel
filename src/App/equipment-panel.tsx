@@ -2,7 +2,8 @@ import React from 'react';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
 import {pipeBigNum} from './helpers';
-import {BagID} from './body';
+import {BagID} from './inventory';
+import {DerivativeType} from './body';
 
 export default function EquipmentPanel(){
 
@@ -46,8 +47,12 @@ export default function EquipmentPanel(){
 					{equipHTML}
 				</span>
 				<span className="equipmentStatColumn">
-					<div className="equipmentStatsLi">Attack: {deriv.attack.value}</div>
-					<div>Defense: {deriv.defense.value}</div>
+					<div className="equipmentStatsLi">
+						Attack: {deriv[DerivativeType.Attack].value}
+					</div>
+					<div>
+						Defense: {deriv[DerivativeType.Defense].value}
+					</div>
 				</span>
 			</div>
 		</div>

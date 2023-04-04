@@ -1,6 +1,7 @@
 import React from 'react';
 import ZonePanel from './zone-panel';
 import PersonalPanel from './personal-panel';
+import InventoryPanel from './inventory-panel';
 
 export default function Center1Panel(){
 
@@ -15,6 +16,9 @@ export default function Center1Panel(){
 			displayedPanel = <ZonePanel/>;
 			break;
 		case 1:
+			displayedPanel = <InventoryPanel/>;
+			break;
+		case 2:
 			displayedPanel = <PersonalPanel/>;
 			break;
 		default:	
@@ -31,8 +35,13 @@ export default function Center1Panel(){
 				>
 					Environment
 				</span>
-				<span className={"panelTab rightmost" + (currentTab===1? " selected" : "")}
+				<span className = {"panelTab" + (currentTab===1? " selected" : "")}
 						onClick = {()=>{setCurrentTab(1)}}
+					>
+					Inventory
+				</span>
+				<span className={"panelTab rightmost" + (currentTab===2? " selected" : "")}
+						onClick = {()=>{setCurrentTab(2)}}
 				>
 					Personal
 				</span>

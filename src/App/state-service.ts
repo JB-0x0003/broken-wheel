@@ -8,6 +8,7 @@ import LocationCollection, {LocationID} from './locations';
 export interface OptionObject{
 
 	autosaveMS: number;
+	
 
 }
 

@@ -1,4 +1,5 @@
-import {Body,AttributeType, AttributeObject, StatusObject, InventoryStack, genBody, calcDerivatives, BagID} from './body';
+import {Body,AttributeType, AttributeObject, DerivativeType, ResourceObject, genBody} from './body';
+import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID} from './inventory';
 import {GenerateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
 import {StateObject} from './state-service';
@@ -35,9 +36,9 @@ export default class CharacterService{
 
 	}
 
-	getStatuses(): StatusObject{
+	getResources(): ResourceObject{
 
-		return this.st.body.statuses;
+		return this.st.body.resources;
 
 	}
 	
@@ -53,22 +54,26 @@ export default class CharacterService{
 
 	}
 	
-	getBag(id : BagID): InventoryStack[]{
+	getBag(id : BagID): Bag{
 		switch (id){
-			case 0:
+			case BagID.Inventory:
 				return this.st.body.inventory;
-			case 1:
+			case BagID.Equipment:
 				return this.st.body.equipment;
 			default:
-				return [];
+				return {
+					size: 0,
+					mask: [],
+					contents: [],
+				};
 
 		}
 
 	}
 
-	getInventory() : InventoryStack[]{
+	getInventoryContents() : InventoryStack[]{
 
-		return this.st.body.inventory;
+		return this.st.body.inventory.contents;
 
 	}
 
@@ -76,18 +81,58 @@ export default class CharacterService{
 		
 		console.log("bag1 + index1:" + id1 + index1);
 		console.log("bag2 + index2:" + id2 + index2);
-		let bag1 = this.getBag(id1);
-		let bag2 = this.getBag(id2);
 
-		let tmp = JSON.parse(JSON.stringify(bag1[index1]));
-		bag1[index1] = bag2[index2]
-		bag2[index2] = tmp;
+		let bag1 = this.getBag(id1);
+		let itemStack1 = bag1.contents[index1];
+		let mask1 = bag1.mask[index1];
+		console.log("bag1 mask");
+		console.log(bag1.mask);
+		if (mask1 === undefined) {
+			mask1 = bag1.mask["-1"];
+			
+			if (mask1 === undefined){
+				
+				console.log("ERROR: Mask1 Fallthrough during swap");
+				mask1 = ItemMaskID.True;
+
+			}
+
+		}
+
+		let bag2 = this.getBag(id2);
+		let itemStack2 = bag2.contents[index2];
+		let mask2 = bag2.mask[index2];
+		console.log("bag2 mask");
+		console.log(bag2.mask);
+		if (!mask2) {
+			mask2 = bag2.mask[-1];
+			
+			if (mask2 === undefined){
+				console.log("ERROR: Mask2 Fallthrough during swap");	
+				mask2 = ItemMaskID.True;
+
+			}
+
+		}
+		
+		let mask1Result = ItemMaskCollection[mask1](this.sv, bag2, itemStack2);
+		let mask2Result = ItemMaskCollection[mask2](this.sv, bag2, itemStack1);
+
+		if(mask1Result === true 
+			&& mask2Result === true){
+				
+				let tmp = JSON.parse(JSON.stringify(bag1.contents[index1]));
+				bag1.contents[index1] = bag2.contents[index2];
+				bag2.contents[index2] = tmp;
+
+		} else console.log("Swap doesn't fit!");
+
 
 	}
 
 	getDailyHealthDrain():number{
 		
-		let currHealth = this.st.body.statuses.Health.value; 
+		let currHealth = this.st.body.resources.Health.value; 
 		
 		return __DAILY_HEALTH_DRAIN_BASE + currHealth * __DAILY_HEALTH_DRAIN_PERCENT; 
 
@@ -97,17 +142,17 @@ export default class CharacterService{
 
 	drainHealthNatural(amount: number): void{
 
-		let currHealth = this.st.body.statuses.Health.value;
+		let currHealth = this.st.body.resources.Health.value;
 		let malus = amount;
 
 		if (currHealth <= malus) {
 			let diff = malus - currHealth
 			
-			this.st.body.statuses.Health.value = 0;
+			this.st.body.resources.Health.value = 0;
 			this.drainLifeNatural(diff);
 		}
 
-		this.st.body.statuses.Health.value -= malus;
+		this.st.body.resources.Health.value -= malus;
 
 	}
 
@@ -121,13 +166,13 @@ export default class CharacterService{
 
 	getLifeMult():number{
 
-		return (12 / (12 + this.st.body.statuses.Health.value));
+		return (12 / (12 + this.st.body.resources.Health.value));
 
 	}
 	
 	drainLifeNatural(amount: number): void{
 
-		this.st.body.statuses.Lifespan.value -= amount * this.getLifeMult();
+		this.st.body.resources.Lifespan.value -= amount * this.getLifeMult();
 
 	}
 	
@@ -145,8 +190,32 @@ export default class CharacterService{
 							
 
 	}	
+	attackFunction(inBody: number, inCunning: number):number{
+		
+		return 2;
 
+	}
+
+	defenseFunction(inBody: number, inCunning: number): number{
+
+		return 2;
+
+	}
 	
+	calcDerivatives() : void{
+
+		let attr = this.st.body.attributes;
+		let deriv = this.st.body.derivatives;
+		
+
+		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
+		let tempDefense = this.attackFunction(attr.body.value, attr.cunning.value);
+		
+		deriv[DerivativeType.Attack].value = tempAttack + deriv[DerivativeType.Attack].base;
+		deriv[DerivativeType.Defense].value = tempDefense + deriv[DerivativeType.Defense].base;
+
+	}
+
 	setName(inName : string) : void{
 
 		this.st.name = inName; 
@@ -168,17 +237,12 @@ export default class CharacterService{
 		
 	}
 	
-	calcPlayerDerivatives() : void{
-
-		calcDerivatives(this.st.body);		
-		
-
-	}
 
 	newBody(){
 		
 		//TODO implement Karma
 		this.st.body = genBody(GenerateJati(0));
+		this.calcDerivatives();
 	}
 	
 	

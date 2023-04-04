@@ -90,7 +90,7 @@ export default class MainLoopService {
 	advanceDay() : void{
 	
 
-		if (this.st.body.statuses.Lifespan.value <= 0){
+		if (this.st.body.resources.Lifespan.value <= 0){
 				
 			this.died = true;
 

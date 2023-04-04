@@ -210,10 +210,10 @@ body {
 }
 .panelContainerLeft {
   margin-right: 3px;
-  flex-grow: 1;
+  min-width: 400px;
+  flex-grow: 0;
   display: flex;
   flex-direction: column;
-  min-width: 400px;
   gap: 8px;
 }
 .panelContainerLeft .panel {
@@ -234,12 +234,12 @@ body {
 .panelContainerRight {
   margin-left: 3px;
   min-width: 350px;
-  flex-grow: 1;
+  flex-grow: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.panelContainerRight .panel {
+.panelContainerRight .panelContainerRight .panel {
   border-width: 2px 1px 2px 3px;
 }
 .panelWrapper {
@@ -520,8 +520,13 @@ body {
   font-size: 14px;
   user-select: none;
   padding-left: 4px;
-  margin-bottom: 4px;
+  border-top: 3px solid var(--panelBackground);
+  border-bottom: 3px solid var(--panelBackground);
   background: var(--panelBorderLight);
+}
+.inventoryLi.selected {
+  color: var(--segmentHighlightText);
+  background: var(--yellow);
 }
 .equipmentStatColumn {
   display: flex;

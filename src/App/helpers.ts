@@ -43,3 +43,26 @@ export function pipeBigNum(num: number) : string{
 
 
 }
+
+export function applyObject(inObj : Object, targetObj : Object): void{
+	
+	for (let key in inObj){
+		
+		if (typeof targetObj[key] === 'undefined'){
+			targetObj[key] = inObj[key];	
+
+		} else if (typeof inObj[key] !== 'object' && typeof targetObj[key] !== 'object'){
+			
+			targetObj[key] = targetObj[key] + inObj[key];
+
+		} else {
+			
+			applyObject(inObj[key], targetObj[key]);
+
+		}
+
+	}
+
+
+
+}
