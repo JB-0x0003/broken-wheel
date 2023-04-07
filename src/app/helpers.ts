@@ -73,6 +73,23 @@ export function applyObject(inObj : Object, targetObj : Object): void{
 
 	}
 
+}
+//merges objects without overwriting values in target object
+export function mergeObjects(templateObj: Object, targetObj: Object): void{
+	
+	for (let key in templateObj){
+		
+		if (typeof targetObj[key] === 'undefined'){
+			targetObj[key] = templateObj[key];	
+
+		} else if (typeof targetObj[key] === 'object' && typeof templateObj[key] === 'object'){
+			
+			mergeObjects(templateObj[key], targetObj[key]);
+
+		} 
+
+	}
+
 
 
 }

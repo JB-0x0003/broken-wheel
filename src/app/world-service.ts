@@ -7,39 +7,17 @@ export interface Zone {
 	
 	name: string;
 	stinger: string;
-	parentService: WorldService;	
 	locations: Location[];
 
 }
 
 
-export enum ItemID {
-	
-	Rice,
-
-}
-
-export interface Item {
-
-	name : string,
-	iType : ItemID,
-	description: string,
-	consequence: Function,
-
-};
 
 export default class WorldService{
 	
 	st: StateObject;
 	character: CharacterService;
 
-
-	ItemCollection : Item[] = [
-
-
-
-	];
-	
 	reqStartAct(inLoc : number, inAct : ActivityID) : void{
 		
 		//TODO doesn't check validity

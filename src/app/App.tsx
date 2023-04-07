@@ -5,7 +5,7 @@ import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
 import EquipmentPanel from "./equipment-panel";
-import {autoLoadState, defaultState} from "./state-service";
+import {loadStateFromLocal, defaultState} from "./state-service";
 import LogService from "./log-service";
 import CharacterService from './character-service';
 import WorldService from './world-service';
@@ -33,8 +33,7 @@ function App() {
 //Define Services
 //First one represents global state. It isn't provided to html pages, only other services
 //State is loaded from local storage if present	
-let [st,] = useState(autoLoadState());
-console.log(st);
+let [st,] = useState(loadStateFromLocal());
 let [log,] = useState(new LogService());
 let [character,] = useState(new CharacterService(st));
 let [world,] = useState(new WorldService(st, character));

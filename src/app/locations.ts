@@ -18,7 +18,7 @@ export interface Location {
 
 interface LocationSuite {
 
-	[key: number]: Location;
+	[key: string]: Location;
 
 }
 

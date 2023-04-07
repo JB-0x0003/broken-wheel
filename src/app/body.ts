@@ -125,4 +125,10 @@ export function defaultBody(): Body{
 
 }
 
+export function initialBody(): Body{
+
+	return genBody(JatiID.Wretch);
+
+}
+
 

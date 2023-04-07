@@ -1,9 +1,9 @@
-import {JatiID} from './reincarnation';
-import {Body, genBody} from './body';
+import {Body, initialBody} from './body';
 import EventSuite, {FlagCollection} from './events';
 import { ActivityID, ActivityRecord} from './activities';
 import {Zone} from './world-service';
 import LocationCollection, {LocationID} from './locations';
+import {mergeObjects} from './helpers';
 
 export interface OptionObject{
 
@@ -44,25 +44,18 @@ export function loadStateFromLocal(): StateObject{
 
 	//TODO make this more robust
 	let temp = localStorage.getItem('state');
-	return JSON.parse(temp);
+	let loadedSave =  JSON.parse(temp);
 	
-
-}
-
-export function autoLoadState(): StateObject{
+	console.log("Loaded Save Data");
+	console.log(loadedSave);
+	//Ensures that the loaded save has all the required fields
+	//Completely overwrites if there is no save data
+	mergeObjects(defaultState(), loadedSave);
 	
+	console.log("Save Data after validation");
+	console.log(loadedSave);
 
-	//TODO add version handling
-	let temp = JSON.parse(localStorage.getItem('state'));
-	//TODO check if save is valid	
-	//this only checks if the save data is present
-	if (temp){ 
-		return temp as StateObject;
-		// eslint-disable-next-line no-unreachable
-		console.log("Loaded save data");
-	}
-	else return defaultState();
-
+	return loadedSave as StateObject;
 }
 
 export function defaultOptions() : OptionObject{
@@ -97,6 +90,7 @@ export function defaultState() : StateObject{
 
 	}
 	
+	console.log("Default Activity Record Generated");
 	console.log(tmpRecord);
 
 	let aRecord = tmpRecord as ActivityRecord;
@@ -131,12 +125,11 @@ export function defaultState() : StateObject{
 		currentLocation : 0,
 		currentActivityID : ActivityID.Oddjobs,
 		
-		body: genBody(JatiID.Wretch),
+		body: initialBody(),
 		ZoneCollection : [
 			{
 				name: "Lateri",
 				stinger: "Marsh and Salt",
-				parentService: this,
 				locations: [
 					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.Plantation],
