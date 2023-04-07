@@ -48,6 +48,7 @@ export function loadStateFromLocal(): StateObject{
 	
 	console.log("Loaded Save Data");
 	console.log(loadedSave);
+	if (loadedSave === null || loadedSave === undefined) loadedSave = {};
 	//Ensures that the loaded save has all the required fields
 	//Completely overwrites if there is no save data
 	mergeObjects(defaultState(), loadedSave);

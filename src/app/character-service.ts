@@ -1,11 +1,12 @@
 import {Body, genBody} from './body';
 import {AttributeType, AttributeObject, DerivativeType,ResourceType, ResourceObject} from './common-types';
-import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID} from './inventory';
+import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID, ItemSortID, ItemSortCollection} from './inventory';
+import ItemCollection from './items';
 import {generateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
-import {StateObject} from './state-service';
+import {StateObject} from './state';
 import {ServiceObject} from './global-service-provider';
-import {pipeAge} from './helpers';
+import {pipeAge, applyObject} from './helpers';
 
 export const __DAILY_LIFE_DRAIN = 0.076;
 export const __DAILY_HEALTH_DRAIN_BASE = 0.5;
@@ -79,6 +80,19 @@ export default class CharacterService{
 
 	}
 
+	removeItemConsumed(id: BagID, index: number, malus: number): void{
+		
+		let bag = this.getBag(id);
+
+		bag.contents[index].amount -= malus;
+
+		if (bag.contents[index].amount <= 0){
+			bag.contents[index] = undefined;
+
+		}
+
+	}
+
 	swapInventoryStacks(id1 : BagID, index1 : number, id2: BagID, index2 : number): void{
 		
 		console.log("bag1 + index1:" + id1 + index1);
@@ -89,6 +103,7 @@ export default class CharacterService{
 		let mask1 = bag1.mask[index1];
 		console.log("bag1 mask");
 		console.log(bag1.mask);
+		console.log(bag1);
 		if (mask1 === undefined) {
 			mask1 = bag1.defaultMask;
 			
@@ -106,6 +121,7 @@ export default class CharacterService{
 		let mask2 = bag2.mask[index2];
 		console.log("bag2 mask");
 		console.log(bag2.mask);
+		console.log(bag2);
 		if (!mask2) {
 			mask2 = bag2.defaultMask;
 			
@@ -181,7 +197,7 @@ export default class CharacterService{
 		currLifeObject.value -= amount * this.getLifeMult();
 
 	}
-	
+		
 
 	causeAge(amount: number): void{
 			//0 health = 19.6 years of life	
@@ -195,7 +211,74 @@ export default class CharacterService{
 			this.st.body.age += amount;
 							
 
-	}	
+	}
+	
+	
+
+	selectInvItemToEat(): number{
+
+		let inv = this.getBag(BagID.Inventory);
+		let bestIndex = 0;
+		let bestValue = 0;
+
+		for (let i = 0; i < inv.size; ++i){
+			
+			if (inv.contents[i] === undefined || inv.contents[i].ID ===undefined) continue;
+			let item = ItemCollection[inv.contents[i].ID];
+			if (item.consumable !== true) continue;
+
+			let value = ItemSortCollection[ItemSortID.HighestValue](inv.contents[i]);
+			if (value > bestValue){
+			
+				bestIndex = i;
+				bestValue = value;
+
+			}
+		}
+		console.log(bestIndex);	
+		return bestIndex;
+
+	}
+
+	consumeItem(id: BagID, index: number): void{
+		
+		let stack = this.getBag(id).contents[index];
+		if (stack === undefined) {
+			console.log("Invalid stack selected for consumption");
+			return;
+		}
+
+		let itemID = stack.ID;
+		let item = ItemCollection[itemID];
+
+		if (item.consumable === true){
+			
+			
+
+			if (item.consumeBonus !== undefined){
+			
+				applyObject(item.consumeBonus, this.st.body);		
+
+			}
+			if (item.consumeConsequence !== undefined){
+
+				item.consumeConsequence(this.sv);
+
+			}
+
+		}
+
+	}
+
+	dailyEat(): void{
+		
+		let bestIndex = this.selectInvItemToEat();
+
+		this.consumeItem(BagID.Inventory, bestIndex);	
+
+	}
+
+
 	attackFunction(inBody: number, inCunning: number):number{
 		
 		return 2;

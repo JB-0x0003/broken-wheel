@@ -129,4 +129,24 @@ ActivityCollection[ActivityID.Poetry] = {
 	}],
 };
 
+ActivityCollection[ActivityID.Stargazing] = {
+	name: ['Gaze At The Stars'],
+	aID: ActivityID.Poetry,
+	description: ["TODO"],
+	rankThreshold: [0],
+	requirements: (sv : ServiceObject)=>{
+		let attr = sv.Character.st.body.attributes;
+		
+		if (attr.learning.value >= 20) return true
+		else return false
+	},
+	consequence: [
+		(sv : ServiceObject) => {
+			sv.Character.trainAttribute(AttributeType.Nobility, 0.015);
+			sv.Character.trainAttribute(AttributeType.Shine, 0.025);
+
+
+	}],
+};
+
 export default ActivityCollection;

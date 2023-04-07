@@ -1,4 +1,5 @@
 import {AttributeType, DerivativeType, ResourceType,AttributeObject, DerivativeObject, ResourceObject} from './common-types';
+import {ServiceObject} from './global-service-provider';
 
 export const enum ItemID{
 
@@ -70,6 +71,7 @@ export interface Item{
 	//Consumable is on-demand eating
 	consumable?: boolean;
 	consumeBonus?: BonusObject;
+	consumeConsequence?: (sv: ServiceObject) => void;
 	equipable?: boolean;
 	equipBonus?: BonusObject;
 }

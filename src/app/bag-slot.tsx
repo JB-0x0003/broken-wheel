@@ -37,7 +37,6 @@ export default function BagSlot(props : BagSlotProps){
 		
 
 		let originBag = ev.dataTransfer.getData("bagID");
-		originBag = Number(originBag);
 		let originIndex = ev.dataTransfer.getData("index");
 
 		setSelected(false);

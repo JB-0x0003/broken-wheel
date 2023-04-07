@@ -1,4 +1,4 @@
-import {StateObject} from './state-service';
+import {StateObject} from './state';
 import CharacterService from './character-service';
 import ActivityCollection, {Activity, ActivityID} from './activities';
 import {Location} from './locations';

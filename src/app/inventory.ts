@@ -91,6 +91,37 @@ export type InventoryStack = {
 
 }
 
+export type ItemSort = (inStack: InventoryStack) => number;
+
+export enum ItemSortID{
+	
+	HighestValue = "highestvalue",
+	LowestValue = "lowestvalue",
+
+}
+
+type ItemSortSuite = {
+	
+	[key in ItemSortID] : ItemSort
+
+}
+
+let ItemSortCollection : ItemSortSuite = {
+	
+	[ItemSortID.HighestValue] : (inStack: InventoryStack) => {
+		
+		return ItemCollection[inStack.ID].value;
+		
+	},
+	
+	[ItemSortID.LowestValue] : (inStack: InventoryStack) => {
+		
+		return -ItemCollection[inStack.ID].value;
+		
+	}
+
+}
+
 let ItemMaskCollection : ItemMaskSuite = {
 
 	[ItemMaskID.True] : maskTrue,
@@ -98,9 +129,8 @@ let ItemMaskCollection : ItemMaskSuite = {
 	[ItemMaskID.EquipGeneric]: maskEquipGeneric,
 	[ItemMaskID.EquipWeapon]: maskEquipWeapon,
 
-
 };
 
-
+export {ItemSortCollection};
 export default ItemMaskCollection;
 

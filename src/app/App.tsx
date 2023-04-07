@@ -5,7 +5,7 @@ import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
 import EquipmentPanel from "./equipment-panel";
-import {loadStateFromLocal, defaultState} from "./state-service";
+import {loadStateFromLocal, defaultState} from "./state";
 import LogService from "./log-service";
 import CharacterService from './character-service';
 import WorldService from './world-service';

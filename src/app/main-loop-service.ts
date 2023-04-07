@@ -1,6 +1,6 @@
 import {Subject} from 'rxjs';
 import {ServiceObject} from './global-service-provider';
-import {saveStateToLocal,StateObject} from './state-service';
+import {saveStateToLocal,StateObject} from './state';
 import LogService from './log-service';
 import CharacterService from './character-service';
 import WorldService from './world-service';
@@ -89,7 +89,8 @@ export default class MainLoopService {
 	}
 
 	advanceDay() : void{
-	
+		
+		this.sv.Character.dailyEat();
 
 		if (this.st.body.resources[ResourceType.Life].value <= 0){
 				
