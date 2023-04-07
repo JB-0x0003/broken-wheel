@@ -1,7 +1,7 @@
 import React from 'react';
 import {Serv} from "./global-service-provider";
 import {pipeBigNum} from "./helpers";
-import {AttributeObject,ResourceType, ResourceObject} from './body';
+import {AttributeObject,ResourceType, ResourceObject} from './common-types';
 import ProgressBar from './progress-bar';
 
 export default function AttributePanel(){

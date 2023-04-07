@@ -2,9 +2,8 @@ import {ActivityID} from './activities';
 
 export enum LocationID {
 
-	CommonGrounds,
-	Plantation,
-	
+	CommonGrounds = "commongrounds",
+	Plantation = "plantation",	
 	
 }
 

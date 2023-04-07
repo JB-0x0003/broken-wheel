@@ -1,66 +1,11 @@
-import {Jati} from './reincarnation';
+import {Jati,JatiCollection, JatiID} from './reincarnation';
 import {ItemID} from './items';
 import {ItemMaskID, Bag} from './inventory'; 
+import {DerivativeType, ResourceType, AttributeObject, DerivativeObject, ResourceObject} from './common-types';
 
 export const __INVENTORY_SLOTS = 30;
 
-export enum AttributeType{
 
-	Body = "body",
-	Cunning = "cunning",
-	Learning = "learning",
-	Charisma = "charisma",
-	Nobility = "nobility",
-	Shine = "shine",
-	Summer = "summer",
-
-}
-
-export type AttributeObject = {
-	[key in AttributeType]:{
-		value: number;
-		aptitude: number;
-	}
-
-
-}
-
-export enum DerivativeType{
-
-	Attack = "attack",
-	Defense = "defense",
-
-}
-
-export type DerivativeObject = {
-	
-	[key in DerivativeType]: {
-
-		value: number,
-		base: number,
-
-	};
-
-}
-
-
-
-export enum ResourceType{
-
-	Stamina = "Stamina",
-	Health = "Health",
-	Life = "Lifespan",
-
-}
-
-export type ResourceObject = {
-
-	[key in ResourceType]:{
-		value: number;
-		max: number;
-	}
-
-}
 
 export interface Body{
 
@@ -75,49 +20,76 @@ export interface Body{
 
 };
 
-export function genBody(inJati:Jati): Body{
+export function defaultDerivatives(): DerivativeObject{
 
-	let tempBod = {
+	let dummyData = {
+		value: 0,
+		base: 0,
+
+	}
+
+	return {
+		[DerivativeType.Attack]: JSON.parse(JSON.stringify(dummyData)),
+		[DerivativeType.Defense]: JSON.parse(JSON.stringify(dummyData)),
+	};
+
+}
+
+export function defaultResources(): ResourceObject{
+
+	return {
+		[ResourceType.Stamina]: {
+			value: 100,
+			max: 100,
+		},
+
+		[ResourceType.Health]: {
+			value: 33,
+			max: 100,
+		},
+
+		[ResourceType.Life]: {
+			value: 100,
+			max: 100,
+		},
+	};
+
+}
+
+
+
+export function genBody(inJati:JatiID): Body{
+	
+	let jati = JatiCollection[inJati];
+
+	let tempBod : Body = {
 
 		//this is the only way I know to do deep copies lol
-		attributes: JSON.parse(JSON.stringify(inJati.initialAttributes)),
-		derivatives: {},
+		attributes: JSON.parse(JSON.stringify(jati.initialAttributes)),
+		derivatives: defaultDerivatives(),
+		resources : defaultResources(),
 		money: 0,
 		inventory : {
 			size: 30,
-			mask: {},
+			defaultMask: ItemMaskID.True,
+			mask: {} as {[key: number]: ItemMaskID},
 			contents: [],
 		},
 		equipment: {
 			size: 5,
-			mask: {},
+			defaultMask: ItemMaskID.EquipGeneric,
+			mask: {
+				0: ItemMaskID.EquipWeapon,
+			},
 			contents: [],
 
 		},
-		jati: inJati,
-		resources : {
-			
-			Stamina: {
-				value: 100,
-				max: 100,
-			},
-
-			Health: {
-				value: 33,
-				max: 100,
-			},
-
-			Lifespan: {
-				value: 100,
-				max: 100,
-			},
-		},
+		jati: jati,
 
 		age : 360 * 16,
 	};
 	
-	tempBod.inventory.mask[-1] = ItemMaskID.True;
-
+	
 	tempBod.inventory.contents.push(
 		{
 			ID: ItemID.Rice,
@@ -126,6 +98,7 @@ export function genBody(inJati:Jati): Body{
 		}
 
 	);
+	
 	tempBod.inventory.contents.push(
 		{
 			ID: ItemID.Garbage,
@@ -139,20 +112,17 @@ export function genBody(inJati:Jati): Body{
 			amount: 1,
 		}
 	);
-
-	tempBod.equipment.mask[-1] = ItemMaskID.EquipGeneric;
-	tempBod.equipment.mask[0] = ItemMaskID.EquipWeapon;
 	
-	//TODO move this character-service
-	//it requipres st information, not just body information
 	
-
-
-	return tempBod as Body; 
+	return tempBod; 
 
 
 }
 
+export function defaultBody(): Body{
 
+	return genBody(JatiID.Laborer);
+
+}
 
 

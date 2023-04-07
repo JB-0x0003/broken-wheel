@@ -1,24 +1,24 @@
-import {AttributeObject,AttributeType, DerivativeObject, DerivativeType, ResourceObject, ResourceType} from './body';
+import {AttributeType, DerivativeType, ResourceType,AttributeObject, DerivativeObject, ResourceObject} from './common-types';
 
-export enum ItemID{
+export const enum ItemID{
 
-	Rice,
-	Garbage,
-	SharpenedStick,
+	Rice = "rice",
+	Garbage = "garbage",
+	SharpenedStick = "sharpenedstick",
 
 }
 
 export enum ItemType{
 	
-	Generic,
-	Food,
-	Weapon,
-	Accessory,
-	Hat,
-	Hands,
-	Body,
-	Legs,
-	OffHand,
+	Generic = "generic",
+	Food = "food",
+	Weapon = "weapon",
+	Accessory = "accessory",
+	Hat = "hat",
+	Hands = "hands",
+	Body = "body",
+	Legs = "legs",
+	OffHand = "offhand",
 }
 
 type OptionalType<T> = {
@@ -71,6 +71,7 @@ export interface Item{
 	consumable?: boolean;
 	consumeBonus?: BonusObject;
 	equipable?: boolean;
+	equipBonus?: BonusObject;
 }
 
 type ItemObject = {

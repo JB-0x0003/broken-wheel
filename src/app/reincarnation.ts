@@ -1,4 +1,13 @@
-import { AttributeObject} from './body';
+import { AttributeObject} from './common-types';
+
+export enum JatiID {
+	Laborer="laborer",
+	Shepherd="shepherd",
+	ForestPerson="forestperson",
+	Wretch="wretch",
+	
+
+}
 
 export type Jati = {
 
@@ -12,13 +21,13 @@ export type Jati = {
 
 type JC = {
 
-	[key: string] : Jati	
+	[key in JatiID] : Jati	
 
 };
 
 export const JatiCollection : JC = {
 		
-	laborer:  {
+	[JatiID.Laborer]:  {
 		
 		name: "Laborer",
 		description: "Your pater familias was the second youngest of his father's sons, on a plot too small to support a family for each of them. He conspired with his brothers to kill the youngest, but he, out of all of them, was the one to show mercy at the last. He drugged the boy instead, and let him float down the river. When water left the land, the remaining brothers went to town for work. The rest of the brothers starved. The one of them who showed mercy was saved, fed by the mayor at his palace for half a year. You are true, as were your ancestors.",
@@ -61,7 +70,7 @@ export const JatiCollection : JC = {
 
 	},
 
-	shepherd:  {
+	[JatiID.Shepherd]:  {
 		
 		name: "Shepherd",
 		description: "Your people are the most devout of all. When the king's priests sent word to colonize the then-empty lands of southern continent, your ancestors were the first to come. You know the holy verses by haert. They live between your tongues after the sun falls. They say that Arima was meant to be born among you, but was stolen away by the jealous Bull-Priests.",
@@ -104,7 +113,7 @@ export const JatiCollection : JC = {
 
 	},
 
-	forestPerson:  {
+	[JatiID.ForestPerson]:  {
 		
 		name: "Forest Person",
 		description: "TODO",
@@ -147,7 +156,7 @@ export const JatiCollection : JC = {
 
 	},
 
-	wretch:  {
+	[JatiID.Wretch]:  {
 		
 		name: "Wretch",
 		description: "TODO",
@@ -198,11 +207,11 @@ export function DefaultJati(): Jati{
 
 }
 
-export function GenerateJati(inKarma: number): Jati{
+export function generateJati(inKarma: number): JatiID{
 
-	let k: string;
-	let bestJati: string = "laborer";
-	let bestKarma: number = 100000;
+	let k: JatiID;
+	let bestJati: JatiID = JatiID.Laborer;
+	let bestKarma: number = 100000000;
 	let tmp: number = 0;
 
 	for (k in JatiCollection){
@@ -217,7 +226,7 @@ export function GenerateJati(inKarma: number): Jati{
 		
 	}
 
-	return JatiCollection[bestJati];
+	return bestJati;
 
 }
 

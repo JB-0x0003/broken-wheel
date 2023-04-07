@@ -1,6 +1,6 @@
 {
-	"watchFolder": "src/App/",
-	"outputFolder": "src/App/",
+	"watchFolder": "src/app/",
+	"outputFolder": "src/app/",
 	"runOnce": false,
 	"enableJs": true
 

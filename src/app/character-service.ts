@@ -1,6 +1,7 @@
-import {Body,AttributeType, AttributeObject, DerivativeType, ResourceObject, genBody} from './body';
+import {Body, genBody} from './body';
+import {AttributeType, AttributeObject, DerivativeType,ResourceType, ResourceObject} from './common-types';
 import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID} from './inventory';
-import {GenerateJati} from './reincarnation';
+import {generateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
 import {StateObject} from './state-service';
 import {ServiceObject} from './global-service-provider';
@@ -63,6 +64,7 @@ export default class CharacterService{
 			default:
 				return {
 					size: 0,
+					defaultMask: ItemMaskID.True,
 					mask: [],
 					contents: [],
 				};
@@ -88,7 +90,7 @@ export default class CharacterService{
 		console.log("bag1 mask");
 		console.log(bag1.mask);
 		if (mask1 === undefined) {
-			mask1 = bag1.mask["-1"];
+			mask1 = bag1.defaultMask;
 			
 			if (mask1 === undefined){
 				
@@ -105,7 +107,7 @@ export default class CharacterService{
 		console.log("bag2 mask");
 		console.log(bag2.mask);
 		if (!mask2) {
-			mask2 = bag2.mask[-1];
+			mask2 = bag2.defaultMask;
 			
 			if (mask2 === undefined){
 				console.log("ERROR: Mask2 Fallthrough during swap");	
@@ -132,7 +134,7 @@ export default class CharacterService{
 
 	getDailyHealthDrain():number{
 		
-		let currHealth = this.st.body.resources.Health.value; 
+		let currHealth = this.st.body.resources[ResourceType.Health].value; 
 		
 		return __DAILY_HEALTH_DRAIN_BASE + currHealth * __DAILY_HEALTH_DRAIN_PERCENT; 
 
@@ -142,17 +144,17 @@ export default class CharacterService{
 
 	drainHealthNatural(amount: number): void{
 
-		let currHealth = this.st.body.resources.Health.value;
+		let currHealthObject = this.st.body.resources[ResourceType.Health];
 		let malus = amount;
 
-		if (currHealth <= malus) {
-			let diff = malus - currHealth
+		if (currHealthObject.value <= malus) {
+			let diff = malus - currHealthObject.value
 			
-			this.st.body.resources.Health.value = 0;
+			currHealthObject.value = 0;
 			this.drainLifeNatural(diff);
 		}
 
-		this.st.body.resources.Health.value -= malus;
+		currHealthObject.value -= malus;
 
 	}
 
@@ -165,14 +167,18 @@ export default class CharacterService{
 	}
 
 	getLifeMult():number{
+		
+		let currHealthObject = this.st.body.resources[ResourceType.Health];
 
-		return (12 / (12 + this.st.body.resources.Health.value));
+		return (12 / (12 +currHealthObject.value));
 
 	}
 	
 	drainLifeNatural(amount: number): void{
+	
+		let currLifeObject = this.st.body.resources[ResourceType.Life];
 
-		this.st.body.resources.Lifespan.value -= amount * this.getLifeMult();
+		currLifeObject.value -= amount * this.getLifeMult();
 
 	}
 	
@@ -207,6 +213,7 @@ export default class CharacterService{
 		let attr = this.st.body.attributes;
 		let deriv = this.st.body.derivatives;
 		
+		console.log(deriv);
 
 		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
 		let tempDefense = this.attackFunction(attr.body.value, attr.cunning.value);
@@ -241,7 +248,7 @@ export default class CharacterService{
 	newBody(){
 		
 		//TODO implement Karma
-		this.st.body = genBody(GenerateJati(0));
+		this.st.body = genBody(generateJati(0));
 		this.calcDerivatives();
 	}
 	

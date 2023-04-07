@@ -6,6 +6,7 @@ import CharacterService from './character-service';
 import WorldService from './world-service';
 import EventSuite, {Event} from './events';
 import {ActivityID} from './activities';
+import {ResourceType} from './common-types';
 
 	const __TICK_MS: number = 50;
 	const __LONG_TICK_MS : number = 140;
@@ -90,7 +91,7 @@ export default class MainLoopService {
 	advanceDay() : void{
 	
 
-		if (this.st.body.resources.Lifespan.value <= 0){
+		if (this.st.body.resources[ResourceType.Life].value <= 0){
 				
 			this.died = true;
 

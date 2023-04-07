@@ -1,21 +1,21 @@
 import {ServiceObject} from './global-service-provider';
-import {AttributeType} from './body';
+import {AttributeType} from './common-types';
 import {genericPowerFunction} from './helpers';
 
 export enum ActivityID {
 
-	Oddjobs,
-	Begging,
-	FieldLabor,
-	Poetry,
-	Stargazing,
+	Oddjobs = "oddjobs",
+	Begging = "begging",
+	FieldLabor = "fieldlabor",
+	Poetry = "poetry",
+	Stargazing = "stargazing",
 		
 };
 
 export enum ActivityType {
 		
-	Oddjobs,
-	Farming,
+	Oddjobs = "oddjobs",
+	Farming = "farming",
 
 };
 

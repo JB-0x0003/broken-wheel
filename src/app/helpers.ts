@@ -5,6 +5,16 @@ export function genericPowerFunction(inNum : number): number{
 	return inNum;
 }
 
+export function pipeDefined(inVal: any): any{
+
+	if (typeof inVal === 'undefined'){
+		return undefined;
+	} else {
+		return inVal;
+	}
+
+}
+
 export function pipeAge(inDays: number): string{
 
 	let years = Math.floor(inDays / 360);

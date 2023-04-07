@@ -3,16 +3,17 @@ import ItemCollection, {ItemID, ItemType} from './items';
 
 export enum BagID{
 	
-	Inventory,
-	Equipment,
+	Inventory = "inventory",
+	Equipment = "equipment",
 
 }
 
 export enum ItemMaskID{
-	
-	True,
-	EquipGeneric,
-	EquipWeapon,
+
+	True = "true",
+	False = "false",
+	EquipGeneric = "equipgeneric",
+	EquipWeapon = "equipweapon",
 
 }
 
@@ -31,7 +32,7 @@ type ItemMaskSuite = {
 
 export type ItemMaskObject = {
 
-	[key in number] : ItemMaskID
+	[key in number]: ItemMaskID
 
 }
 
@@ -41,6 +42,12 @@ export function maskTrue():boolean{
 	
 }
 
+export function maskFalse():boolean{
+	
+	console.log("!!ERROR: maskFalse() Activated!!");
+	return false;
+
+}
 
 export function maskEquipGeneric(sv : ServiceObject, selfBag: Bag, originInventoryStack: InventoryStack) : boolean{
 
@@ -71,6 +78,7 @@ export function maskEquipWeapon(sv : ServiceObject, selfBag: Bag, originInventor
 export type Bag = {
 	
 	size : number;
+	defaultMask : ItemMaskID;
 	mask : ItemMaskObject;	
 	contents : InventoryStack[];	
 
@@ -86,6 +94,7 @@ export type InventoryStack = {
 let ItemMaskCollection : ItemMaskSuite = {
 
 	[ItemMaskID.True] : maskTrue,
+	[ItemMaskID.False]: maskFalse,
 	[ItemMaskID.EquipGeneric]: maskEquipGeneric,
 	[ItemMaskID.EquipWeapon]: maskEquipWeapon,
 

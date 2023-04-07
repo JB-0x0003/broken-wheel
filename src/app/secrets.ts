@@ -1,7 +1,7 @@
 
 export enum SecretID{
 
-	Swords,
+	Swords = 'swords',
 
 
 }

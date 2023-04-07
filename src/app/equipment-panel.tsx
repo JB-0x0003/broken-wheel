@@ -1,9 +1,9 @@
 import React from 'react';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
-import {pipeBigNum} from './helpers';
+import {pipeBigNum, pipeDefined} from './helpers';
 import {BagID} from './inventory';
-import {DerivativeType} from './body';
+import {DerivativeType} from './common-types';
 
 export default function EquipmentPanel(){
 
@@ -25,6 +25,10 @@ export default function EquipmentPanel(){
 
 
 	let deriv = sv.Character.st.body.derivatives;
+	//if body is invalid, return
+	if (Object.keys(deriv).length === 0 && deriv.constructor === Object) return null;
+
+
 	let equipHTML = [];
 	
 	for (let i = 0; i < 5; ++i){
@@ -35,6 +39,11 @@ export default function EquipmentPanel(){
 		);
 
 	}
+	
+
+
+	let defense = pipeDefined(deriv[DerivativeType.Defense])
+	defense = pipeDefined(defense.value);
 
 	return(
 

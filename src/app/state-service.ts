@@ -1,4 +1,4 @@
-import {JatiCollection} from './reincarnation';
+import {JatiID} from './reincarnation';
 import {Body, genBody} from './body';
 import EventSuite, {FlagCollection} from './events';
 import { ActivityID, ActivityRecord} from './activities';
@@ -58,7 +58,8 @@ export function autoLoadState(): StateObject{
 	//this only checks if the save data is present
 	if (temp){ 
 		return temp as StateObject;
-
+		// eslint-disable-next-line no-unreachable
+		console.log("Loaded save data");
 	}
 	else return defaultState();
 
@@ -79,19 +80,24 @@ export function defaultState() : StateObject{
 	//create default values for activity recording
 	
 	let tmpRecord : ActivityRecord = {};
-	let IDTotal = Object.keys(ActivityID).length / 2;
-
-	//This is some weird cludge, thank god these are numbers on the backend
+	let IDCollection = Object.keys(ActivityID);
+	let IDTotal = IDCollection.length;
+	//This is some weird cludge
 	for (let i = 0; i < IDTotal; ++i){
-		tmpRecord[i] = {
+		
+		let currID = IDCollection[i];
+		currID = ActivityID[currID];
+
+		tmpRecord[currID] = {
 			
-			aID: i,
+			aID: currID as ActivityID,
 			discovered : false,
 			meetsReqs: false,
 		}
 
 	}
-
+	
+	console.log(tmpRecord);
 
 	let aRecord = tmpRecord as ActivityRecord;
 	
@@ -125,7 +131,7 @@ export function defaultState() : StateObject{
 		currentLocation : 0,
 		currentActivityID : ActivityID.Oddjobs,
 		
-		body: genBody(JatiCollection.wretch),
+		body: genBody(JatiID.Wretch),
 		ZoneCollection : [
 			{
 				name: "Lateri",

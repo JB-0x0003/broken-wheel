@@ -3,19 +3,19 @@ import {pipeAge} from './helpers';
 
 export enum EventType {
 
-	Default,
-	List,
-	Beherit,
-	Options,
-	UploadSave,
+	Default	= "default",
+	List = "list",
+	Beherit = "beherit",
+	Options = "options",
+	UploadSave = "uploadSave",
 
 }
 
 export interface EventChoice{
 	
-	text: Function;
-	tooltip?: Function;
-	consequence: Function;
+	text: (sv?: ServiceObject)=>string;
+	tooltip?: (sv?: ServiceObject)=>string;
+	consequence: (sv: ServiceObject, formData?: any)=>void;
 
 }
 

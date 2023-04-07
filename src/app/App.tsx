@@ -34,6 +34,7 @@ function App() {
 //First one represents global state. It isn't provided to html pages, only other services
 //State is loaded from local storage if present	
 let [st,] = useState(autoLoadState());
+console.log(st);
 let [log,] = useState(new LogService());
 let [character,] = useState(new CharacterService(st));
 let [world,] = useState(new WorldService(st, character));
