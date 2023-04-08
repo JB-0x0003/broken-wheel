@@ -91,13 +91,14 @@ export type InventoryStack = {
 
 }
 
-export type ItemSort = (inStack: InventoryStack) => number;
+export type ItemSort = (inBag: Bag, index: number) => number;
 
 export enum ItemSortID{
 	
 	HighestValue = "highestvalue",
 	LowestValue = "lowestvalue",
-
+	First = "first",
+	Last = "last",
 }
 
 type ItemSortSuite = {
@@ -108,16 +109,31 @@ type ItemSortSuite = {
 
 let ItemSortCollection : ItemSortSuite = {
 	
-	[ItemSortID.HighestValue] : (inStack: InventoryStack) => {
+	[ItemSortID.HighestValue] : (inBag: Bag, index: number) => {
 		
-		return ItemCollection[inStack.ID].value;
+		let itemID = inBag.contents[index].ID;
+		let item = ItemCollection[itemID];
+		return item.value;
 		
 	},
 	
-	[ItemSortID.LowestValue] : (inStack: InventoryStack) => {
+	[ItemSortID.LowestValue] : (inBag: Bag, index: number) => {
 		
-		return -ItemCollection[inStack.ID].value;
+		let itemID = inBag.contents[index].ID;
+		let item = ItemCollection[itemID];
+		return -item.value;
 		
+	},
+
+	[ItemSortID.First] : (inBag: Bag, index: number) => {
+		
+		return -index;
+
+	},
+
+	[ItemSortID.Last] : (inBag: Bag, index: number) => {
+
+		return index;
 	}
 
 }

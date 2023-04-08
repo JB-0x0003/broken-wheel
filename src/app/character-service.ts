@@ -1,7 +1,7 @@
 import {Body, genBody} from './body';
 import {AttributeType, AttributeObject, DerivativeType,ResourceType, ResourceObject} from './common-types';
 import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID, ItemSortID, ItemSortCollection} from './inventory';
-import ItemCollection from './items';
+import ItemCollection, {ItemID} from './items';
 import {generateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
 import {StateObject} from './state';
@@ -77,6 +77,52 @@ export default class CharacterService{
 	getInventoryContents() : InventoryStack[]{
 
 		return this.st.body.inventory.contents;
+
+	}
+	
+	addItemToBag(bagID: BagID, itemID: ItemID, amount: number): void{
+
+
+		let itemMax = ItemCollection[itemID].maxStack;
+		let bag = this.getBag(bagID);
+		let firstEmpty = -1;
+		
+		for (let i = 0; i < bag.size; i++){
+			
+			if (firstEmpty === -1 && bag.contents[i] === undefined){
+				firstEmpty = i;
+			}
+
+			if (bag.contents[i] !== undefined && bag.contents[i].ID === itemID){
+				
+				let overflow = bag.contents[i].amount + amount - itemMax;
+				if (overflow > 0){
+					bag.contents[i].amount = itemMax;
+					amount = overflow;
+
+				} else {
+					bag.contents[i].amount += amount;
+					return;
+				}
+
+			}
+		}
+
+		//if amount is still >0, create and add new stack to first non-empty slot
+		if (amount > 0) {
+
+			if (firstEmpty === -1){
+				console.log("ERROR: Bag " + bagID + " full!");
+				return;
+			}
+
+			bag.contents[firstEmpty] = {
+				ID: itemID,
+				amount: amount,
+			};
+			
+
+		}
 
 	}
 
@@ -226,9 +272,10 @@ export default class CharacterService{
 			if (inv.contents[i] === undefined || inv.contents[i].ID ===undefined) continue;
 			let item = ItemCollection[inv.contents[i].ID];
 			if (item.consumable !== true) continue;
-
-			let value = ItemSortCollection[ItemSortID.HighestValue](inv.contents[i]);
-			if (value > bestValue){
+			
+			//TODO add option to use different sorting methods
+			let value = ItemSortCollection[ItemSortID.HighestValue](inv, i);
+			if (value >= bestValue){
 			
 				bestIndex = i;
 				bestValue = value;
@@ -253,7 +300,7 @@ export default class CharacterService{
 
 		if (item.consumable === true){
 			
-			
+			this.removeItemConsumed(id, index, 1);
 
 			if (item.consumeBonus !== undefined){
 			
@@ -266,6 +313,7 @@ export default class CharacterService{
 
 			}
 
+
 		}
 
 	}
@@ -273,6 +321,8 @@ export default class CharacterService{
 	dailyEat(): void{
 		
 		let bestIndex = this.selectInvItemToEat();
+		
+		//this.addItemToBag(BagID.Inventory, ItemID.Rice, 4);
 
 		this.consumeItem(BagID.Inventory, bestIndex);	
 
