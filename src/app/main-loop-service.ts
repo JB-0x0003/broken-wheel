@@ -9,8 +9,10 @@ import {ActivityID} from './activities';
 import {ResourceType} from './common-types';
 
 	const __TICK_MS: number = 50;
-	const __LONG_TICK_MS : number = 140;
+	const __LONG_TICK_MS : number = 150;
 	const __BASE_ADVANCE_MS : number = 250;
+	const __PULSE_ADVANCES : number = 15;
+	const __LONG_PULSE_ADVANCES : number = 180;
 	export const __SPEED_MULT_ARRAY : number[] = [1, 2, 4, 8, 12, 16, 24, 32];	
 	export const __SEASON_NOUNS : string[] = ["Rain","Joy", "Silence","Work","Preparation","Stars"];
 	export const __STARTING_YEAR : number = 4294967296;
@@ -25,9 +27,12 @@ export default class MainLoopService {
 
 	tickSubject = new Subject();
 	longTickSubject = new Subject<number>();
+	pulseSubject = new Subject();
+	longPulseSubject = new Subject();
 	eventSubject = new Subject();
 	autosaveTimer;
 	prevTime : number = new Date().getTime();
+	advanceCounter: number = 0;
 	paused : boolean = true;
 	frozen : boolean = false;
 	died : boolean = false;
@@ -146,9 +151,29 @@ export default class MainLoopService {
 		this.world.getCurrentActivity().consequence[0](this.sv);
 
 	}
+	
+	pulse(): void{
+		
+		this.pulseSubject.next(0);
+
+	}
+
+	longPulse():void{
+
+		this.pulseSubject.next(0);
+
+	}
 
 	advance() : void{
-
+		
+		++this.advanceCounter;
+		if (this.advanceCounter % __PULSE_ADVANCES === 0){
+			this.pulse();
+		}
+		if (this.advanceCounter % __LONG_PULSE_ADVANCES === 0){
+			this.advanceCounter = 0;
+			this.longPulse();
+		}
 		this.act();
 		this.advanceDay();
 		
@@ -208,6 +233,17 @@ export default class MainLoopService {
 	subscribeToLongTick(callback: Function): void{
 
 		this.longTickSubject.subscribe((v)=> {callback(v)});
+
+	}
+
+	subscribeToPulse(callback: Function): void{
+
+		this.pulseSubject.subscribe((v)=> {callback(v)});
+	}
+	
+	subscribeToLongPulse(callback: Function): void{
+
+		this.longPulseSubject.subscribe((v)=> {callback(v)});
 
 	}
 

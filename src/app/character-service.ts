@@ -333,17 +333,27 @@ export default class CharacterService{
 	
 	calcAttribute(inAttr: AttributeType): void{
 		
-		let attr = this.st.body.attributes;
+		let attr = this.st.body.attributes[inAttr];
+
+		attr.value = attr.base;
+		//TODO add bonus calculation system
+		attr.value += attr.bonus;
+		attr.value *= attr.mult;
+		attr.aptitude = attr.aptitudeBase + attr.aptitudeBonus;
 
 	}
 
-	attackFunction(inBody: number, inCunning: number):number{
+	calcResource(inRes: ResourceType): void{
+
+	}
+
+	attackFunction():number{
 		
 		return 2;
 
 	}
 
-	defenseFunction(inBody: number, inCunning: number): number{
+	defenseFunction(): number{
 
 		return 2;
 
@@ -354,14 +364,14 @@ export default class CharacterService{
 		let attr = this.st.body.attributes;
 		let deriv = this.st.body.derivatives;
 
-		let temp = this.attackFunction(attr.body.value, attr.cunning.value);
+		let temp = 0;
 		
 		switch (inType){
 			case DerivativeType.Attack:
-				temp = this.attackFunction(attr.body.value, attr.cunning.value);
+				temp = this.attackFunction();
 				break;
 			case DerivativeType.Defense:
-				temp = this.defenseFunction(attr.body.value, attr.cunning.value);
+				temp = this.defenseFunction();
 				break;
 			default:
 				temp = 0;
@@ -377,11 +387,13 @@ export default class CharacterService{
 
 		console.log("Calculating Player Stats");	
 		//Calculate Attributes
-		for (let key in ResourceType){
-
-
+		for (let key in AttributeType){
+			this.calcAttribute(AttributeType[key]);
 		}
 		//Calculate Resources
+		for (let key in ResourceType){
+			this.calcResource(ResourceType[key]);
+		}
 		//Calculate Derivatives
 		for (let key in DerivativeType){
 			this.calcDeriv(DerivativeType[key]);
@@ -493,6 +505,7 @@ export default class CharacterService{
 
 		//Dependency related startup
 		this.sv.MainLoop.subscribeToLongTick(this.calcActivityReqs.bind(this));
+		this.sv.MainLoop.subscribeToPulse(this.calcPlayerStats.bind(this));
 
 	}
 
