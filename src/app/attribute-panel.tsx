@@ -1,4 +1,5 @@
 import React from 'react';
+import ErrorPanel from './error-panel';
 import {Serv} from "./global-service-provider";
 import {pipeBigNum} from "./helpers";
 import {AttributeObject,ResourceType, ResourceObject} from './common-types';
@@ -10,7 +11,7 @@ export default function AttributePanel(){
 	const [, dummyState] = React.useState({});
 	
 	//check if state is done being created; if not, die
-	if (sv === undefined) return;
+	if (sv === undefined) return <ErrorPanel/>;
 
 	function refresh(tickCount : number){
 

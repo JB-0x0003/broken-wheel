@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import ErrorPanel from './error-panel';
 import {Serv} from "./global-service-provider";
 import {__SPEED_MULT_ARRAY} from './main-loop-service';
 
@@ -10,7 +11,7 @@ export default function TimePanel(){
 	let sv = Serv();
 
 	//Abort if state isn't done loading
-	if (sv === undefined) return;
+	if (sv === undefined) return <ErrorPanel/>;
 
 	//TODO this doesn't work on internet explorer
 	document.onkeypress = (e)=> {

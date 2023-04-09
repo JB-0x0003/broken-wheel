@@ -1,4 +1,5 @@
 import React from 'react';
+import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
 import {pipeBigNum, pipeDefined} from './helpers';
@@ -11,7 +12,7 @@ export default function EquipmentPanel(){
 	let [,dummyState] = React.useState({});
 	let sv = Serv()
 	
-	if (sv === undefined) return;
+	if (sv === undefined) return <ErrorPanel/>;
 	
 	let gold = sv.Character.getMoney();
 

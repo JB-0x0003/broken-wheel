@@ -239,7 +239,7 @@ body {
   flex-direction: column;
   gap: 8px;
 }
-.panelContainerRight .panelContainerRight .panel {
+.panelContainerRight .panel {
   border-width: 2px 1px 2px 3px;
 }
 .panelWrapper {
@@ -287,10 +287,16 @@ body {
   border-color: var(--panelBorderLight) var(--panelBorderDark) var(--panelBorderDark) var(--panelBorderLight);
   border-radius: 0px 36px 0px 22px;
   padding: 6px 6px 12px 6px;
+	
+
 }
 .invert {
   color: var(--panelBackground);
   background-color: var(--panelText);
+}
+
+.error{
+	background-color: var(--red);
 }
 .panelHeader {
   margin-bottom: 4px;

@@ -1,4 +1,5 @@
 import React from 'react';
+import ErrorPanel from './error-panel';
 import {Location} from './locations';
 import {Serv} from "./global-service-provider";
 import ActivityCollection from "./activities";
@@ -11,7 +12,7 @@ function ZonePanel(){
 	let [, dummyState] = React.useState({});
 
 	//Abort if state isn't done loading
-	if (sv === undefined) return;
+	if (sv === undefined) return <ErrorPanel/>;
 	
 	//Dumb refreshes
 	//TODO only refresh when activity state changes

@@ -1,4 +1,5 @@
 import React from 'react';
+import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
 import {BagID} from './inventory';
@@ -10,7 +11,7 @@ export default function InventoryPanel(){
 	let sv = Serv();
 	
 	//If state isn't done being created, abort
-	if (sv === undefined) return;
+	if (sv === undefined) return <ErrorPanel/>;
 
 	//TODO make alert system to only update when needed
 	function refresh():void{
