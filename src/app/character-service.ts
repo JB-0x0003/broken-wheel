@@ -16,6 +16,8 @@ export default class CharacterService{
 	
 	st : StateObject;
 	sv : ServiceObject = undefined!;
+	
+
 
 	getBody() : Body{
 
@@ -33,6 +35,7 @@ export default class CharacterService{
 	trainAttribute(targetAttribute: AttributeType, gain: number) : void{
 
 		gain *= this.st.body.attributes[targetAttribute].aptitude;
+		this.st.body.attributes[targetAttribute].base += gain;
 		this.st.body.attributes[targetAttribute].value += gain;
 		
 
@@ -327,7 +330,12 @@ export default class CharacterService{
 		this.consumeItem(BagID.Inventory, bestIndex);	
 
 	}
+	
+	calcAttribute(inAttr: AttributeType): void{
+		
+		let attr = this.st.body.attributes;
 
+	}
 
 	attackFunction(inBody: number, inCunning: number):number{
 		
@@ -341,18 +349,43 @@ export default class CharacterService{
 
 	}
 	
-	calcDerivatives() : void{
-
+	calcDeriv(inType: DerivativeType): void{
+		
 		let attr = this.st.body.attributes;
 		let deriv = this.st.body.derivatives;
-		
-		console.log(deriv);
 
-		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
-		let tempDefense = this.attackFunction(attr.body.value, attr.cunning.value);
+		let temp = this.attackFunction(attr.body.value, attr.cunning.value);
 		
-		deriv[DerivativeType.Attack].value = tempAttack + deriv[DerivativeType.Attack].base;
-		deriv[DerivativeType.Defense].value = tempDefense + deriv[DerivativeType.Defense].base;
+		switch (inType){
+			case DerivativeType.Attack:
+				temp = this.attackFunction(attr.body.value, attr.cunning.value);
+				break;
+			case DerivativeType.Defense:
+				temp = this.defenseFunction(attr.body.value, attr.cunning.value);
+				break;
+			default:
+				temp = 0;
+		}
+
+		temp += deriv[inType].base;
+		temp +=deriv[inType].bonus;
+
+		deriv[inType].value = temp; 
+	}
+
+	calcPlayerStats() : void{
+
+		console.log("Calculating Player Stats");	
+		//Calculate Attributes
+		for (let key in ResourceType){
+
+
+		}
+		//Calculate Resources
+		//Calculate Derivatives
+		for (let key in DerivativeType){
+			this.calcDeriv(DerivativeType[key]);
+		}
 
 	}
 
@@ -382,7 +415,7 @@ export default class CharacterService{
 		
 		//TODO implement Karma
 		this.st.body = genBody(generateJati(0));
-		this.calcDerivatives();
+		this.calcPlayerStats();
 	}
 	
 	

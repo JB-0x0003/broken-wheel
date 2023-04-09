@@ -21,16 +21,22 @@ export interface Body{
 };
 
 export function defaultDerivatives(): DerivativeObject{
-
-	let dummyData = {
-		value: 0,
-		base: 0,
-
-	}
-
+	
+	//These are in a stupid manual format to keep typesafety
 	return {
-		[DerivativeType.Attack]: JSON.parse(JSON.stringify(dummyData)),
-		[DerivativeType.Defense]: JSON.parse(JSON.stringify(dummyData)),
+		[DerivativeType.Attack]: {
+			value: 0,
+			base: 0,
+			bonus: 0,
+			mult: 1,
+
+		},
+		[DerivativeType.Defense]: {
+			value: 0,
+			base: 0,
+			bonus: 0,
+			mult: 1,
+		},
 	};
 
 }
@@ -40,17 +46,26 @@ export function defaultResources(): ResourceObject{
 	return {
 		[ResourceType.Stamina]: {
 			value: 100,
-			max: 100,
+			maxValue: 100,
+			maxBase: 100,
+			maxBonus: 0,
+			maxMult: 1,
 		},
 
 		[ResourceType.Health]: {
 			value: 33,
-			max: 100,
+			maxValue: 100,
+			maxBase: 100,
+			maxBonus: 0,
+			maxMult: 1,
 		},
 
 		[ResourceType.Life]: {
 			value: 100,
-			max: 100,
+			maxValue: 100,
+			maxBase: 100,
+			maxBonus: 0,
+			maxMult: 1,
 		},
 	};
 

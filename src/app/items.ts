@@ -1,4 +1,4 @@
-import {AttributeType, DerivativeType, ResourceType,AttributeObject, DerivativeObject, ResourceObject} from './common-types';
+import {AttributeType, DerivativeType, ResourceType, BonusObject} from './common-types';
 import {ServiceObject} from './global-service-provider';
 
 export const enum ItemID{
@@ -22,38 +22,6 @@ export enum ItemType{
 	OffHand = "offhand",
 }
 
-type OptionalType<T> = {
-
-	[key in T as string]?: T[keyof T];
-
-}
-
-type AttributeBonus = {
-	
-	[key in AttributeType]? : OptionalType<AttributeObject[AttributeType.Body]>
-
-
-}
-
-type DerivativeBonus = {
-	
-	[key in DerivativeType]? : OptionalType<DerivativeObject[DerivativeType.Attack]>
-
-}
-
-type ResourceBonus = {
-
-	[key in ResourceType]? : OptionalType<ResourceObject[ResourceType.Stamina]>
-}
-
-export type BonusObject = {
-	
-	attributes?: AttributeBonus;
-	derivatives?: DerivativeBonus;
-	resources?: ResourceBonus;
-	money?: number
-
-}
 
 
 
@@ -123,6 +91,11 @@ let ItemCollection : ItemObject = {
 		description: "A sharpened and fire-hardened branch. It's functional as a weapon.",
 		value: 5,
 		maxStack: 1,
+		equipable: true,
+		equipBonus: {
+			derivatives: {[DerivativeType.Attack]: {bonus: 1}},
+
+		},
 		
 
 	},

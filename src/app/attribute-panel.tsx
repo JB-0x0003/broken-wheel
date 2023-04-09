@@ -76,13 +76,13 @@ export default function AttributePanel(){
 				</div>
 				<div className="attributeFlexColumn">
 					<div className="attributeLi">
-						<ProgressBar value={stat[ResourceType.Stamina].value} max={stat[ResourceType.Stamina].max} colorType="Stamina"/>
+						<ProgressBar value={stat[ResourceType.Stamina].value} max={stat[ResourceType.Stamina].maxValue} colorType="Stamina"/>
 					</div>
 					<div className="attributeLi">
-						<ProgressBar value={stat[ResourceType.Health].value} max={stat[ResourceType.Health].max} colorType="Health"/>
+						<ProgressBar value={stat[ResourceType.Health].value} max={stat[ResourceType.Health].maxValue} colorType="Health"/>
 					</div>
 					<div className="attributeLi">
-						<ProgressBar value={stat[ResourceType.Life].value} max={stat[ResourceType.Life].max} colorType="Lifespan"/>
+						<ProgressBar value={stat[ResourceType.Life].value} max={stat[ResourceType.Life].maxValue} colorType="Lifespan"/>
 					</div>
 				</div>
 

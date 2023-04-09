@@ -1,4 +1,5 @@
 import {Body, initialBody} from './body';
+import {SecretObject} from './secrets';
 import EventSuite, {FlagCollection} from './events';
 import { ActivityID, ActivityRecord} from './activities';
 import {Zone} from './world-service';
@@ -30,6 +31,7 @@ export interface StateObject{
 	currentActivityID : ActivityID;
 
 	body: Body;
+	//secrets: SecretObject;
 	ZoneCollection: Zone[];
 }
 
@@ -127,6 +129,7 @@ export function defaultState() : StateObject{
 		currentActivityID : ActivityID.Oddjobs,
 		
 		body: initialBody(),
+		//secrets: {},
 		ZoneCollection : [
 			{
 				name: "Lateri",
