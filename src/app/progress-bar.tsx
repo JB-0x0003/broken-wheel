@@ -4,6 +4,7 @@ export interface ProgressBarProps{
 	value: number;
 	max: number;
 	colorType: string;
+	slim?: boolean;
 
 }
 
@@ -14,19 +15,17 @@ export default function ProgressBar(props : ProgressBarProps){
 
 	return(
 	
-		<div className="attributeLi">
-			<span className="statusName">
-				{props.colorType}
-			</span>
-			<span className="progressBar">	
+			<span className={"progressBar" + (props.slim? " slim" : "")}>	
 				<span className="progressText">
-					{Math.ceil(props.value) + "/" + Math.ceil(props.max)}
+					{	!props.slim?
+							(Math.ceil(props.value) + "/" + Math.ceil(props.max)):
+							""	
+					}
 				</span>
 				<span className={className} style={{width: percent + "%"}}>
 				</span>
 			
 			</span>
-		</div>
 
 	);
 

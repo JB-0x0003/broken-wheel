@@ -5,6 +5,7 @@ import {genericPowerFunction} from './helpers';
 export enum ActivityID {
 
 	Oddjobs = "oddjobs",
+	Meditation = "meditation",
 	Begging = "begging",
 	FieldLabor = "fieldlabor",
 	Poetry = "poetry",
@@ -55,15 +56,31 @@ ActivityCollection[ActivityID.Oddjobs] = {
 	requirements: ()=>{return true},
 	consequence: [
 		(sv : ServiceObject) => {
-		sv.Character.trainAttribute(AttributeType.Body,0.025);
-		sv.Character.trainAttribute(AttributeType.Cunning,0.025);
-		sv.Character.trainAttribute(AttributeType.Learning,0.025);
-		sv.Character.trainAttribute(AttributeType.Charisma,0.025);
-		
+			sv.Character.trainAttribute(AttributeType.Body,0.025);
+			sv.Character.trainAttribute(AttributeType.Cunning,0.025);
+			sv.Character.trainAttribute(AttributeType.Learning,0.025);
+			sv.Character.trainAttribute(AttributeType.Charisma,0.025);
 
-		sv.Character.giveMoney(2);
+			sv.Character.giveMoney(2);
 	}],
 };
+
+ActivityCollection[ActivityID.Meditation] = {
+	
+	name: ['Meditation'],
+	aID: ActivityID.Meditation,
+	description: ['PLAYER SHOULD NOT SEE THIS'],
+	rankThreshold: [0],
+	requirements: ()=>{return true},
+	consequence: [
+		(sv : ServiceObject) => {
+			let targetSecret = sv.Character.st.currentSecretID;
+			
+			sv.Character.trainSecret(targetSecret,4.0);
+
+		}
+	]
+}
 
 ActivityCollection[ActivityID.Begging] = {
 
@@ -79,8 +96,8 @@ ActivityCollection[ActivityID.Begging] = {
 	},
 	consequence: [
 		(sv : ServiceObject) => {
-		sv.Character.trainAttribute(AttributeType.Charisma,0.1);
-		sv.Character.st.body.attributes.nobility.value -= 0.1;
+			sv.Character.trainAttribute(AttributeType.Charisma,0.1);
+			sv.Character.st.body.attributes.nobility.value -= 0.1;
 	}],
 };
 

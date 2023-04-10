@@ -33,7 +33,6 @@ export default class WorldService{
 	}
 
 	setCurrentActivity(inAct : ActivityID) : void{
-
 		this.st.currentActivityID = inAct;
 
 	}

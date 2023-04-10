@@ -344,7 +344,7 @@ export const JatiCollection : JC = {
 
 export function DefaultJati(): Jati{
 		
-	return JatiCollection.laborer;
+	return JatiCollection[JatiID.Laborer];
 
 }
 

@@ -78,12 +78,15 @@ export function applyObject(inObj : Object, targetObj : Object): void{
 export function mergeObjects(templateObj: Object, targetObj: Object): void{
 	
 	for (let key in templateObj){
-		
+		console.log(key);
 		if (typeof targetObj[key] === 'undefined'){
 			targetObj[key] = templateObj[key];	
-
-		} else if (typeof targetObj[key] === 'object' && typeof templateObj[key] === 'object'){
-			
+		
+		//null check is here because typeof null === 'object'
+		//and many things give null instead of undefined for esoteric reasons
+		} else if (typeof targetObj[key] === 'object' && typeof templateObj[key] === 'object' && targetObj[key] !== null){
+			console.log("continuing merge with key: " + key);
+			console.log(targetObj[key]);
 			mergeObjects(templateObj[key], targetObj[key]);
 
 		} 

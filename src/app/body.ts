@@ -88,7 +88,7 @@ export function genBody(inJati:JatiID): Body{
 			size: 30,
 			defaultMask: ItemMaskID.True,
 			mask: {} as {[key: number]: ItemMaskID},
-			contents: [],
+			contents: {},
 		},
 		equipment: {
 			size: 5,
@@ -96,7 +96,7 @@ export function genBody(inJati:JatiID): Body{
 			mask: {
 				0: ItemMaskID.EquipWeapon,
 			},
-			contents: [],
+			contents: {},
 
 		},
 		jati: jati,
@@ -105,7 +105,7 @@ export function genBody(inJati:JatiID): Body{
 	};
 	
 	
-	tempBod.inventory.contents.push(
+	tempBod.inventory.contents[0] =(
 		{
 			ID: ItemID.Rice,
 			amount: 300,
@@ -114,14 +114,14 @@ export function genBody(inJati:JatiID): Body{
 
 	);
 	
-	tempBod.inventory.contents.push(
+	tempBod.inventory.contents[1] = (
 		{
 			ID: ItemID.Garbage,
 			amount: 300,
 
 		}
 	);	
-	tempBod.inventory.contents.push(
+	tempBod.inventory.contents[2] = (
 		{
 			ID: ItemID.SharpenedStick,
 			amount: 1,

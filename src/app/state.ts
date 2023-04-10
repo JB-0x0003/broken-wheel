@@ -1,5 +1,5 @@
 import {Body, initialBody} from './body';
-import {SecretObject} from './secrets';
+import {SecretID, SecretObject, SecretRecord} from './secrets';
 import EventSuite, {FlagCollection} from './events';
 import { ActivityID, ActivityRecord} from './activities';
 import {Zone} from './world-service';
@@ -29,9 +29,10 @@ export interface StateObject{
 	currentZone : number;
 	currentLocation: number;
 	currentActivityID : ActivityID;
+	currentSecretID: SecretID;
 
 	body: Body;
-	//secrets: SecretObject;
+	secrets: SecretObject;
 	ZoneCollection: Zone[];
 }
 
@@ -71,10 +72,8 @@ export function defaultOptions() : OptionObject{
 	return tempOpt;
 }
 
-export function defaultState() : StateObject{
+export function defaultActivityRecord() : ActivityRecord{
 
-	//create default values for activity recording
-	
 	let tmpRecord : ActivityRecord = {};
 	let IDCollection = Object.keys(ActivityID);
 	let IDTotal = IDCollection.length;
@@ -95,10 +94,12 @@ export function defaultState() : StateObject{
 	
 	console.log("Default Activity Record Generated");
 	console.log(tmpRecord);
+	return tmpRecord;
 
-	let aRecord = tmpRecord as ActivityRecord;
-	
-	//create default values for event flags
+}
+
+export function defaultEventFlags(): FlagCollection{
+
 	let tmp = {};
 	for (let key in EventSuite) {
 		
@@ -110,6 +111,39 @@ export function defaultState() : StateObject{
 
 	defFlags.script.named = false;
 
+	return defFlags;
+
+}
+
+export function defaultSecretRecord(): SecretObject{
+
+	let tmpRecord = {};
+	let IDCollection = Object.keys(SecretID);
+	let IDTotal = IDCollection.length;
+	
+
+	for (let i = 0; i < IDTotal; ++i){
+		
+		let currID = IDCollection[i];
+		currID = SecretID[currID];
+
+		tmpRecord[currID] = {
+			
+			ID: currID,
+			rank: 0,
+			XP: 0,
+		} as SecretRecord
+
+	}
+
+	return tmpRecord as SecretObject;
+
+}
+
+export function defaultState() : StateObject{
+
+	//create default values for event flags
+	
 
 	return {
 		
@@ -118,18 +152,30 @@ export function defaultState() : StateObject{
 		dayTotal : 0,
 		lifeTotal: 0,
 		trueYear : 4294967296,
-		activityRecord: aRecord,	
+		activityRecord: defaultActivityRecord(),	
 
 		inEvent: false,
 		currentEvent : ["system",1000],
-		eFlags : defFlags,
+		eFlags : defaultEventFlags(),
 		
 		currentZone : 0,
 		currentLocation : 0,
 		currentActivityID : ActivityID.Oddjobs,
+		currentSecretID : SecretID.Swords,
 		
 		body: initialBody(),
-		//secrets: {},
+		secrets: {
+			[SecretID.Swords]: {
+				ID: SecretID.Swords,
+				rank: 0,
+				XP: 0,
+			},
+			[SecretID.Weapons]: {
+				ID: SecretID.Weapons,
+				rank: 0,
+				XP: 0,
+			}
+		},
 		ZoneCollection : [
 			{
 				name: "Lateri",

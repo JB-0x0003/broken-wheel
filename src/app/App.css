@@ -239,7 +239,7 @@ body {
   flex-direction: column;
   gap: 8px;
 }
-.panelContainerRight .panel {
+.panelContainerRight .panelContainerRight .panel {
   border-width: 2px 1px 2px 3px;
 }
 .panelWrapper {
@@ -287,16 +287,13 @@ body {
   border-color: var(--panelBorderLight) var(--panelBorderDark) var(--panelBorderDark) var(--panelBorderLight);
   border-radius: 0px 36px 0px 22px;
   padding: 6px 6px 12px 6px;
-	
-
 }
 .invert {
   color: var(--panelBackground);
   background-color: var(--panelText);
 }
-
-.error{
-	background-color: var(--red);
+.error {
+  background-color: var(--red);
 }
 .panelHeader {
   margin-bottom: 4px;
@@ -444,6 +441,32 @@ body {
 .activitySegmentTitleButton.disabled {
   border-color: var(--segmentFadedText);
 }
+.secretFlexbox {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.secretElement {
+  display: inline-block;
+  width: 240px;
+  margin-bottom: 5px;
+}
+.secretLabel {
+  position: relative;
+  display: flex;
+  user-select: none;
+  justify-content: space-between;
+  color: var(--panelText);
+  background: var(--panelBorderLight);
+  width: 100%;
+  border: 1px solid var(--panelBorderLight);
+  border-radius: 0px 10px 0px 0px;
+  padding: 2px 4px 2px 4px;
+}
+.secretLabel.selected {
+  background: var(--panelHighlightText);
+  color: var(--panelHighlightBackground);
+}
 .attributeFlexRow {
   display: flex;
   justify-content: space-between;
@@ -464,11 +487,12 @@ body {
 .attributeLi > .iconButt {
   margin-right: 3px;
 }
-.statusName {
+.resourceName {
   width: 60px;
+  margin-right: 5px;
 }
 .progressBar {
-  display: inline;
+  display: inline-block;
   border: 1px solid ;
   border-radius: 15px;
   width: 100px;
@@ -476,8 +500,16 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
-  margin-left: 5px;
   z-index: 0;
+}
+.progressBar.slim {
+  display: flex;
+  border-radius: 0;
+  width: calc(100% + 8px);
+  min-height: 2px;
+  height: 4px;
+  position: relative;
+  top: 0;
 }
 .progressBar > .span {
   display: inline-block;
@@ -498,14 +530,17 @@ body {
   z-index: -1;
   background: grey;
 }
-.progressFill.Stamina {
+.progressFill.stamina {
   background: var(--aqua-dim);
 }
-.progressFill.Health {
+.progressFill.health {
   background: var(--red-dim);
 }
-.progressFill.Lifespan {
+.progressFill.lifespan {
   background: var(--yellow-dim);
+}
+.progressFill.secret {
+  background: var(--yellow);
 }
 .inventoryFlexRow {
   display: flex;

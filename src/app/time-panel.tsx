@@ -7,7 +7,7 @@ export default function TimePanel(){
 
 	const [pauseDesire, setPauseDesire] = useState(false);
 	const [desiredSpeedChange, setDesiredSpeedChange] = useState(0);
-	const [, dummyState] = useState(new Object());
+	const [, dummyState] = useState({});
 	let sv = Serv();
 
 	//Abort if state isn't done loading
@@ -25,7 +25,7 @@ export default function TimePanel(){
 	
 	function refresh(){
 
-		dummyState(new Object());
+		dummyState({});
 
 	}
 

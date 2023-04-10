@@ -1,9 +1,11 @@
+import {Subject} from 'rxjs';	
 import {Body, genBody} from './body';
 import {AttributeType, AttributeObject, DerivativeType,ResourceType, ResourceObject} from './common-types';
-import ItemMaskCollection, {ItemMaskID, Bag, InventoryStack, BagID, ItemSortID, ItemSortCollection} from './inventory';
+import ItemMaskCollection, {ItemMaskID, Bag,BagContents, BagID, ItemSortID, ItemSortCollection} from './inventory';
 import ItemCollection, {ItemID} from './items';
 import {generateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
+import {SecretID, secretXPForRank} from './secrets';
 import {StateObject} from './state';
 import {ServiceObject} from './global-service-provider';
 import {pipeAge, applyObject} from './helpers';
@@ -16,7 +18,7 @@ export default class CharacterService{
 	
 	st : StateObject;
 	sv : ServiceObject = undefined!;
-	
+	secretSubject = new Subject();
 
 
 	getBody() : Body{
@@ -38,6 +40,24 @@ export default class CharacterService{
 		this.st.body.attributes[targetAttribute].base += gain;
 		this.st.body.attributes[targetAttribute].value += gain;
 		
+
+	}
+
+	trainSecret(targetSecret: SecretID, gain: number) : void{
+		
+		let sRecord = this.st.secrets[targetSecret];
+		let maxXP = secretXPForRank(targetSecret, sRecord.rank + 1);
+		
+		let overflow = sRecord.XP + gain - maxXP;	
+		if (overflow >= 0){
+			sRecord.rank++;
+			sRecord.XP = 0;
+			this.trainSecret(targetSecret, overflow);
+		} else {
+			sRecord.XP += gain;
+		}
+		
+		this.secretChange();
 
 	}
 
@@ -77,7 +97,7 @@ export default class CharacterService{
 
 	}
 
-	getInventoryContents() : InventoryStack[]{
+	getInventoryContents() : BagContents{
 
 		return this.st.body.inventory.contents;
 
@@ -330,74 +350,34 @@ export default class CharacterService{
 		this.consumeItem(BagID.Inventory, bestIndex);	
 
 	}
-	
-	calcAttribute(inAttr: AttributeType): void{
-		
-		let attr = this.st.body.attributes[inAttr];
 
-		attr.value = attr.base;
-		//TODO add bonus calculation system
-		attr.value += attr.bonus;
-		attr.value *= attr.mult;
-		attr.aptitude = attr.aptitudeBase + attr.aptitudeBonus;
 
-	}
-
-	calcResource(inRes: ResourceType): void{
-
-	}
-
-	attackFunction():number{
+	attackFunction(inBody: number, inCunning: number):number{
 		
 		return 2;
 
 	}
 
-	defenseFunction(): number{
+	defenseFunction(inBody: number, inCunning: number): number{
 
 		return 2;
 
 	}
 	
-	calcDeriv(inType: DerivativeType): void{
-		
-		let attr = this.st.body.attributes;
-		let deriv = this.st.body.derivatives;
-
-		let temp = 0;
-		
-		switch (inType){
-			case DerivativeType.Attack:
-				temp = this.attackFunction();
-				break;
-			case DerivativeType.Defense:
-				temp = this.defenseFunction();
-				break;
-			default:
-				temp = 0;
-		}
-
-		temp += deriv[inType].base;
-		temp +=deriv[inType].bonus;
-
-		deriv[inType].value = temp; 
-	}
-
 	calcPlayerStats() : void{
 
-		console.log("Calculating Player Stats");	
-		//Calculate Attributes
-		for (let key in AttributeType){
-			this.calcAttribute(AttributeType[key]);
-		}
-		//Calculate Resources
-		for (let key in ResourceType){
-			this.calcResource(ResourceType[key]);
-		}
-		//Calculate Derivatives
-		for (let key in DerivativeType){
-			this.calcDeriv(DerivativeType[key]);
-		}
+		let attr = this.st.body.attributes;
+		let deriv = this.st.body.derivatives;
+		
+		console.log(deriv);
+
+		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
+		tempAttack += deriv[DerivativeType.Attack].base;
+		let tempDefense = this.attackFunction(attr.body.value, attr.cunning.value);
+		tempDefense += deriv[DerivativeType.Defense].base;
+		
+		deriv[DerivativeType.Attack].value = tempAttack + deriv[DerivativeType.Attack].base;
+		deriv[DerivativeType.Defense].value = tempDefense + deriv[DerivativeType.Defense].base;
 
 	}
 
@@ -497,6 +477,25 @@ export default class CharacterService{
 		}
 		
 	}
+
+	setCurrentSecret(inSecret: SecretID): void{
+		
+		this.st.currentSecretID = inSecret;
+		this.secretChange();
+
+	}
+	
+	secretChange(): void{
+		
+		this.secretSubject.next(this.st.currentSecretID);
+
+	}
+
+	subscribeToSecretChange(callback: Function): void{
+		
+		this.secretSubject.subscribe((v)=>{callback(v)});
+
+	}
 	
 	//This is called by MainLoopService
 	injectDep(inSV : ServiceObject) : void{
@@ -505,7 +504,6 @@ export default class CharacterService{
 
 		//Dependency related startup
 		this.sv.MainLoop.subscribeToLongTick(this.calcActivityReqs.bind(this));
-		this.sv.MainLoop.subscribeToPulse(this.calcPlayerStats.bind(this));
 
 	}
 

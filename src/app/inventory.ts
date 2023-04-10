@@ -74,13 +74,18 @@ export function maskEquipWeapon(sv : ServiceObject, selfBag: Bag, originInventor
 
 }
 
+export type BagContents = {
+
+	[key: number] : InventoryStack;
+
+}
 
 export type Bag = {
 	
 	size : number;
 	defaultMask : ItemMaskID;
 	mask : ItemMaskObject;	
-	contents : InventoryStack[];	
+	contents : BagContents;	
 
 }
 
