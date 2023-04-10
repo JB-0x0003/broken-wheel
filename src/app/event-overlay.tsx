@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {EventType} from './events';
+import {EventType} from './game-state/events';
 import {Serv} from './global-service-provider'
 import OptionsForm from './options-form';
 

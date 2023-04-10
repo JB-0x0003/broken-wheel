@@ -3,7 +3,7 @@ import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
 import {pipeBigNum, pipeDefined} from './helpers';
-import {BagID} from './inventory';
+import {BagID} from './game-state/inventory';
 import {DerivativeType} from './common-types';
 
 export default function EquipmentPanel(){

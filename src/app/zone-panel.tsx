@@ -1,8 +1,8 @@
 import React from 'react';
 import ErrorPanel from './error-panel';
-import {Location} from './locations';
+import {Location} from './game-state/locations';
 import {Serv} from "./global-service-provider";
-import ActivityCollection from "./activities";
+import ActivityCollection from "./game-state/activities";
 
 function ZonePanel(){
 	

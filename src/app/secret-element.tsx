@@ -2,8 +2,8 @@ import React from 'react';
 import {Serv} from './global-service-provider';
 import ErrorPanel from './error-panel';
 import ProgressBar from './progress-bar';
-import {ActivityID} from './activities';
-import SecretCollection, {SecretID, secretXPForRank} from './secrets';
+import {ActivityID} from './game-state/activities';
+import SecretCollection, {SecretID, secretXPForRank} from './game-state/secrets';
 
 
 interface secretElementProps {

@@ -5,11 +5,11 @@ import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
 import EquipmentPanel from "./equipment-panel";
-import {loadStateFromLocal, defaultState} from "./state";
-import LogService from "./log-service";
-import CharacterService from './character-service';
-import WorldService from './world-service';
-import MainLoopService from './main-loop-service';
+import {loadStateFromLocal, defaultState} from "./game-state/state";
+import LogService from "./game-state/log-service";
+import CharacterService from './game-state/character-service';
+import WorldService from './game-state/world-service';
+import MainLoopService from './game-state/main-loop-service';
 import GlobalServiceProvider, {ServiceObject}  from "./global-service-provider";
 
 function App() {

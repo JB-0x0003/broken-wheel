@@ -1,7 +1,7 @@
 import React from 'react';
 import ErrorPanel from './error-panel';
 import SecretElement from './secret-element';
-import {SecretID} from './secrets';
+import {SecretID} from './game-state/secrets';
 import {Serv} from './global-service-provider';
 
 export default function PersonalPanel(){

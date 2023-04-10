@@ -2,7 +2,7 @@ import React from 'react';
 import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
-import {BagID} from './inventory';
+import {BagID} from './game-state/inventory';
 
 export default function InventoryPanel(){
 

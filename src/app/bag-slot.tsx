@@ -1,7 +1,7 @@
 import React from 'react';
 import {ServiceObject} from './global-service-provider';
-import {BagID} from './inventory';
-import ItemCollection, {ItemID} from './items';
+import {BagID} from './game-state/inventory';
+import ItemCollection, {ItemID} from './game-state/items';
 
 interface BagSlotProps{
 

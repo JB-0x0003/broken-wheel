@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ErrorPanel from './error-panel';
 import {Serv} from "./global-service-provider";
-import {__SPEED_MULT_ARRAY} from './main-loop-service';
+import {__SPEED_MULT_ARRAY} from './game-state/main-loop-service';
 
 export default function TimePanel(){
 

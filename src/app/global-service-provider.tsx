@@ -1,8 +1,8 @@
 import React from 'react';
-import LogService from './log-service';
-import CharacterService from './character-service';
-import WorldService from './world-service';
-import MainLoopService from './main-loop-service';
+import LogService from './game-state/log-service';
+import CharacterService from './game-state/character-service';
+import WorldService from './game-state/world-service';
+import MainLoopService from './game-state/main-loop-service';
 
 const ServiceContext = React.createContext<ServiceObject>(undefined!);
 

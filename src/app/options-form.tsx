@@ -1,6 +1,6 @@
 import React from 'react';
 import {Serv} from './global-service-provider';
-import {OptionObject} from './state';
+import {OptionObject} from './game-state/state';
 
 
 export default function OptionsForm(){

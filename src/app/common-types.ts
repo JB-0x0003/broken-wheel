@@ -1,4 +1,4 @@
-
+import {Bag} from './game-state/inventory';
 
 export enum AttributeType{
 
@@ -92,11 +92,18 @@ export type ResourceBonus = {
 	[key in ResourceType]? : OptionalType<ResourceObject[ResourceType.Stamina]>
 }
 
+export type InventoryBonus = {
+	
+	//[key in Bag]?: OptionalType<Bag>
+
+}
+
 export type BonusObject = {
 	
 	attributes?: AttributeBonus;
 	derivatives?: DerivativeBonus;
 	resources?: ResourceBonus;
+	//inventory?: InventoryBonus;
 	money?: number
 
 }
