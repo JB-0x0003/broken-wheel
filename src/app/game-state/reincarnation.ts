@@ -1,4 +1,4 @@
-import { AttributeObject} from '../common-types';
+import {AttributeType, AttributeObject} from '../common-types';
 
 export enum JatiID {
 	Laborer="laborer",
@@ -34,7 +34,7 @@ export const JatiCollection : JC = {
 		karma: 50,
 		initialAttributes: {	
 	
-			body: {
+			[AttributeType.Body]: {
 				value: 15,
 				base: 15,
 				bonus: 0,
@@ -343,7 +343,6 @@ export const JatiCollection : JC = {
 };
 
 export function DefaultJati(): Jati{
-		
 	return JatiCollection[JatiID.Laborer];
 
 }

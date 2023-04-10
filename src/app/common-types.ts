@@ -12,14 +12,6 @@ export enum AttributeType{
 
 }
 
-
-export enum DerivativeType{
-
-	Attack = "attack",
-	Defense = "defense",
-
-}
-
 export enum ResourceType{
 	Stamina = "stamina",
 	Health = "health",
@@ -27,6 +19,12 @@ export enum ResourceType{
 
 }
 
+export enum DerivativeType{
+
+	Attack = "attack",
+	Defense = "defense",
+
+}
 
 export type AttributeObject = {
 	[key in AttributeType]:{
@@ -42,20 +40,6 @@ export type AttributeObject = {
 
 }
 
-
-export type DerivativeObject = {
-	
-	[key in DerivativeType]: {
-
-		value: number,
-		base: number,
-		bonus: number,
-		mult: number,
-
-	};
-
-}
-
 export type ResourceObject = {
 
 	[key in ResourceType]:{
@@ -65,6 +49,20 @@ export type ResourceObject = {
 		maxBonus: number;
 		maxMult: number;
 	}
+
+}
+
+export type DerivativeObject = {
+	
+	[key in DerivativeType]: {
+
+		value: number,
+		base: number,
+		attrBonus: number,
+		bonus: number,
+		mult: number,
+
+	};
 
 }
 
@@ -92,10 +90,10 @@ export type ResourceBonus = {
 	[key in ResourceType]? : OptionalType<ResourceObject[ResourceType.Stamina]>
 }
 
-export type InventoryBonus = {
+export type BagBonus = {
 	
-	//[key in Bag]?: OptionalType<Bag>
-
+	[key in keyof Bag]?: OptionalType<Bag[key]>;
+	
 }
 
 export type BonusObject = {
@@ -103,7 +101,8 @@ export type BonusObject = {
 	attributes?: AttributeBonus;
 	derivatives?: DerivativeBonus;
 	resources?: ResourceBonus;
-	//inventory?: InventoryBonus;
+	inventory?: BagBonus;
+	equipment?: BagBonus;
 	money?: number
 
 }

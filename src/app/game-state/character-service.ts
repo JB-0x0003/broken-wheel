@@ -1,11 +1,11 @@
 import {Subject} from 'rxjs';	
-import {Body, genBody} from './body';
-import {AttributeType, AttributeObject, DerivativeType,ResourceType, ResourceObject} from '../common-types';
+import {Body, genBody, refreshBody} from './body';
+import {AttributeType, AttributeObject, DerivativeType, DerivativeObject,ResourceType, ResourceObject} from '../common-types';
 import ItemMaskCollection, {ItemMaskID, Bag,BagContents, BagID, ItemSortID, ItemSortCollection} from './inventory';
 import ItemCollection, {ItemID} from './items';
 import {generateJati} from './reincarnation';
 import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
-import {SecretID, secretXPForRank} from './secrets';
+import SecretCollection, {SecretID, secretXPForRank} from './secrets';
 import {StateObject} from './state';
 import {ServiceObject} from '../global-service-provider';
 import {pipeAge, applyObject} from '../helpers';
@@ -47,11 +47,12 @@ export default class CharacterService{
 		
 		let sRecord = this.st.secrets[targetSecret];
 		let maxXP = secretXPForRank(targetSecret, sRecord.rank + 1);
-		
+
 		let overflow = sRecord.XP + gain - maxXP;	
 		if (overflow >= 0){
 			sRecord.rank++;
 			sRecord.XP = 0;
+			this.calcPlayerStats();
 			this.trainSecret(targetSecret, overflow);
 		} else {
 			sRecord.XP += gain;
@@ -364,21 +365,87 @@ export default class CharacterService{
 
 	}
 	
-	calcPlayerStats() : void{
-
-		let attr = this.st.body.attributes;
-		let deriv = this.st.body.derivatives;
+	//appies all bonuses
+	//Note that this doesn't push them into affecting the actual value
+	//TODO Apply to non-constant bonuses
+	calcSecretBonuses(): void{
+	
+		let sRecord = this.st.secrets;
+		console.log(sRecord);
+		for (let id in sRecord){
+			let currentSecret = SecretCollection[id];
+			let rank = sRecord[id].rank;
+			
+			for (let i = 0; i < rank; ++i){
+				console.log("Applying secret bonus");
+				console.log(currentSecret.constantBonus);
+				applyObject(currentSecret.constantBonus, this.st.body);
+				console.log("After bonus");
+				console.log(this.st.body);
+			}
+		}
+	}
+	
+	sumPlayerAttributes(): void{
 		
-		console.log(deriv);
+		let attr : AttributeObject = this.st.body.attributes;
+
+		for (let key in attr) {
+			
+			attr[key].value = attr[key].base + attr[key].bonus;
+			attr[key].value *= attr[key].mult;
+			attr[key].aptitude = attr[key].aptitudeBase + attr[key].aptitudeBonus;
+
+		}
+	}
+
+	sumPlayerResources(): void{
+		
+		let res : ResourceObject = this.st.body.resources;
+		
+		for (let key in res) {
+
+			res[key].maxValue = res[key].maxBase + res[key].maxBonus;
+			res[key].maxValue *= res[key].maxMult;
+		}
+	}
+
+	sumPlayerDerivatives(): void{
+		
+
+		let attr : AttributeObject = this.st.body.attributes;
+		let deriv : DerivativeObject = this.st.body.derivatives;
 
 		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
-		tempAttack += deriv[DerivativeType.Attack].base;
-		let tempDefense = this.attackFunction(attr.body.value, attr.cunning.value);
-		tempDefense += deriv[DerivativeType.Defense].base;
+		let tempDefense = this.defenseFunction(attr.body.value, attr.cunning.value);
 		
-		deriv[DerivativeType.Attack].value = tempAttack + deriv[DerivativeType.Attack].base;
-		deriv[DerivativeType.Defense].value = tempDefense + deriv[DerivativeType.Defense].base;
+		deriv[DerivativeType.Attack].attrBonus = tempAttack;
+		deriv[DerivativeType.Defense].attrBonus = tempDefense;
 
+		for (let key in deriv) {
+			
+			deriv[key].value = deriv[key].base + deriv[key].attrBonus + deriv[key].bonus;
+			deriv[key].value *= deriv[key].mult;
+
+		}
+
+	}
+
+	calcPlayerStats() : void{
+
+		console.log("Calculating Player Stats");
+		//reset all bonuses
+		//Does not affect base values
+		refreshBody(this.st.body);
+		//push in all bonuses from secrets
+		//Note that this doesn't add them to the actual values
+		this.calcSecretBonuses();
+		
+		//Push bonuses into actual values
+		//Order matters here, as derivs/resources are downstream
+		this.sumPlayerAttributes();
+		this.sumPlayerResources();
+		this.sumPlayerDerivatives();
 	}
 
 	setName(inName : string) : void{
@@ -504,6 +571,8 @@ export default class CharacterService{
 
 		//Dependency related startup
 		this.sv.MainLoop.subscribeToLongTick(this.calcActivityReqs.bind(this));
+		
+		this.sv.MainLoop.subscribeToPulse(this.calcPlayerStats.bind(this));
 
 	}
 

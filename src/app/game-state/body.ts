@@ -27,6 +27,7 @@ export function defaultDerivatives(): DerivativeObject{
 		[DerivativeType.Attack]: {
 			value: 0,
 			base: 0,
+			attrBonus: 0,
 			bonus: 0,
 			mult: 1,
 
@@ -34,6 +35,7 @@ export function defaultDerivatives(): DerivativeObject{
 		[DerivativeType.Defense]: {
 			value: 0,
 			base: 0,
+			attrBonus: 0,
 			bonus: 0,
 			mult: 1,
 		},
@@ -70,8 +72,69 @@ export function defaultResources(): ResourceObject{
 	};
 
 }
+//TODO
+//These are all way too complicated
+//Should just replace it with a new default object,
+//then copy over the value of the 'base' key from the old one
+export function refreshAttributes(inBod: Body): void{
+	
+	for (let attr in inBod.attributes){
+		let targetAttr = inBod.attributes[attr];
+		for (let key in targetAttr){
+			if (key === 'base' || key === 'aptitudeBase') continue;
+			else if (key ==='mult'){
+				targetAttr[key] = 1;
+			} else{
+				targetAttr[key] = 0;
+			}
+		}
+		targetAttr['value'] = targetAttr['base'];
+		targetAttr['aptitude'] = targetAttr['aptitudeBase'];
+	}
 
+}
 
+export function refreshResources(inBod: Body): void{
+
+	for (let res in inBod.resources){
+		let targetRes = inBod.resources[res];
+		for (let key in targetRes){
+			if (key === 'maxBase' || key === 'value') continue;
+			else if (key === 'maxMult'){
+				targetRes[key] = 1;
+			} else{
+				targetRes[key] = 0;
+			}
+		}
+		targetRes['maxValue'] = targetRes['maxBase'];
+	}
+
+}
+
+export function refreshDerivatives(inBod: Body): void{
+
+	for (let stat in inBod.derivatives){
+		let targetStat = inBod.derivatives[stat];
+		for (let key in targetStat){
+			if (key === 'base') continue;
+			else if (key === 'mult'){
+				targetStat[key] = 1;
+			} else{
+				targetStat[key] = 0;
+			}
+		}
+		targetStat['value'] = targetStat['base'];
+	}
+
+}
+
+export function refreshBody(inBod: Body): void{
+	
+	refreshAttributes(inBod);
+	refreshResources(inBod);
+	refreshDerivatives(inBod);
+
+}
 
 export function genBody(inJati:JatiID): Body{
 	

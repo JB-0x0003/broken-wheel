@@ -1,4 +1,5 @@
 import {AttributeType,BonusObject, DerivativeType} from '../common-types';
+import {ItemMaskID} from './inventory';
 
 export const __SECRET_XP_EXPONENT = 1.4;
 
@@ -63,9 +64,9 @@ let SecretCollection : SecretSuite = {
 		XPExponent: __SECRET_XP_EXPONENT,
 	},
 	[SecretID.Weapons]: {
-		name: ["Weapon Mastery"],	
-		description: [""],
-		rankThresholds: [],
+		name: ["Weapon Mastery", "Weapon Mastery"],	
+		description: ["",""],
+		rankThresholds: [8],
 		constantBonus: {
 			derivatives: {
 				[DerivativeType.Attack]: {
@@ -76,6 +77,19 @@ let SecretCollection : SecretSuite = {
 			},
 		},
 		specificBonus: [],
+		specificOverwriteBonus: [
+			
+			{
+				equipment: {
+					mask: {
+						1: ItemMaskID.EquipWeapon,
+						
+					}
+				}
+
+			}
+
+		],
 		baseXP: 100,
 		XPExponent: __SECRET_XP_EXPONENT,
 

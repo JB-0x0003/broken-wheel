@@ -54,10 +54,16 @@ export function pipeBigNum(num: number) : string{
 
 }
 
+//merges objects, summing shared keys
 export function applyObject(inObj : Object, targetObj : Object): void{
 	
 	for (let key in inObj){
 		
+		if (typeof inObj[key] === 'undefined'){
+			console.log("!!ERROR: template object has undefined value for key: " + key + "!!");
+			continue;
+		}
+
 		if (typeof targetObj[key] === 'undefined'){
 			targetObj[key] = inObj[key];	
 
@@ -78,15 +84,15 @@ export function applyObject(inObj : Object, targetObj : Object): void{
 export function mergeObjects(templateObj: Object, targetObj: Object): void{
 	
 	for (let key in templateObj){
-		console.log(key);
+		//console.log(key);
 		if (typeof targetObj[key] === 'undefined'){
 			targetObj[key] = templateObj[key];	
 		
 		//null check is here because typeof null === 'object'
 		//and many things give null instead of undefined for esoteric reasons
 		} else if (typeof targetObj[key] === 'object' && typeof templateObj[key] === 'object' && targetObj[key] !== null){
-			console.log("continuing merge with key: " + key);
-			console.log(targetObj[key]);
+			//console.log("continuing merge with key: " + key);
+			//console.log(targetObj[key]);
 			mergeObjects(templateObj[key], targetObj[key]);
 
 		} 
