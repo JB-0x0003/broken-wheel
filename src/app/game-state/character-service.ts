@@ -2,23 +2,32 @@ import {Subject} from 'rxjs';
 import {Body, genBody, refreshBody} from './body';
 import {AttributeType, AttributeObject, DerivativeType, DerivativeObject,ResourceType, ResourceObject} from '../common-types';
 import ItemMaskCollection, {ItemMaskID, Bag,BagContents, BagID, ItemSortID, ItemSortCollection} from './inventory';
-import ItemCollection, {ItemID} from './items';
+import ItemCollection, {Item, ItemID} from './items';
 import {generateJati} from './reincarnation';
-import ActivityCollection, {ActivityID, ActivityIndex} from './activities';
 import SecretCollection, {SecretID, secretXPForRank} from './secrets';
 import {StateObject} from './state';
 import {ServiceObject} from '../global-service-provider';
-import {pipeAge, applyObject} from '../helpers';
+import {pipeAge, sumObject, overwriteObject, weightedAverage} from '../helpers';
 
 export const __DAILY_LIFE_DRAIN = 0.076;
 export const __DAILY_HEALTH_DRAIN_BASE = 0.5;
 export const __DAILY_HEALTH_DRAIN_PERCENT = 0.0454545;
+
+export enum FoodSourceStatus{
+	Inventory = "inventory",
+	Store = "store",
+	Starvation = "starvation",
+	
+}
 
 export default class CharacterService{
 	
 	st : StateObject;
 	sv : ServiceObject = undefined!;
 	secretSubject = new Subject();
+	starveSubject = new Subject();
+
+	foodSource : FoodSourceStatus = FoodSourceStatus.Inventory;
 
 
 	getBody() : Body{
@@ -42,6 +51,28 @@ export default class CharacterService{
 		
 
 	}
+	
+	secretRankUp(targetSecret: SecretID): void{
+
+		this.st.secrets[targetSecret].rank++;
+		this.st.secrets[targetSecret].XP = 0;
+		
+		let rank = this.st.secrets[targetSecret].rank;
+		let secret = SecretCollection[targetSecret];
+		
+		//apply specific bonuses
+		if (secret.specificOverwriteBonus !== undefined 
+					&& secret.specificOverwriteBonus[rank] !== undefined){
+			overwriteObject(secret.specificOverwriteBonus[rank], this.st.body)	
+		}
+		if (secret.specificBonus !== undefined 
+					&& secret.specificBonus[rank] !== undefined){
+			sumObject(secret.specificBonus[rank], this.st.body)	
+		}
+		//apply constant bonuses
+		sumObject(secret.constantBonus, this.st.body);
+
+	}
 
 	trainSecret(targetSecret: SecretID, gain: number) : void{
 		
@@ -50,15 +81,14 @@ export default class CharacterService{
 
 		let overflow = sRecord.XP + gain - maxXP;	
 		if (overflow >= 0){
-			sRecord.rank++;
-			sRecord.XP = 0;
-			this.calcPlayerStats();
+			this.secretRankUp(targetSecret);
 			this.trainSecret(targetSecret, overflow);
+			return;
 		} else {
 			sRecord.XP += gain;
+			this.secretChange();
 		}
 		
-		this.secretChange();
 
 	}
 
@@ -103,8 +133,8 @@ export default class CharacterService{
 		return this.st.body.inventory.contents;
 
 	}
-	
-	addItemToBag(bagID: BagID, itemID: ItemID, amount: number): void{
+	//returns index that item is added to or -1 if bag is full
+	addItemToBag(bagID: BagID, itemID: ItemID, amount: number): number{
 
 
 		let itemMax = ItemCollection[itemID].maxStack;
@@ -126,7 +156,7 @@ export default class CharacterService{
 
 				} else {
 					bag.contents[i].amount += amount;
-					return;
+					return i;
 				}
 
 			}
@@ -137,14 +167,14 @@ export default class CharacterService{
 
 			if (firstEmpty === -1){
 				console.log("ERROR: Bag " + bagID + " full!");
-				return;
+				return -1;
 			}
 
-			bag.contents[firstEmpty] = {
-				ID: itemID,
-				amount: amount,
-			};
-			
+				bag.contents[firstEmpty] = {
+					ID: itemID,
+					amount: amount,
+				};
+				return firstEmpty;
 
 		}
 
@@ -203,15 +233,21 @@ export default class CharacterService{
 
 		}
 		
-		let mask1Result = ItemMaskCollection[mask1](this.sv, bag2, itemStack2);
+		let mask1Result = ItemMaskCollection[mask1](this.sv, bag1, itemStack2);
 		let mask2Result = ItemMaskCollection[mask2](this.sv, bag2, itemStack1);
 
 		if(mask1Result === true 
 			&& mask2Result === true){
-				
+							
 				let tmp = JSON.parse(JSON.stringify(bag1.contents[index1]));
 				bag1.contents[index1] = bag2.contents[index2];
 				bag2.contents[index2] = tmp;
+				//If changed equipment, recalculate stats
+				//TODO calculate only changed stats
+				//Needs subtraction function for objects	
+				if (id1 === BagID.Equipment || id2 === BagID.Equipment){
+					this.calcPlayerStats();
+				}
 
 		} else console.log("Swap doesn't fit!");
 
@@ -288,8 +324,8 @@ export default class CharacterService{
 	selectInvItemToEat(): number{
 
 		let inv = this.getBag(BagID.Inventory);
-		let bestIndex = 0;
-		let bestValue = 0;
+		let bestIndex = -1;
+		let bestValue = -1000000;
 
 		for (let i = 0; i < inv.size; ++i){
 			
@@ -310,8 +346,9 @@ export default class CharacterService{
 		return bestIndex;
 
 	}
-
-	consumeItem(id: BagID, index: number): void{
+	
+	//returns -1 if item was not consumed
+	consumeItem(id: BagID, index: number): number{
 		
 		let stack = this.getBag(id).contents[index];
 		if (stack === undefined) {
@@ -328,7 +365,7 @@ export default class CharacterService{
 
 			if (item.consumeBonus !== undefined){
 			
-				applyObject(item.consumeBonus, this.st.body);		
+				sumObject(item.consumeBonus, this.st.body);		
 
 			}
 			if (item.consumeConsequence !== undefined){
@@ -341,27 +378,87 @@ export default class CharacterService{
 		}
 
 	}
+	
+	setFoodSource(value: FoodSourceStatus): void{
+		this.foodSource = value;
+	}
+
+	getFoodSource(): FoodSourceStatus{
+		return this.foodSource;
+	}
+
+	onStarve(): void{
+		if (this.foodSource !== FoodSourceStatus.Starvation){
+		
+			this.setFoodSource(FoodSourceStatus.Starvation);
+			this.sv.MainLoop.pause();
+
+		}
+		this.starveSubject.next(0);
+	}
+
+	subscribeToStarve(callback: Function): void{
+			
+		this.starveSubject.subscribe((v)=>{callback(v)});	
+
+	}
+	//returns index of item if item is bought
+	//otherwise returns -1
+	autoBuyFood(): number{
+		
+		let price = ItemCollection[ItemID.Rice].value;
+		
+		if (this.st.body.money >= price){
+			let index = this.addItemToBag(BagID.Inventory, ItemID.Rice, 1);
+			if (index !== -1){
+				this.st.body.money -= price;
+			}	
+			return index;
+			
+		} else return -1;
+	}
 
 	dailyEat(): void{
 		
 		let bestIndex = this.selectInvItemToEat();
 		
-		//this.addItemToBag(BagID.Inventory, ItemID.Rice, 4);
-
-		this.consumeItem(BagID.Inventory, bestIndex);	
-
+		if (bestIndex === -1) {
+			let newIndex = this.autoBuyFood();
+			if (newIndex !== -1){
+				newIndex = this.consumeItem(BagID.Inventory, newIndex);	
+			}
+			if (newIndex === -1){
+				this.onStarve();
+			} else {
+				this.setFoodSource(FoodSourceStatus.Store);
+			}
+		}
+		else {
+			this.setFoodSource(FoodSourceStatus.Inventory);
+			this.consumeItem(BagID.Inventory, bestIndex);	
+		}
 	}
 
 
-	attackFunction(inBody: number, inCunning: number):number{
+	attackFormula(inBody: number, inCunning: number):number{
 		
-		return 2;
+		let power = weightedAverage([inBody, inCunning], [1, 1]);
+
+		return power / 20 + 1;
 
 	}
 
-	defenseFunction(inBody: number, inCunning: number): number{
+	nobleAttackFormula(inNob: number) : number{
+		
 
-		return 2;
+		return this.attackFormula(inNob, inNob);
+	}
+
+	defenseFormula(inBody: number, inCunning: number): number{
+		
+		let power = weightedAverage([inBody, inCunning], [2, 1]);
+		
+		return power / 20 + 1;
 
 	}
 	
@@ -375,15 +472,41 @@ export default class CharacterService{
 		for (let id in sRecord){
 			let currentSecret = SecretCollection[id];
 			let rank = sRecord[id].rank;
-			
+
 			for (let i = 0; i < rank; ++i){
-				console.log("Applying secret bonus");
-				console.log(currentSecret.constantBonus);
-				applyObject(currentSecret.constantBonus, this.st.body);
-				console.log("After bonus");
-				console.log(this.st.body);
+				//console.log("Applying secret bonus");
+				//console.log(currentSecret.constantBonus);
+				sumObject(currentSecret.constantBonus, this.st.body);
+				if (currentSecret.specificOverwriteBonus !== undefined
+							&& currentSecret.specificOverwriteBonus[i] !== undefined){
+					overwriteObject(currentSecret.specificOverwriteBonus[i], this.st.body);
+				}
+				if (currentSecret.specificBonus !== undefined
+							&& currentSecret.specificBonus[i] !== undefined){
+					sumObject(currentSecret.specificBonus[i], this.st.body);
+				}
+				//console.log("After bonus");
+				//console.log(this.st.body);
 			}
 		}
+	}
+
+	calcItemBonuses(): void{
+		
+		let equipment = this.getBag(BagID.Equipment);
+		let contents = equipment.contents;
+
+		for (let key in contents){
+			console.log(key);
+			console.log(contents[key]);
+			if (contents[key] === undefined) continue;
+			let item : Item = ItemCollection[contents[key].ID];
+
+			if (item.equipBonus !== undefined){
+				sumObject(item.equipBonus, this.st.body);
+			}
+		}
+		
 	}
 	
 	sumPlayerAttributes(): void{
@@ -416,8 +539,17 @@ export default class CharacterService{
 		let attr : AttributeObject = this.st.body.attributes;
 		let deriv : DerivativeObject = this.st.body.derivatives;
 
-		let tempAttack = this.attackFunction(attr.body.value, attr.cunning.value);
-		let tempDefense = this.defenseFunction(attr.body.value, attr.cunning.value);
+		let tempAttack;	
+		let firstWeaponSlot = this.getBag(BagID.Equipment).contents[0];
+		
+		//this is hardcoded because it's a universal axiom
+		if (firstWeaponSlot !== undefined 
+			&& firstWeaponSlot.ID !== undefined
+			&& ItemCollection[firstWeaponSlot.ID].noble === true){
+				tempAttack = this.nobleAttackFormula(attr.nobility.value);	
+
+		} else tempAttack = this.attackFormula(attr.body.value, attr.cunning.value);
+		let tempDefense = this.defenseFormula(attr.body.value, attr.cunning.value);
 		
 		deriv[DerivativeType.Attack].attrBonus = tempAttack;
 		deriv[DerivativeType.Defense].attrBonus = tempDefense;
@@ -440,6 +572,8 @@ export default class CharacterService{
 		//push in all bonuses from secrets
 		//Note that this doesn't add them to the actual values
 		this.calcSecretBonuses();
+		//push in all bonuses from items
+		this.calcItemBonuses();
 		
 		//Push bonuses into actual values
 		//Order matters here, as derivs/resources are downstream
@@ -477,73 +611,9 @@ export default class CharacterService{
 		this.calcPlayerStats();
 	}
 	
-	
-	getActivityIndex(index : ActivityID):ActivityIndex{
 
-		return (this.st.activityRecord[index]);
-
-	}
-	
-	getActivityReqState(id: ActivityID):boolean{
-
-		return this.st.activityRecord[id].meetsReqs;	
-
-	}
-
-	getActivityDiscoverState(id: ActivityID) : boolean{
-		
-		return this.st.activityRecord[id].discovered;
-
-	}
-
-	//This also controls activity discovery
-	//Only checks activities in current Zone
-	calcActivityReqs(): void{
-		
-		let currZone = this.st.ZoneCollection[this.st.currentZone];
-		let currLoc;
-		let currAct;
-
-		for (let i = 0; i < currZone.locations.length; ++i){
-			
-			currLoc = currZone.locations[i];
-
-			for (let j = 0; j < currLoc.activities.length; ++j){
-
-				currAct = currLoc.activities[j];
-				
-				if (ActivityCollection[currAct].requirements(this.sv) === true){
-					
-					this.st.activityRecord[currAct].discovered = true;
-					this.st.activityRecord[currAct].meetsReqs = true;
-
-				}else {
-
-					this.st.activityRecord[currAct].meetsReqs = false;
-
-				}
-				
-
-			}
-		}
-	
-
-	}
 
 	
-	//only changes the 'meetsReqs' property. Doesn't undiscover activities
-	resetActivityReqs():void{
-
-		let rec = this.st.activityRecord;
-		let recLen = Object.keys(rec).length;
-
-		for (let i = 0; i < recLen; ++i){
-			
-			rec[i].meetsReqs = false;
-
-		}
-		
-	}
 
 	setCurrentSecret(inSecret: SecretID): void{
 		
@@ -568,9 +638,8 @@ export default class CharacterService{
 	injectDep(inSV : ServiceObject) : void{
 		
 		this.sv = inSV;
-
+		this.calcPlayerStats();
 		//Dependency related startup
-		this.sv.MainLoop.subscribeToLongTick(this.calcActivityReqs.bind(this));
 		
 		this.sv.MainLoop.subscribeToPulse(this.calcPlayerStats.bind(this));
 

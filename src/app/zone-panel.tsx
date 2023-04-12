@@ -59,9 +59,9 @@ function ZonePanel(){
 					selectedBool = true;
 			}
 			
-			if (sv.Character.getActivityDiscoverState(jID)===true){	
+			if (sv.World.getActivityDiscoverState(jID)===true){	
 
-				reqMet = sv.Character.getActivityReqState(jID);
+				reqMet = sv.World.getActivityReqState(jID);
 				
 				activityContent.push(
 

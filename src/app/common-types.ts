@@ -106,3 +106,8 @@ export type BonusObject = {
 	money?: number
 
 }
+
+export type BonusObjectRanks = {
+
+	[key: number]: BonusObject;
+}

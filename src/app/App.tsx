@@ -40,6 +40,7 @@ let [world,] = useState(new WorldService(st, character));
 let [mainLoop,] = useState(new MainLoopService(st,log,character, world));
 
 const [serv,] = useState({
+	ST: st,
 	Log: log,
 	Character: character,
 	World: world,

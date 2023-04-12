@@ -63,7 +63,6 @@ export default function TimePanel(){
 				<span className="dateDay">{sv.MainLoop.genDayString()}</span>
 				<span> of the </span>
 				<span className="dateSeason">{sv.MainLoop.genSeasonString()}</span>
-				{/*<span>{sv.MainLoop.genYearString()}</span>*/ }
 			</div>
 			<div>
 				<span className="mat-icon">

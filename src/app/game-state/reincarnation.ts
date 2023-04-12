@@ -25,6 +25,30 @@ type JC = {
 
 };
 
+const defaultAttributeValues : AttributeObject[AttributeType.Body] = {
+
+	value: 1,
+	base: 1,
+	bonus: 0,
+	mult: 1,
+	aptitude: 1,
+	aptitudeBase: 1,
+	aptitudeBonus: 0,
+
+}
+
+const defaultAspectValues : AttributeObject[AttributeType.Body] = {
+
+	
+	value: 1,
+	base: 1,
+	bonus: 0,
+	mult: 1,
+	aptitude: 1,
+	aptitudeBase: 1,
+	aptitudeBonus: 0,
+}
+
 export const JatiCollection : JC = {
 		
 	[JatiID.Laborer]:  {
@@ -45,31 +69,13 @@ export const JatiCollection : JC = {
 					
 			},
 			cunning: {
-				value: 1,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			learning: {
-				value: 1,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			charisma: {
-				value: 1,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			nobility: {
 				value: -10,
@@ -81,22 +87,10 @@ export const JatiCollection : JC = {
 				aptitudeBonus: 0,
 			},
 			summer: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAspectValues,
 			},
 			shine: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAspectValues,
 			},
 			
 
@@ -114,40 +108,16 @@ export const JatiCollection : JC = {
 		initialAttributes: {	
 	
 			body: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			cunning: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			learning: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			charisma: {
-				value: 0,
-				base: 1,
-				bonus: 0,
-				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
-				aptitudeBonus: 0,
+				...defaultAttributeValues,
 			},
 			nobility: {
 				value: 0,

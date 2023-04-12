@@ -6,6 +6,7 @@ export const enum ItemID{
 	Rice = "rice",
 	Garbage = "garbage",
 	SharpenedStick = "sharpenedstick",
+	Rapier = "rapier",
 
 }
 
@@ -42,6 +43,7 @@ export interface Item{
 	consumeConsequence?: (sv: ServiceObject) => void;
 	equipable?: boolean;
 	equipBonus?: BonusObject;
+	noble?: boolean
 }
 
 type ItemObject = {
@@ -99,6 +101,22 @@ let ItemCollection : ItemObject = {
 		
 
 	},
+
+	[ItemID.Rapier]:{
+		name:"Rapier",
+		ID: ItemID.Rapier,
+		type: ItemType.Weapon,
+		description: "Nobility in a blade.",
+		value: 100,
+		maxStack: 1,
+		equipable: true,
+		equipBonus: {
+			derivatives: {[DerivativeType.Attack]: {bonus: 10}},
+
+		},
+		noble: true,
+
+	}
 
 };
 

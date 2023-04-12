@@ -14,7 +14,7 @@ export enum ItemMaskID{
 	False = "false",
 	EquipGeneric = "equipgeneric",
 	EquipWeapon = "equipweapon",
-
+	EquipWeaponNoble = "equipweaponnoble",
 }
 
 
@@ -58,6 +58,22 @@ export function maskEquipWeapon(sv : ServiceObject, selfBag: Bag, originInventor
 	
 	console.log("WeaponSlot Mask Tested");
 	
+	if (maskEquipWeaponNoble(sv, selfBag, originInventoryStack)){
+		if (originInventoryStack === undefined) return true;
+		let ID = originInventoryStack.ID;		
+		if (ItemCollection[ID].noble === true){
+			console.log("You cannot bring yourself to abuse something so noble.");
+			return false;
+		}
+		return true;
+	}else return false;
+	
+
+
+}
+
+export function maskEquipWeaponNoble(sv : ServiceObject, selfBag: Bag, originInventoryStack: InventoryStack) : boolean{
+	
 	if (!originInventoryStack) return true;
 
 	let ID = originInventoryStack.ID;
@@ -69,8 +85,6 @@ export function maskEquipWeapon(sv : ServiceObject, selfBag: Bag, originInventor
 		return true;
 		
 	} else return maskEquipGeneric(sv, selfBag, originInventoryStack)
-	
-
 
 }
 
@@ -149,6 +163,7 @@ let ItemMaskCollection : ItemMaskSuite = {
 	[ItemMaskID.False]: maskFalse,
 	[ItemMaskID.EquipGeneric]: maskEquipGeneric,
 	[ItemMaskID.EquipWeapon]: maskEquipWeapon,
+	[ItemMaskID.EquipWeaponNoble]: maskEquipWeaponNoble,
 
 };
 

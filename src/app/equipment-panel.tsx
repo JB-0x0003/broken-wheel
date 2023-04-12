@@ -1,4 +1,5 @@
 import React from 'react';
+import {FoodSourceStatus} from './game-state/character-service';
 import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
 import {Serv} from './global-service-provider';
@@ -41,16 +42,38 @@ export default function EquipmentPanel(){
 
 	}
 	
+	let attack = deriv[DerivativeType.Attack].value;
+	let defense = deriv[DerivativeType.Defense].value;
+	
+	let foodSource : FoodSourceStatus = sv.Character.getFoodSource();
 
-
-	let defense = pipeDefined(deriv[DerivativeType.Defense])
-	defense = pipeDefined(defense.value);
+	let foodSourceText = "";
+	
+	switch (foodSource){
+		case FoodSourceStatus.Inventory:
+		break;
+		case FoodSourceStatus.Store:
+			foodSourceText = "carrot";
+		break;
+		case FoodSourceStatus.Starvation:
+			foodSourceText = "STARVING";
+		break;
+		default:
+			foodSourceText = "ERROR";
+	}
 
 	return(
 
 		<div className="panel">
 			<div className="panelHeader">
-				{"Equipment - " + "₪" + pipeBigNum(gold)}
+				<span className="inventoryFlexRow">
+					<span>
+					{"Equipment - ₪" + pipeBigNum(gold)}
+					</span>
+					<span className="cornerElement mat-icon mat-red">
+						{foodSourceText}
+					</span>
+				</span>
 			</div>
 			<div className="inventoryFlexRow">
 				<span className="inventoryFlexColumn">
@@ -58,10 +81,10 @@ export default function EquipmentPanel(){
 				</span>
 				<span className="equipmentStatColumn">
 					<div className="equipmentStatsLi">
-						Attack: {deriv[DerivativeType.Attack].value}
+						Attack: {pipeBigNum(attack)}
 					</div>
 					<div>
-						Defense: {deriv[DerivativeType.Defense].value}
+						Defense: {pipeBigNum(defense)}
 					</div>
 				</span>
 			</div>

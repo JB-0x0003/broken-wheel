@@ -1,4 +1,4 @@
-import {AttributeType,BonusObject, DerivativeType} from '../common-types';
+import {AttributeType,BonusObject,BonusObjectRanks, DerivativeType} from '../common-types';
 import {ItemMaskID} from './inventory';
 
 export const __SECRET_XP_EXPONENT = 1.4;
@@ -14,12 +14,11 @@ export type Secret = {
 	
 	name: string[];
 	description: string[];
-	rankThresholds: number[];
 	constantBonus: BonusObject;
-	specificBonus: BonusObject[];
+	specificBonus: BonusObjectRanks;
 	//only executed once, manually sets values
 	//mostly for unique effects
-	specificOverwriteBonus?: BonusObject[];
+	specificOverwriteBonus?: BonusObjectRanks;
 	baseXP: number;
 	XPExponent: number;
 
@@ -47,39 +46,48 @@ type SecretSuite = {
 let SecretCollection : SecretSuite = {
 	
 	[SecretID.Swords]: {
-		name: ["Swordlore"],
+		name: ["Noble Edges"],
 		description: ["TODO"],
-		rankThresholds: [],
 		constantBonus: {
 			attributes: {
 				[AttributeType.Nobility]: {
-					bonus: 10,
+					value: 15,
+					bonus: 15,
 
 				}
 
 			},
 		},
-		specificBonus: [],
+		specificBonus: {
+			4: {
+				attributes: {
+					[AttributeType.Learning]: {
+						value: 100,
+						bonus: 100,
+					},
+				},
+			},
+		},
 		baseXP: 100,
 		XPExponent: __SECRET_XP_EXPONENT,
 	},
 	[SecretID.Weapons]: {
 		name: ["Weapon Mastery", "Weapon Mastery"],	
 		description: ["",""],
-		rankThresholds: [8],
 		constantBonus: {
 			derivatives: {
 				[DerivativeType.Attack]: {
+					value: 10,
 					bonus: 10,
 
-				}
+				},
 
 			},
 		},
-		specificBonus: [],
-		specificOverwriteBonus: [
+		specificBonus: {},
+		specificOverwriteBonus: {
 			
-			{
+			1: {
 				equipment: {
 					mask: {
 						1: ItemMaskID.EquipWeapon,
@@ -87,9 +95,9 @@ let SecretCollection : SecretSuite = {
 					}
 				}
 
-			}
+			},
 
-		],
+		},
 		baseXP: 100,
 		XPExponent: __SECRET_XP_EXPONENT,
 

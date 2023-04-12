@@ -2,7 +2,7 @@ import {Subject} from 'rxjs';
 import {ServiceObject} from '../global-service-provider';
 import {saveStateToLocal,StateObject} from './state';
 import LogService from './log-service';
-import CharacterService from './character-service';
+import CharacterService, {FoodSourceStatus} from './character-service';
 import WorldService from './world-service';
 import EventSuite, {Event} from './events';
 import {ActivityID} from './activities';
@@ -11,8 +11,8 @@ import {ResourceType} from '../common-types';
 	const __TICK_MS: number = 50;
 	const __LONG_TICK_MS : number = 150;
 	const __BASE_ADVANCE_MS : number = 250;
-	const __PULSE_ADVANCES : number = 15;
-	const __LONG_PULSE_ADVANCES : number = 180;
+	const __PULSE_ADVANCES : number = 60;
+	const __LONG_PULSE_ADVANCES : number = 360;
 	export const __SPEED_MULT_ARRAY : number[] = [1, 2, 4, 8, 12, 16, 24, 32];	
 	export const __SEASON_NOUNS : string[] = ["Rain","Joy", "Silence","Work","Preparation","Stars"];
 	export const __STARTING_YEAR : number = 4294967296;
@@ -64,6 +64,12 @@ export default class MainLoopService {
 
 
 	}
+	
+	pause() : void{
+		console.log(this.paused);
+		console.log("PAUSEPAUSEPAUSE");
+		this.paused = true;
+	}
 
 	togglePause() : void{
 		if (this.frozen !== true) this.paused = !this.paused;
@@ -81,8 +87,12 @@ export default class MainLoopService {
 		this.paused = true;
 		this.previousAge = this.st.body.age;
 		this.character.newBody();
+		//TODO move this into character service general refresh function
+		//Make it send an update to the secrets as well
+		this.character.setFoodSource(FoodSourceStatus.Inventory);
 		this.died = false;
 		
+
 		this.world.setCurrentActivity(ActivityID.Oddjobs);
 
 		if (this.st.eFlags.script.named === false) {
@@ -115,7 +125,7 @@ export default class MainLoopService {
 		
 		this.st.inEvent = true;
 		this.setFrozen(true);
-		this.paused = true;
+		this.pause();
 		this.st.currentEvent = inEvent;
 		this.eventHappen();
 
@@ -193,7 +203,6 @@ export default class MainLoopService {
 			this.die();
 
 		}
-
 		if (this.paused === false ){
 			for(let i = 0; i < owedAdvances; ++i){
 
@@ -313,15 +322,15 @@ export default class MainLoopService {
 		return( "Day " + day + " of the " + season);
 	}
 
-	constructor(inSt: StateObject, inLog: LogService, inChar: CharacterService, inWorld: WorldService){
+	constructor(inST: StateObject, inLog: LogService, inChar: CharacterService, inWorld: WorldService){
 		
-		this.st = inSt;
+		this.st = inST;
 		this.log = inLog;
 		this.character = inChar;
 		this.world = inWorld;
 		
 		this.sv = {
-
+			ST: inST,
 			Log : inLog,
 			Character: inChar,
 			World: inWorld,
@@ -330,8 +339,10 @@ export default class MainLoopService {
 		};
 
 		if (this.st.inEvent === true) this.setFrozen(true);
-
+		
+		//inject dependencies
 		this.character.injectDep(this.sv);
+		this.world.injectDep(this.sv);
 		this.setAutosaveMS(this.st.options.autosaveMS);
 
 		window.setInterval(()=> {

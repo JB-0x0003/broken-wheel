@@ -1,7 +1,8 @@
 import {StateObject} from './state';
 import CharacterService from './character-service';
-import ActivityCollection, {Activity, ActivityID} from './activities';
+import ActivityCollection, {Activity, ActivityID, ActivityIndex} from './activities';
 import {Location} from './locations';
+import {ServiceObject} from '../global-service-provider';
 
 export interface Zone {
 	
@@ -16,6 +17,7 @@ export interface Zone {
 export default class WorldService{
 	
 	st: StateObject;
+	sv: ServiceObject = undefined!;
 	character: CharacterService;
 
 	reqStartAct(inLoc : number, inAct : ActivityID) : void{
@@ -37,6 +39,8 @@ export default class WorldService{
 
 	}
 
+	
+
 	getCurrentActivityID(): ActivityID{
 
 		return this.st.currentActivityID;
@@ -51,12 +55,77 @@ export default class WorldService{
 
 	}
 	
+	
+	getActivityIndex(index : ActivityID):ActivityIndex{
+
+		return (this.st.activityRecord[index]);
+
+	}
+	
+	getActivityReqState(id: ActivityID):boolean{
+
+		return this.st.activityRecord[id].meetsReqs;	
+
+	}
+
+	getActivityDiscoverState(id: ActivityID) : boolean{
+		
+		return this.st.activityRecord[id].discovered;
+
+	}
 
 	setCurrentLocation(inLoc : number) : void{
 		
 		this.st.currentLocation = inLoc;
 
 	}	
+	//This also controls activity discovery
+	//Only checks activities in current Zone
+	calcActivityReqs(): void{
+		
+		let currZone = this.st.ZoneCollection[this.st.currentZone];
+		let currLoc;
+		let currAct;
+
+		for (let i = 0; i < currZone.locations.length; ++i){
+			
+			currLoc = currZone.locations[i];
+
+			for (let j = 0; j < currLoc.activities.length; ++j){
+
+				currAct = currLoc.activities[j];
+				
+				if (ActivityCollection[currAct].requirements(this.sv) === true){
+					
+					this.st.activityRecord[currAct].discovered = true;
+					this.st.activityRecord[currAct].meetsReqs = true;
+
+				}else {
+
+					this.st.activityRecord[currAct].meetsReqs = false;
+
+				}
+				
+
+			}
+		}
+	
+
+	}
+
+	//only changes the 'meetsReqs' property. Doesn't undiscover activities
+	resetActivityReqs():void{
+
+		let rec = this.st.activityRecord;
+		let recLen = Object.keys(rec).length;
+
+		for (let i = 0; i < recLen; ++i){
+			
+			rec[i].meetsReqs = false;
+
+		}
+		
+	}
 
 	getCurrentLocation(): Location{
 
@@ -78,6 +147,14 @@ export default class WorldService{
 
 		return this.st.ZoneCollection[ZoneIndex]
 
+	}
+
+	injectDep(inSV: ServiceObject): void{
+		
+		this.sv = inSV;
+
+		//dependency related start up
+		this.sv.MainLoop.subscribeToLongTick(this.calcActivityReqs.bind(this));
 	}
 
 	constructor(inSt : StateObject, inChar : CharacterService){

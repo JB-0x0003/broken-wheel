@@ -1,6 +1,6 @@
 import {ServiceObject} from '../global-service-provider';
 import {AttributeType} from '../common-types';
-import {genericPowerFunction} from '../helpers';
+import {weightedAverage} from '../helpers';
 
 export enum ActivityID {
 
@@ -74,7 +74,7 @@ ActivityCollection[ActivityID.Meditation] = {
 	requirements: ()=>{return true},
 	consequence: [
 		(sv : ServiceObject) => {
-			let targetSecret = sv.Character.st.currentSecretID;
+			let targetSecret = sv.ST.currentSecretID;
 			
 			sv.Character.trainSecret(targetSecret,4.0);
 
@@ -89,15 +89,19 @@ ActivityCollection[ActivityID.Begging] = {
 	description: ['Pitifully beg for pocket change. Increases charisma. Very ignoble.'],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
-		let attr = sv.Character.st.body.attributes;
+		let attr = sv.ST.body.attributes;
 		
 		if (attr.charisma.value >= 10) return true
 		else return false
 	},
 	consequence: [
 		(sv : ServiceObject) => {
+			let workpower = sv.ST.body.attributes.charisma.value;
+
+			sv.Character.giveMoney(workpower * 0.1);
+
 			sv.Character.trainAttribute(AttributeType.Charisma,0.1);
-			sv.Character.st.body.attributes.nobility.value -= 0.1;
+			sv.ST.body.attributes.nobility.value -= 0.1;
 	}],
 };
 
@@ -107,7 +111,7 @@ ActivityCollection[ActivityID.FieldLabor] = {
 	description: ['Work someone else\'s land. Disabled at low reputation. Makes a little money and makes a little food. Increases body.'],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
-		let attr = sv.Character.st.body.attributes;
+		let attr = sv.ST.body.attributes;
 		
 		if (attr.body.value >= 20) return true
 		else return false
@@ -115,10 +119,10 @@ ActivityCollection[ActivityID.FieldLabor] = {
 	},
 	consequence: [
 		(sv : ServiceObject) => {
-		let attr = sv.Character.st.body.attributes;
-		let workPower = genericPowerFunction(attr.body.value + attr.summer.value * 2.0);
+		let attr = sv.ST.body.attributes;
+		let workPower = attr.body.value + attr.summer.value * 3.0;
 		
-		sv.Character.giveMoney(workPower * 0.12);
+		sv.Character.giveMoney(workPower * 0.12);	
 
 		sv.Character.trainAttribute(AttributeType.Summer,0.01);
 		sv.Character.trainAttribute(AttributeType.Body,0.12);
@@ -131,7 +135,7 @@ ActivityCollection[ActivityID.Poetry] = {
 	description: ["Grind yourself against the wheel of literature until you shine as a diamond in the rough"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
-		let attr = sv.Character.st.body.attributes;
+		let attr = sv.ST.body.attributes;
 		
 		if (attr.learning.value >= 20) return true
 		else return false
@@ -152,7 +156,7 @@ ActivityCollection[ActivityID.Stargazing] = {
 	description: ["TODO"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
-		let attr = sv.Character.st.body.attributes;
+		let attr = sv.ST.body.attributes;
 		
 		if (attr.learning.value >= 20) return true
 		else return false

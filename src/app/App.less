@@ -19,51 +19,16 @@
 	font-display: block;
 }
 
-.mat-sig {
-
-	font-family: 'angelin';
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-
-}
-
-.mat-icon {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: never;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  
-  user-select:none;
-  display:inline-block;
-
-  /* Enable Ligatures ================ */
-  letter-spacing: 0;
-  -webkit-font-feature-settings: "liga";
-  -moz-font-feature-settings: "liga=1";
-  -moz-font-feature-settings: "liga";
-  -ms-font-feature-settings: "liga" 1;
-  font-feature-settings: "liga";
-  -webkit-font-variant-ligatures: discretionary-ligatures;
-  font-variant-ligatures: discretionary-ligatures;
-
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 body{
 	
+	background: #282828;
 	margin:0;
 	font-size:16px;
 	scrollbar-width:thin;
 
 	--panelTabRadius: 12px;
+	--panelTopRightOffset: 36px;
 
 }
 
@@ -175,7 +140,61 @@ body{
 	
 
 }
+.mat-sig {
 
+	font-family: 'angelin';
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+
+}
+
+.mat-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  
+  user-select:none;
+  display:inline-block;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mat-red {
+	
+	color: var(--red);
+
+}
+
+.mat-orange {
+	
+	color: var(--orange);
+
+}
+
+.mat-yellow {
+	
+	color: var(--yellow);
+
+}
 
 .navbar{
 
@@ -357,7 +376,7 @@ body{
 	display:flex;
 	flex-direction:row;
 	justify-content:right;
-	padding-right: 36px;
+	margin-right: var(--panelTopRightOffset);
 	top:0;
 	right:0;
 }
@@ -841,5 +860,10 @@ body{
 .dateDay{
 	display: inline-block;	
 	width: 22px;
+
+}
+
+.cornerElement{
+	margin-right: var(--panelTopRightOffset);
 
 }

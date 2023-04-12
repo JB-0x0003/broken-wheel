@@ -157,7 +157,7 @@ export function genBody(inJati:JatiID): Body{
 			size: 5,
 			defaultMask: ItemMaskID.EquipGeneric,
 			mask: {
-				0: ItemMaskID.EquipWeapon,
+				0: ItemMaskID.EquipWeaponNoble,
 			},
 			contents: {},
 
@@ -187,6 +187,12 @@ export function genBody(inJati:JatiID): Body{
 	tempBod.inventory.contents[2] = (
 		{
 			ID: ItemID.SharpenedStick,
+			amount: 1,
+		}
+	);
+	tempBod.inventory.contents[3] = (
+		{
+			ID: ItemID.Rapier,
 			amount: 1,
 		}
 	);

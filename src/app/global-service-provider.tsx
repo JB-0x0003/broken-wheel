@@ -3,6 +3,7 @@ import LogService from './game-state/log-service';
 import CharacterService from './game-state/character-service';
 import WorldService from './game-state/world-service';
 import MainLoopService from './game-state/main-loop-service';
+import {StateObject} from './game-state/state';
 
 const ServiceContext = React.createContext<ServiceObject>(undefined!);
 
@@ -14,7 +15,8 @@ interface fuckyou{
 }
 
 export interface ServiceObject{
-	
+
+	ST : StateObject;
 	Log : LogService;
 	Character: CharacterService;
 	World : WorldService;
