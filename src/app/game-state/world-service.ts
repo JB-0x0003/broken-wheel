@@ -54,11 +54,21 @@ export default class WorldService{
 		return ActivityCollection[index];
 
 	}
+
 	
 	
 	getActivityIndex(index : ActivityID):ActivityIndex{
 
 		return (this.st.activityRecord[index]);
+
+	}
+	
+	getCurrentGerund() : string{
+		
+		let index = this.getCurrentActivityID();
+		let rank = 0;
+
+		return ActivityCollection[index].gerund[rank];
 
 	}
 	

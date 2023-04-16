@@ -48,7 +48,7 @@ export default class CharacterService{
 		gain *= this.st.body.attributes[targetAttribute].aptitude;
 		this.st.body.attributes[targetAttribute].base += gain;
 		this.st.body.attributes[targetAttribute].value += gain;
-		
+		this.sumPlayerDerivatives();
 
 	}
 	

@@ -40,6 +40,50 @@ export function pipeAge(inDays: number): string{
 
 }
 
+export function pipeName(inName: string): string{
+	
+	//safety check because i hate javascript
+	if (inName === undefined) return "Unknown";
+
+	let i = 0;
+	let outName = "";
+	let newWord = true;
+	
+
+
+	//discard all leading whitespace
+	for (i; i < inName.length; ++i){
+		
+		if (inName[i] === "") continue;
+		else break;
+
+	}
+
+	for(i; i < inName.length; ++i){
+		
+		if (inName[i] === " "){
+			if (newWord === true) continue;
+			else {
+				newWord = true;
+				outName += " ";
+				continue;
+			}
+		}
+
+		if (newWord){
+			outName += inName[i].toUpperCase();
+			newWord = false;
+		} else {
+			outName += inName[i].toLowerCase();
+
+		}
+	}
+		
+	if (inName === "") return "Unknown";
+	else return outName;
+
+}
+
 export function pipeBigNum(num: number) : string{
 	
 	if (num === 0) return "0";

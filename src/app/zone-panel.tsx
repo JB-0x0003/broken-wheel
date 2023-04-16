@@ -87,7 +87,7 @@ function ZonePanel(){
 				)
 			}
 		}
-
+	
 
 		//push this locations content, then repeat
 		locationContent.push(
@@ -102,18 +102,25 @@ function ZonePanel(){
 		);
 
 	}
-	 
+
+	
+
 	return(
 
-		<div className="panel">
-			<div className="panelHeader">
-				<span className="townName">{currentZone.name}
-				</span>
-				<span className="townStinger">{currentZone.stinger}
-				</span>
+		<div className="panel spanning">
+			<div className="flexColumn">
+				<div className="panelHeader">
+					<span className="townName">{currentZone.name}
+					</span>
+					<span className="townStinger">{currentZone.stinger}
+					</span>
+				</div>
+				<div className="scrollableWrapper">
+					<div className="scrollable">
+						{locationContent}
+					</div>
+				</div>
 			</div>
-			{locationContent}
-			
 		</div>
 	);
 

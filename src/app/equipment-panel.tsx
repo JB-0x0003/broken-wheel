@@ -36,7 +36,7 @@ export default function EquipmentPanel(){
 	for (let i = 0; i < 5; ++i){
 		
 		equipHTML.push(
-			<BagSlot sv={sv} bagID={BagID.Equipment} index={i}/>
+			<BagSlot key = {"equip" + i} sv={sv} bagID={BagID.Equipment} index={i}/>
 
 		);
 

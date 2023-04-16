@@ -135,10 +135,8 @@ export default function EventOverlay(){
 			bodyHTML.push(<OptionsForm/>);
 			console.log(bodyHTML);
 			break;
-		default:
-			
+		default:	
 			bodyHTML.push(defaultBodyHTML());
-
 		break;
 
 
@@ -170,7 +168,7 @@ export default function EventOverlay(){
 	<div className="overlayContainer" style = {{visibility: (overlayVisible?"visible":"hidden" ) }} >
 		<div className="overlayBackdrop" onClick={attemptCancel}></div>
 		<div className="panel eventPanel">
-			<div style={{display:"flex", flexDirection: "column", height:"100%"}}>
+			<div className="flexColumn">
 				<div className="panelHeader">
 					{currentEvent.title()}
 				</div>

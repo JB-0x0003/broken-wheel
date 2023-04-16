@@ -1,5 +1,12 @@
 import {Bag} from './game-state/inventory';
 
+export enum ThemeType {
+
+	Dark = "dark",
+	Light = "light",
+
+}
+	
 export enum AttributeType{
 
 	Body = "body",

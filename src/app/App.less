@@ -26,14 +26,16 @@ body{
 	margin:0;
 	font-size:16px;
 	scrollbar-width:thin;
-
+	
+	--navbarHeight: 30px;
+	--navbarMargins: 10px;
 	--panelTabRadius: 12px;
-	--panelTopRightOffset: 36px;
+	--panelTopRightOffset: 20px;
 
 }
 
 
-.themeWrapperDark{
+.themeWrapper.dark{
   
   --bg_h: #1d2021;
   --bg:   #282828;
@@ -69,7 +71,7 @@ body{
 
 }
 
-.themeWrapperLight{
+.themeWrapper.light{
 
   --bg_h: #f9f5d7;
   --bg:   #fbf1c7;
@@ -117,6 +119,8 @@ body{
 	--panelText: var(--fg1);
 	--panelHighlightBackground: var(--bg4);
 	--panelHighlightText: var(--fg);
+	--panelDarkenedBackground: var(--bg1);
+	--panelDarkenedText: var(--fg2);
 	/*change to fg4 if borders are no longer outset*/
 	--panelBorderLight: var(--bg4);
 	--panelBorderDark: var(--bg1);
@@ -178,6 +182,12 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
+.mat-faded {
+	
+	color: var(--bodyTextFaint);
+
+}
+
 .mat-red {
 	
 	color: var(--red);
@@ -200,9 +210,9 @@ body{
 
 	display:flex;
 	justify-content:space-between;
-	margin:10px;
+	margin:0px 10px 10px 10px;
 	font-size:x-small;
-
+	height: var(--navbarHeight);
 }
 
 .navbar * {
@@ -291,7 +301,7 @@ body{
 
 	display: flex;
 	flex-direction: column;
-
+	height:100%;
 }
 
 .flexCenter{
@@ -304,10 +314,9 @@ body{
 .panelContainer{
 
 	width:100%;
+	height: calc(100% - var(--navbarHeight) - var(--navbarMargins) - 60px);
 	display:flex;
-	flex:1 0 75%;
-	overflow:auto;
-
+	flex-direction:row;
 }
 
 .panelContainerLeft{
@@ -337,14 +346,28 @@ body{
 	display: flex;
 	flex-direction: column;
 	min-width:440px;
-	gap:8px;
+	width:440px;
+	//TODO figure out why this doesn't line up	
+	gap:33px;
 
-	.panel{
-
-		border-width: 2px;
-
-	}
 }
+
+.panelContainerCenterUpper{
+	
+	display:flex;
+	width: 100%;
+	height: calc(100% - 200px);
+}
+
+.panelContainerCenterLower{
+	
+	display:flex;
+	width:100%;
+	height:200px;
+	min-height:200px;
+
+}
+
 .panelContainerRight{
 
 	margin-left:3px;
@@ -354,7 +377,7 @@ body{
 	flex-direction: column;
 	gap:8px;
 
-	.panelContainerRight .panel{
+	.panel{
 
 		border-width: 2px 1px 2px 3px;
 
@@ -366,7 +389,9 @@ body{
 .panelWrapper{
 
 	position:relative;
-	display: inline-block;
+	display: flex;
+	width:100%;
+	height:100%;
 
 }
 
@@ -376,7 +401,7 @@ body{
 	display:flex;
 	flex-direction:row;
 	justify-content:right;
-	margin-right: var(--panelTopRightOffset);
+	margin-right: calc(var(--panelTopRightOffset) + 16px);
 	top:0;
 	right:0;
 }
@@ -384,7 +409,7 @@ body{
 .panelTab{
 	
 	user-select: none;
-	color: var(--panelTextHighlight);
+	color: var(--panelText);
 	background: var(--panelBackground);
 	font-size: 16px;
 	padding: 0px 3px 0 3px;
@@ -413,7 +438,7 @@ body{
 .panelTab.selected{
 	
 	background: var(--bg1);
-	color: var(--panelText);
+	color: var(--panelHighlightText);
 	border-top: 3px solid var(--background);
 }
 
@@ -425,8 +450,18 @@ body{
 	border-color: var(--panelBorderLight) var(--panelBorderDark) var(--panelBorderDark) var(--panelBorderLight);
 	border-radius: 0px 36px 0px 22px;
 	padding:6px 6px 12px 6px;
+
 }
 
+.spanning{
+	height: 100%;
+	width:100%;
+}
+
+.cornerElement{
+	margin-right: var(--panelTopRightOffset);
+
+}
 .invert{
 	
 	color: var(--panelBackground);
@@ -444,6 +479,31 @@ body{
 	border-bottom:1px solid var(--panelBorderLight);
 	padding-bottom:4px;
 	font-size: 18px;
+}
+
+
+//THESE MUST BE IN A FLEX COLUMN I DONT KNOW WHY FUCK CSS
+//the insane margins and padding are to let things overflow on the x axis
+//technically, they never leave the area of the scroll element
+.scrollableWrapper{
+	
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-right: -5px;
+	margin-left: -100px;
+	padding-left: 100px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+
+	@supports (scrollbar-gutter: stable){
+		overflow: auto;
+		scrollbar-gutter: stable;
+
+	}
+}
+
+.scrollable{
 }
 
 .overlayContainer{
@@ -476,30 +536,33 @@ body{
 	display: flex;
 	flex-direction:column;
 	width: 50%;
-	height: 70%;
-	top: 15%;
+	height: calc(80%);
+	top: 10%;
 	left:25%;
 	z-index: 1000;
 }
 
-.eventPanel>.panelHeader{
+.eventPanel .panelHeader{
 
 	text-align: center;
+	font-size: 24px;
 
 }
 
 .eventBody{
 	
-	overflow: hidden;
+	.scrollableWrapper();
 	margin-bottom: 4px;
 	padding-bottom:4px;
 	border-bottom: 1px solid var(--panelBorderLight);
-	height: 100%;
+
 }
 
 .scrollVertical{
 	
-	overflow: auto;
+	.scrollable();
+
+	background: var(--panelDarkenedBackground);
 }
 
 .eventChoice{
@@ -810,21 +873,22 @@ body{
 }
 
 .inventoryFlexRow{
-
-	display:flex;
-	justify-content:space-between;
+	
+	.flexRow();
 
 }
+
 
 .inventoryFlexColumn{
 
 	display:flex;
 	flex-direction:column;
 	margin-right:5px;
-	flex: 1 0 50%;
+	flex: 1 1 50%;
 	height:100%;
 
 }
+
 
 .inventoryLi{
 		
@@ -838,6 +902,12 @@ body{
 	border-top: 3px solid var(--panelBackground);
 	border-bottom: 3px solid var(--panelBackground);
 	background: var(--panelBorderLight);
+}
+
+.inventoryFlexRow:last-child .inventoryLi{
+	
+	margin-right: none;
+
 }
 
 .inventoryLi.selected{
@@ -863,7 +933,53 @@ body{
 
 }
 
-.cornerElement{
-	margin-right: var(--panelTopRightOffset);
+.logPanel{
+	
+
+	.panelHeader{
+		
+		border-bottom: none;
+
+	}
+
+}
+
+.logDisplayWrapper{
+	
+		
+	.scrollableWrapper();
+	position: relative;
+	left: 100px;
+	height: 100%;	
+	font-size: 14px;
+	padding: 0px 0px 0px 0px;
+	border-radius: 0px 10px 0px 10px;
+	background: var(--panelBorderDark);
+
+}
+
+.logDisplay{
+	
+
+	.scrollable();
+	background: var(--panelDarkenedBackground);
+	margin: 0px 5px 0px 5px;
+	border: 1px solid var(--panelBorderLight);
+	border-width: 0px 1px 0px 0px;
+	border-radius: 0px 10px 0px 10px;
+}
+
+
+.logMessage{
+	
+	padding: 2px 0px 2px 0px;
+	border-bottom: 1px solid var(--panelBorderLight);
+
+
+}
+
+.logMessage:last-child{
+	
+	border-bottom: none;
 
 }

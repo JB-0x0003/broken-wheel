@@ -18,10 +18,12 @@ body {
   margin: 0;
   font-size: 16px;
   scrollbar-width: thin;
+  --navbarHeight: 30px;
+  --navbarMargins: 10px;
   --panelTabRadius: 12px;
-  --panelTopRightOffset: 36px;
+  --panelTopRightOffset: 20px;
 }
-.themeWrapperDark {
+.themeWrapper.dark {
   --bg_h: #1d2021;
   --bg: #282828;
   --bg_s: #32302f;
@@ -51,7 +53,7 @@ body {
   --gray-dim: #a89984;
   --orange-dim: #d65d0e;
 }
-.themeWrapperLight {
+.themeWrapper.light {
   --bg_h: #f9f5d7;
   --bg: #fbf1c7;
   --bg_s: #f2e5bc;
@@ -90,6 +92,8 @@ body {
   --panelText: var(--fg1);
   --panelHighlightBackground: var(--bg4);
   --panelHighlightText: var(--fg);
+  --panelDarkenedBackground: var(--bg1);
+  --panelDarkenedText: var(--fg2);
   /*change to fg4 if borders are no longer outset*/
   --panelBorderLight: var(--bg4);
   --panelBorderDark: var(--bg1);
@@ -140,6 +144,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.mat-faded {
+  color: var(--bodyTextFaint);
+}
 .mat-red {
   color: var(--red);
 }
@@ -152,8 +159,9 @@ body {
 .navbar {
   display: flex;
   justify-content: space-between;
-  margin: 10px;
+  margin: 0px 10px 10px 10px;
   font-size: x-small;
+  height: var(--navbarHeight);
 }
 .navbar * {
   margin-top: auto;
@@ -208,6 +216,7 @@ body {
 .flexColumn {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 .flexCenter {
   display: flex;
@@ -215,9 +224,9 @@ body {
 }
 .panelContainer {
   width: 100%;
+  height: calc(100% - var(--navbarHeight) - var(--navbarMargins) - 60px);
   display: flex;
-  flex: 1 0 75%;
-  overflow: auto;
+  flex-direction: row;
 }
 .panelContainerLeft {
   margin-right: 3px;
@@ -237,10 +246,19 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 440px;
-  gap: 8px;
+  width: 440px;
+  gap: 33px;
 }
-.panelContainerCenter .panel {
-  border-width: 2px;
+.panelContainerCenterUpper {
+  display: flex;
+  width: 100%;
+  height: calc(100% - 200px);
+}
+.panelContainerCenterLower {
+  display: flex;
+  width: 100%;
+  height: 200px;
+  min-height: 200px;
 }
 .panelContainerRight {
   margin-left: 3px;
@@ -250,25 +268,27 @@ body {
   flex-direction: column;
   gap: 8px;
 }
-.panelContainerRight .panelContainerRight .panel {
+.panelContainerRight .panel {
   border-width: 2px 1px 2px 3px;
 }
 .panelWrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 .panelTabContainer {
   position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: right;
-  margin-right: var(--panelTopRightOffset);
+  margin-right: calc(var(--panelTopRightOffset) + 16px);
   top: 0;
   right: 0;
 }
 .panelTab {
   user-select: none;
-  color: var(--panelTextHighlight);
+  color: var(--panelText);
   background: var(--panelBackground);
   font-size: 16px;
   padding: 0px 3px 0 3px;
@@ -288,7 +308,7 @@ body {
 }
 .panelTab.selected {
   background: var(--bg1);
-  color: var(--panelText);
+  color: var(--panelHighlightText);
   border-top: 3px solid var(--background);
 }
 .panel {
@@ -298,6 +318,13 @@ body {
   border-color: var(--panelBorderLight) var(--panelBorderDark) var(--panelBorderDark) var(--panelBorderLight);
   border-radius: 0px 36px 0px 22px;
   padding: 6px 6px 12px 6px;
+}
+.spanning {
+  height: 100%;
+  width: 100%;
+}
+.cornerElement {
+  margin-right: var(--panelTopRightOffset);
 }
 .invert {
   color: var(--panelBackground);
@@ -311,6 +338,22 @@ body {
   border-bottom: 1px solid var(--panelBorderLight);
   padding-bottom: 4px;
   font-size: 18px;
+}
+.scrollableWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: -5px;
+  margin-left: -100px;
+  padding-left: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+@supports (scrollbar-gutter: stable) {
+  .scrollableWrapper {
+    overflow: auto;
+    scrollbar-gutter: stable;
+  }
 }
 .overlayContainer {
   display: flex;
@@ -335,23 +378,36 @@ body {
   display: flex;
   flex-direction: column;
   width: 50%;
-  height: 70%;
-  top: 15%;
+  height: calc(80%);
+  top: 10%;
   left: 25%;
   z-index: 1000;
 }
-.eventPanel > .panelHeader {
+.eventPanel .panelHeader {
   text-align: center;
+  font-size: 24px;
 }
 .eventBody {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: -5px;
+  margin-left: -100px;
+  padding-left: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
   margin-bottom: 4px;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--panelBorderLight);
-  height: 100%;
+}
+@supports (scrollbar-gutter: stable) {
+  .eventBody {
+    overflow: auto;
+    scrollbar-gutter: stable;
+  }
 }
 .scrollVertical {
-  overflow: auto;
+  background: var(--panelDarkenedBackground);
 }
 .eventChoice {
   border: 1px solid var(--panelText);
@@ -555,13 +611,13 @@ body {
 }
 .inventoryFlexRow {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
 }
 .inventoryFlexColumn {
   display: flex;
   flex-direction: column;
   margin-right: 5px;
-  flex: 1 0 50%;
+  flex: 1 1 50%;
   height: 100%;
 }
 .inventoryLi {
@@ -575,6 +631,9 @@ body {
   border-top: 3px solid var(--panelBackground);
   border-bottom: 3px solid var(--panelBackground);
   background: var(--panelBorderLight);
+}
+.inventoryFlexRow:last-child .inventoryLi {
+  margin-right: none;
 }
 .inventoryLi.selected {
   color: var(--segmentHighlightText);
@@ -591,6 +650,43 @@ body {
   display: inline-block;
   width: 22px;
 }
-.cornerElement {
-  margin-right: var(--panelTopRightOffset);
+.logPanel .panelHeader {
+  border-bottom: none;
+}
+.logDisplayWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: -5px;
+  margin-left: -100px;
+  padding-left: 100px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  left: 100px;
+  height: 100%;
+  font-size: 14px;
+  padding: 0px 0px 0px 0px;
+  border-radius: 0px 10px 0px 10px;
+  background: var(--panelBorderDark);
+}
+@supports (scrollbar-gutter: stable) {
+  .logDisplayWrapper {
+    overflow: auto;
+    scrollbar-gutter: stable;
+  }
+}
+.logDisplay {
+  background: var(--panelDarkenedBackground);
+  margin: 0px 5px 0px 5px;
+  border: 1px solid var(--panelBorderLight);
+  border-width: 0px 1px 0px 0px;
+  border-radius: 0px 10px 0px 10px;
+}
+.logMessage {
+  padding: 2px 0px 2px 0px;
+  border-bottom: 1px solid var(--panelBorderLight);
+}
+.logMessage:last-child {
+  border-bottom: none;
 }

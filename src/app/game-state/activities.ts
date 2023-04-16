@@ -26,6 +26,7 @@ export interface Activity{
 	name: string[],
 	aID: ActivityID,
 	description: string[],
+	gerund: string[],
 	rankThreshold: number[],
 	requirements: (sv : ServiceObject)=>boolean,
 	consequence: ((sv : ServiceObject) => void)[],
@@ -45,14 +46,15 @@ export type ActivityRecord = {
 
 }
 
-let ActivityCollection = {};
+let ActivityCollection : {[key: string] : Activity}= {};
 
 ActivityCollection[ActivityID.Oddjobs] = {
 	//default activity, probably important to make give this no side-effects
 	name: ['Odd Jobs'],
 	aID: ActivityID.Oddjobs,
 	description: ['Errands, cleaning latrines, last-second grunt work. Anything no-skill that makes a little money. Increases ignoble attributes by a small amount.'],
-	rankThreshold: [0],
+	gerund: ['Doing odd jobs'],
+	rankThreshold: [],
 	requirements: ()=>{return true},
 	consequence: [
 		(sv : ServiceObject) => {
@@ -70,7 +72,8 @@ ActivityCollection[ActivityID.Meditation] = {
 	name: ['Meditation'],
 	aID: ActivityID.Meditation,
 	description: ['PLAYER SHOULD NOT SEE THIS'],
-	rankThreshold: [0],
+	gerund: ['Meditating'],
+	rankThreshold: [],
 	requirements: ()=>{return true},
 	consequence: [
 		(sv : ServiceObject) => {
@@ -87,7 +90,8 @@ ActivityCollection[ActivityID.Begging] = {
 	name: ['Begging'],
 	aID: ActivityID.Begging,
 	description: ['Pitifully beg for pocket change. Increases charisma. Very ignoble.'],
-	rankThreshold: [0],
+	gerund: ['Begging'],
+	rankThreshold: [],
 	requirements: (sv : ServiceObject)=>{
 		let attr = sv.ST.body.attributes;
 		
@@ -109,6 +113,7 @@ ActivityCollection[ActivityID.FieldLabor] = {
 	name: ['Field Labor'],
 	aID: ActivityID.FieldLabor,
 	description: ['Work someone else\'s land. Disabled at low reputation. Makes a little money and makes a little food. Increases body.'],
+	gerund: ["Picking"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
 		let attr = sv.ST.body.attributes;
@@ -134,6 +139,7 @@ ActivityCollection[ActivityID.Poetry] = {
 	aID: ActivityID.Poetry,
 	description: ["Grind yourself against the wheel of literature until you shine as a diamond in the rough"],
 	rankThreshold: [0],
+	gerund: ["Exploring the classics"],
 	requirements: (sv : ServiceObject)=>{
 		let attr = sv.ST.body.attributes;
 		
@@ -154,6 +160,7 @@ ActivityCollection[ActivityID.Stargazing] = {
 	name: ['Gaze At The Stars'],
 	aID: ActivityID.Poetry,
 	description: ["TODO"],
+	gerund: ["Gazing"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
 		let attr = sv.ST.body.attributes;

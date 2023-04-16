@@ -5,31 +5,27 @@ import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
 import EquipmentPanel from "./equipment-panel";
+import LogPanel from './log-panel';
 import {loadStateFromLocal, defaultState} from "./game-state/state";
 import LogService from "./game-state/log-service";
 import CharacterService from './game-state/character-service';
 import WorldService from './game-state/world-service';
 import MainLoopService from './game-state/main-loop-service';
 import GlobalServiceProvider, {ServiceObject}  from "./global-service-provider";
+import {ThemeType} from './common-types';
 
 function App() {
 
-	enum themeNames {
+let [,dummyState] = useState({});
 
-		Dark = 0,
-		Light = 1
-
-	}
+function toggleTheme() {
 	
-	let [themeSelect, setThemeSelect] = React.useState(0);
+	console.log(st.options.theme);
+	if (st.options.theme === ThemeType.Light) st.options.theme = ThemeType.Dark;
+	else st.options.theme = ThemeType.Light;
+	dummyState({});
+}
 
-	function toggleTheme() {
-
-
-		if (themeSelect === 0) setThemeSelect(1);
-		else setThemeSelect(0);
-
-	}
 //Define Services
 //First one represents global state. It isn't provided to html pages, only other services
 //State is loaded from local storage if present	
@@ -51,7 +47,7 @@ const [serv,] = useState({
 return (
 
 <GlobalServiceProvider serv={serv} >
-<div id="themeWrapper" className={"themeWrapper" + themeNames[themeSelect]}>
+<div id="themeWrapper" className={"themeWrapper " + st.options.theme}>
 <div id="main" className="mainContainer">
 
 <EventOverlay/>
@@ -59,11 +55,16 @@ return (
 <div className="navbar">
 	
 	<span className="gameTitle">
-		A Wheel Is Broken
+		A Wheel {"\t"}Is Broken
 	<span className="version">v{process.env.REACT_APP_VERSION}</span>
 	</span>
 	<span className="navElement">
-		<span className="mat-icon iconButt">question</span>
+		<span 
+			className="mat-icon iconButt" 
+			onClick={()=>{mainLoop.pushEvent(['system',1002])}}
+			>
+			question
+		</span>
 	</span>
 	<span className="mat-icon navElement">
 		<span className="iconButt navElement">download</span>
@@ -74,40 +75,38 @@ return (
 	</span>
 	<span className="navElement">
 		<label>
-			<input type="checkbox" id="themeCheckbox" checked={themeSelect === 1} onChange={toggleTheme}/>
-			Light Theme
+			<input 
+			type="checkbox" 
+			id="themeCheckbox" 
+			checked={st.options.theme === ThemeType.Light} 
+			onChange={toggleTheme}/>
+				Light Theme
 		</label>
 	</span>
 	<span className="mat-icon iconButt navElement" onClick={()=>{mainLoop.pushEvent(['system',1001])}}>cog</span>
 </div>
-
 <div className="panelContainer">
-
 	<div className="panelContainerLeft">
 		<TimePanel/>
 		<AttributePanel/>
 	</div>
 
 	<div className="panelContainerCenter">
-		<Center1Panel/>
+		<div className="panelContainerCenterUpper">
+			<Center1Panel/>
+		</div>
+		<div className="panelContainerCenterLower">
+			<LogPanel/>
+		</div>
 	</div>
-
 	<div className="panelContainerRight">
 		<EquipmentPanel/>
 	</div>
 
-
-</div>
-
-
-
-
+	</div>
 </div>
 </div>
 </GlobalServiceProvider>
-
-
-
 
 
   );

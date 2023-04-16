@@ -5,10 +5,12 @@ import { ActivityID, ActivityRecord} from './activities';
 import {Zone} from './world-service';
 import LocationCollection, {LocationID} from './locations';
 import {mergeObjects} from '../helpers';
+import {ThemeType} from '../common-types';
 
 export interface OptionObject{
 
 	autosaveMS: number;
+	theme: ThemeType;
 	
 
 }
@@ -67,6 +69,7 @@ export function defaultOptions() : OptionObject{
 	let tempOpt : OptionObject = {
 		
 		autosaveMS : 60000,
+		theme: ThemeType.Dark,
 	};
 
 	return tempOpt;
@@ -181,6 +184,10 @@ export function defaultState() : StateObject{
 				name: "Lateri",
 				stinger: "Marsh and Salt",
 				locations: [
+					LocationCollection[LocationID.CommonGrounds],
+					LocationCollection[LocationID.CommonGrounds],
+					LocationCollection[LocationID.CommonGrounds],
+					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.Plantation],
 

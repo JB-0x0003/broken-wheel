@@ -10,7 +10,7 @@ export default function PersonalPanel(){
 	if (sv === undefined) return <ErrorPanel/>;
 
 	return (
-		<div className="panel">
+		<div className="panel spanning">
 			<div className="panelHeader">
 				Personal Information
 			</div>

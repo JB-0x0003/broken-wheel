@@ -77,8 +77,10 @@ export default function TimePanel(){
 							forwards
 					</span>
 				</span>
-				<span>x{__SPEED_MULT_ARRAY[sv.MainLoop.speedMultIndex]}</span>
-
+				<span> x{__SPEED_MULT_ARRAY[sv.MainLoop.speedMultIndex]}</span>
+				<span className="mat-faded"> 
+					{" " + (sv.MainLoop.paused ? "" : (sv.World.getCurrentGerund() + "...") )}
+				</span>
 			</div>
 		</div>
 	);

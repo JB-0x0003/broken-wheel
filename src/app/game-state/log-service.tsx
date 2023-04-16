@@ -1,14 +1,40 @@
+import {Subject} from 'rxjs';
 
+export enum LogType{
+	
+	Normal = 'normal',
+	Warning = 'warning',
+	Danger = 'danger',
+
+}
+
+export interface LogMessage{
+	
+	text: string;
+	type: LogType;
+
+}
 
 export default class LogService{
 
-	textLog : string[] = [];
-	currentEvent : Event
-
-	log(text: string){
-		
-		this.textLog.push(text);
+	textLog : LogMessage[] = [];
+	logSubject = new Subject<LogMessage>();
 	
+	subscribeToLogPush(callback: Function){
+
+		this.logSubject.subscribe((v)=>callback(v));
+		
+	}
+	
+	logPush(text: string, type: LogType = LogType.Normal){
+		
+		console.log("LOG ACTIVATED");
+		let msg : LogMessage = {
+			text: text,
+			type: type,
+		}
+		this.textLog.push(msg);
+		this.logSubject.next(msg);
 	}
 
 }

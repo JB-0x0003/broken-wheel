@@ -27,7 +27,7 @@ export default function InventoryPanel(){
 	for (let i = 0; i < 30; ++i){
 		
 		stackHTML[i % 2].push(
-			<BagSlot sv={sv} bagID={BagID.Inventory} index={i}/>			
+			<BagSlot key = {"inv" + i} sv={sv} bagID={BagID.Inventory} index={i}/>			
 		);
 
 		
@@ -35,20 +35,24 @@ export default function InventoryPanel(){
 
 	return(
 
-	<div className="panel">
-		<div className="panelHeader">
-			Inventory
+	<div className="panel spanning">
+		<div className="flexColumn">
+			<div className="panelHeader">
+				Inventory
+			</div>
+			<div className="scrollableWrapper">
+				<div className="scrollable">
+					<div className="inventoryFlexRow">
+						<span className="inventoryFlexColumn">
+							{stackHTML[0]}
+						</span>
+						<span className="inventoryFlexColumn">
+							{stackHTML[1]}
+						</span>
+					</div>
+				</div>
+			</div>
 		</div>
-		<span className="flexRow">
-			<span className="inventoryFlexColumn">
-				{stackHTML[0]}
-			</span>
-			<span className="inventoryFlexColumn">
-				{stackHTML[1]}
-			</span>
-			<span className="inventoryFlexColumn">
-			</span>
-		</span>
 
 	</div>
 
