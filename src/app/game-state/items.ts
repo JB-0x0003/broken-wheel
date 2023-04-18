@@ -46,6 +46,21 @@ export interface Item{
 	noble?: boolean
 }
 
+type ItemTagType = {
+
+	[key in ItemID] : string
+}
+
+export enum ItemTags{
+
+	noble = "noble",
+	edible = "food",
+	consumable = "consumable",
+	equipable = "equipable",
+
+}
+
+
 type ItemObject = {
 	
 	[key in ItemID] : Item

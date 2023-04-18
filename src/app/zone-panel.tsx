@@ -115,7 +115,7 @@ function ZonePanel(){
 					<span className="townStinger">{currentZone.stinger}
 					</span>
 				</div>
-				<div className="scrollableWrapper">
+				<div className="scrollableWrapperOverflow">
 					<div className="scrollable">
 						{locationContent}
 					</div>

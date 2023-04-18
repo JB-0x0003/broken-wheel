@@ -1,5 +1,6 @@
 import React from 'react';
 import {ServiceObject} from './global-service-provider';
+import {InventoryTooltip} from './tooltips';
 import {BagID} from './game-state/inventory';
 import ItemCollection, {ItemID} from './game-state/items';
 
@@ -78,12 +79,15 @@ export default function BagSlot(props : BagSlotProps){
 				onDragEnd={leaveDrag}
 				onDrop={(ev)=>{dropSwapSlots(ev,props.bagID,props.index)}}
 			>
-				<span>
-					{ItemCollection[id].name}
+				<span className="rowSpreader">
+					<span>
+						{ItemCollection[id].name}
+					</span>
+					<span>
+						{(amount > 1.5)? "x" + bag.contents[props.index].amount : ""}
+					</span>
 				</span>
-				<span>
-					{(amount > 1.5)? "x" + bag.contents[props.index].amount : ""}
-				</span>
+				<InventoryTooltip id={id} />
 			</div>
 
 		);

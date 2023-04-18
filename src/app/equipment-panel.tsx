@@ -68,7 +68,7 @@ export default function EquipmentPanel(){
 			<div className="panelHeader">
 				<span className="inventoryFlexRow">
 					<span>
-					{"Equipment - ₪" + pipeBigNum(gold)}
+					{"Equipment - ₹" + pipeBigNum(gold)}
 					</span>
 					<span className="cornerElement mat-icon mat-red">
 						{foodSourceText}

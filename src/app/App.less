@@ -8,6 +8,7 @@
   font-weight: normal;
   font-style: normal;
   font-display: block;
+
 }
 
 @font-face {
@@ -117,10 +118,11 @@ body{
 	--background: var(--bg);
 	--panelBackground: var(--bg2);
 	--panelText: var(--fg1);
+	--panelFaded: var(--bg4);
 	--panelHighlightBackground: var(--bg4);
 	--panelHighlightText: var(--fg);
 	--panelDarkenedBackground: var(--bg1);
-	--panelDarkenedText: var(--fg2);
+	--panelDarkenedText: var(--fg3);
 	/*change to fg4 if borders are no longer outset*/
 	--panelBorderLight: var(--bg4);
 	--panelBorderDark: var(--bg1);
@@ -269,6 +271,24 @@ body{
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+
+}
+
+.rowSpreader{
+	
+	display: flex;
+	flex: 1 0 100%;
+	flex-direction: row;
+	justify-content: space-between;
+
+}
+
+.columnSpreader{
+
+	display: flex;
+	flex: 1 0 100%;
+	flex-direction: column;
+	justify-content: space-between;
 
 }
 
@@ -481,6 +501,67 @@ body{
 	font-size: 18px;
 }
 
+.tooltipContainer{
+	
+	position: absolute;
+	top:100%;
+	left:50%;
+	width: 0%;
+	height: 0%;
+	opacity: 0;
+	transition: opacity 0.2s ease-in;
+	transition-delay: 1.0s;
+	z-index: 1000;
+
+}
+
+*:hover>.tooltipContainer{
+	
+	opacity: 1;
+}
+
+.tooltip{
+	
+	position: fixed;
+	display: inline-block;
+	color: var(--panelText);
+	width: 200px;
+	background-color: var(--panelBackground);
+	border-radius: 15px 0px 40px 0px;
+	border: 1px solid var(--panelDarkenedText);
+	padding: 4px;
+	pointer-events: none;
+	//opacity: 0;
+	z-index: 1000;
+}
+
+.tooltipHeader{
+	
+	font-size: 16px;
+	margin-bottom: 4px;
+
+
+}
+
+.tooltipTags{
+	
+	color: var(--panelDarkenedText);
+	font-size: 12px;
+
+}
+
+.tooltipSegment{
+	
+	border-top: 1px solid var(--panelText);
+	padding-top: 4px;
+	margin-bottom: 4px;
+}
+
+.tooltipElement{
+		
+	margin-left: 10px;
+	border-left: 1px solid var(--panelFaded);
+}
 
 //THESE MUST BE IN A FLEX COLUMN I DONT KNOW WHY FUCK CSS
 //the insane margins and padding are to let things overflow on the x axis
@@ -490,14 +571,11 @@ body{
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	margin-right: -5px;
-	margin-left: -100px;
-	padding-left: 100px;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	overscroll-behavior: contain;
 
 	@supports (scrollbar-gutter: stable){
-		overflow: auto;
 		scrollbar-gutter: stable;
 
 	}
@@ -505,6 +583,14 @@ body{
 
 .scrollable{
 }
+
+.scrollableWrapperOverflow{
+
+	.scrollableWrapper();
+	margin-left: -100px;
+	padding-left: 100px;
+}
+
 
 .overlayContainer{
 
@@ -891,14 +977,16 @@ body{
 
 
 .inventoryLi{
-		
-	overflow: scroll;
+	
+	position:relative;
+	overflow: visible;
 	display:flex;
 	flex-direction:row;
 	justify-content: space-between;
 	font-size: 14px;
 	user-select: none;
 	padding-left: 4px;
+	padding-right: 4px;
 	border-top: 3px solid var(--panelBackground);
 	border-bottom: 3px solid var(--panelBackground);
 	background: var(--panelBorderLight);
@@ -949,7 +1037,6 @@ body{
 		
 	.scrollableWrapper();
 	position: relative;
-	left: 100px;
 	height: 100%;	
 	font-size: 14px;
 	padding: 0px 0px 0px 0px;
@@ -962,6 +1049,7 @@ body{
 	
 
 	.scrollable();
+	min-height: 100%;
 	background: var(--panelDarkenedBackground);
 	margin: 0px 5px 0px 5px;
 	border: 1px solid var(--panelBorderLight);
