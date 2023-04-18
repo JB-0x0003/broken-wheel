@@ -62,7 +62,7 @@ export function maskEquipWeapon(sv : ServiceObject, selfBag: Bag, originInventor
 		if (originInventoryStack === undefined) return true;
 		let ID = originInventoryStack.ID;		
 		if (ItemCollection[ID].noble === true){
-			sv.Log.logPush("You cannot bring yourself to abuse something so noble.");
+			sv.Log.pushLog("You cannot bring yourself to abuse something so noble.");
 			return false;
 		}
 		return true;

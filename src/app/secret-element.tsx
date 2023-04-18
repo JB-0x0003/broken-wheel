@@ -4,7 +4,7 @@ import ErrorPanel from './error-panel';
 import ProgressBar from './progress-bar';
 import {ActivityID} from './game-state/activities';
 import SecretCollection, {SecretID, secretXPForRank} from './game-state/secrets';
-
+import {SecretTooltip} from './tooltips';
 
 interface secretElementProps {
 	
@@ -67,6 +67,7 @@ export default function SecretElement(props: secretElementProps) {
 				<span className = "secretLevel">
 					{"Lv: " + sRecord.rank}
 				</span>
+				<SecretTooltip ID={props.ID} currRank={sRecord.rank}/>
 			</div>
 			<ProgressBar colorType="secret" value={sRecord.XP} max={maxXP} slim={true}/>
 		</span>

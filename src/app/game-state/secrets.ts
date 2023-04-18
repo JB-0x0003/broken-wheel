@@ -72,8 +72,8 @@ let SecretCollection : SecretSuite = {
 		XPExponent: __SECRET_XP_EXPONENT,
 	},
 	[SecretID.Weapons]: {
-		name: ["Weapon Mastery", "Weapon Mastery"],	
-		description: ["",""],
+		name: ["Weapon Mastery"],	
+		description: ["TODO"],
 		constantBonus: {
 			derivatives: {
 				[DerivativeType.Attack]: {

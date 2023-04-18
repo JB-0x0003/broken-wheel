@@ -32,7 +32,7 @@ body{
 	--navbarMargins: 10px;
 	--panelTabRadius: 12px;
 	--panelTopRightOffset: 20px;
-
+	--tooltipWidth: 200px;
 }
 
 
@@ -505,7 +505,7 @@ body{
 	
 	position: absolute;
 	top:100%;
-	left:50%;
+	left:30%;
 	width: 0%;
 	height: 0%;
 	opacity: 0;
@@ -520,12 +520,17 @@ body{
 	opacity: 1;
 }
 
+.tooltipContainer.left{
+	
+	left: calc(30% - var(--tooltipWidth));
+}
+
 .tooltip{
 	
 	position: fixed;
 	display: inline-block;
 	color: var(--panelText);
-	width: 200px;
+	width: var(--tooltipWidth);
 	background-color: var(--panelBackground);
 	border-radius: 15px 0px 40px 0px;
 	border: 1px solid var(--panelDarkenedText);
@@ -612,7 +617,7 @@ body{
 	height:100%;
 	width:100%;
 	z-index: 999;
-	background: rgba(0,0,0,0.32);
+	background: rgba(10,3,0,0.32);
 
 
 }
@@ -861,10 +866,11 @@ body{
 }
 
 .attributeLi{
+	position:relative;
 	font-size: 14px;
 	display:flex;
 	flex-direction:row;
-
+	user-select: none;
 }
 
 .attributeLi>.iconButt{
@@ -1012,6 +1018,16 @@ body{
 	flex: 1 0 50%;
 	height: 100%;
 	font-size: 14px;
+
+}
+
+.equipmentStatsLi{
+	
+	position:relative;
+	font-size: 14px;
+	display:flex;
+	flex-direction:row;
+	user-select: none;
 
 }
 

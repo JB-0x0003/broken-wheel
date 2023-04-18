@@ -8,6 +8,8 @@ import SecretCollection, {SecretID, secretXPForRank} from './secrets';
 import {StateObject} from './state';
 import {ServiceObject} from '../global-service-provider';
 import {pipeAge, sumObject, overwriteObject, weightedAverage} from '../helpers';
+import {LogType} from './log-service';
+
 
 export const __DAILY_LIFE_DRAIN = 0.076;
 export const __DAILY_HEALTH_DRAIN_BASE = 0.5;
@@ -392,7 +394,7 @@ export default class CharacterService{
 		
 			this.setFoodSource(FoodSourceStatus.Starvation);
 			this.sv.MainLoop.pause();
-
+			this.sv.Log.pushLog("You are starving", LogType.Danger);
 		}
 		this.starveSubject.next(0);
 	}
@@ -420,6 +422,7 @@ export default class CharacterService{
 
 	dailyEat(): void{
 		
+		console.log(this.foodSource);
 		let bestIndex = this.selectInvItemToEat();
 		
 		if (bestIndex === -1) {

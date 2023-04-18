@@ -1,5 +1,7 @@
 import ItemCollection, {ItemID, ItemTags} from './game-state/items';
-
+import {AttributeType, AttributeData, DerivativeType, DerivativeData} from './common-types';
+import SecretCollection, {SecretID} from './game-state/secrets';
+import ErrorPanel from './error-panel';
 
 interface InventoryTooltipProps {
 	
@@ -47,12 +49,15 @@ export function InventoryTooltip(props: InventoryTooltipProps) {
 	const item = ItemCollection[props.id];
 
 	let tags = "";
-	
+	let buffer = "";
+
 	for (let key in ItemTags){
 		if (item[key] !== undefined && item[key] !== false){
-			tags += key + ", ";
+			tags += buffer + " ";
+			buffer = key;
 		}
 	}
+	tags += buffer;	
 
 	let elements = [];
 	if (item.consumeBonus !== undefined){
@@ -93,6 +98,127 @@ export function InventoryTooltip(props: InventoryTooltipProps) {
 
 	);
 
+
+
+}
+
+interface StatTooltipProps{
+	
+	category: "attribute" | "derivative";
+	stat: AttributeType | DerivativeType;
+	direction?: "left" | "right";
+
+}
+
+export function StatTooltip({category, stat, direction = "right"}: StatTooltipProps){
+	
+	let data;
+
+	switch (category){
+
+		case "attribute":
+			data = AttributeData;
+		break;
+		case "derivative":
+			data = DerivativeData;
+		break;	
+		default:
+			data = AttributeData;
+	};
+	
+	if (data[stat] === undefined) return (<ErrorPanel/>);
+
+	return(
+
+		<div className={"tooltipContainer " + direction}>
+			<div className="tooltip">
+				<div className="tooltipHeader">
+					{data[stat].name}
+				</div>
+				<div className="tooltipSegment">
+					{data[stat].description}
+				</div>
+			</div>
+
+		</div>
+	);
+
+}
+
+interface SecretTooltipProps {
+	
+	ID: SecretID;
+	currRank: number;
+}
+
+function findNextSpecificBonus(inObj: object, currRank: number){
+
+	let keys = Object.keys(inObj);
+	let currentBest = null
+	//this is very unsafe code :/
+	for (let i in keys){
+		if (keys[i] as unknown as number > currRank){
+			currentBest = keys[i];
+			break;
+		}	
+	}
+
+	return currentBest;
+
+}
+
+export function SecretTooltip(props: SecretTooltipProps){
+
+	let secret = SecretCollection[props.ID];
+	//console.log(Object.keys(SecretCollection[SecretID.Swords].specificBonus));	
+	let specificHTML = [];
+	let overwriteHTML = [];
+	
+	if (secret.specificBonus !== undefined){
+		let specificIndex = findNextSpecificBonus(secret.specificBonus, props.currRank);
+		if (specificIndex !== null){
+			console.log(specificIndex);
+			specificHTML.push(
+				<div className="tooltipSegment">
+					At Rank {specificIndex}:
+					{traverseObject(secret.specificBonus[specificIndex])}
+				</div>
+			);
+		}
+	}
+	if (secret.specificOverwriteBonus !== undefined){
+		let overwriteIndex = findNextSpecificBonus(secret.specificOverwriteBonus, props.currRank);
+		if (overwriteIndex !== null){
+			overwriteHTML.push(
+				<div className="tooltipSegment">
+					At Rank {overwriteIndex}:
+					{traverseObject(secret.specificOverwriteBonus[overwriteIndex])}
+				</div>
+			);
+
+		}
+	}
+	return(
+		
+		<div className="tooltipContainer">
+			<div className="tooltip">
+				<div className="tooltipHeader">
+					{secret.name}
+				</div>
+				<div className="tooltipSegment">
+					{secret.description}
+				</div>
+				<div className="tooltipSegment">
+					On Level Up:
+					{traverseObject(secret.constantBonus)}
+				</div>
+				{specificHTML}
+				{overwriteHTML}
+			</div>
+
+		</div>
+
+	)
 
 
 }

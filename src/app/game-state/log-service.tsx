@@ -26,7 +26,7 @@ export default class LogService{
 		
 	}
 	
-	logPush(text: string, type: LogType = LogType.Normal){
+	pushLog(text: string, type: LogType = LogType.Normal){
 		
 		console.log("LOG ACTIVATED");
 		let msg : LogMessage = {

@@ -2,8 +2,9 @@ import React from 'react';
 import ErrorPanel from './error-panel';
 import {Serv} from "./global-service-provider";
 import {pipeBigNum} from "./helpers";
-import {AttributeObject,ResourceType, ResourceObject} from './common-types';
+import {AttributeType,AttributeObject,ResourceType, ResourceObject} from './common-types';
 import ProgressBar from './progress-bar';
+import {StatTooltip} from './tooltips';
 
 export default function AttributePanel(){
 	
@@ -32,6 +33,7 @@ export default function AttributePanel(){
 		<div className="attributeLi">
 			<span className="mat-icon ">eye</span>
 			Shine: {pipeBigNum(attr.shine.value)}
+			<StatTooltip category="attribute" stat={AttributeType.Shine}/>
 		</div>
 
 	);
@@ -39,6 +41,7 @@ export default function AttributePanel(){
 		<div className="attributeLi">
 			<span className="mat-icon "></span>
 			Summer: {pipeBigNum(attr.summer.value)}
+			<StatTooltip category="attribute" stat={AttributeType.Summer}/>
 		</div>
 
 	);
@@ -56,22 +59,27 @@ export default function AttributePanel(){
 					<div className="attributeLi">
 						<span className="mat-icon ">bolt</span>
 						Body: {pipeBigNum(attr.body.value)}
+						<StatTooltip category="attribute" stat={AttributeType.Body}/>
 					</div>
 					<div className="attributeLi">
 						<span className="mat-icon ">moon</span>
 						Cunning: {pipeBigNum(attr.cunning.value)}
+						<StatTooltip category="attribute" stat={AttributeType.Cunning}/>
 					</div>
 					<div className="attributeLi">
 						<span className="mat-icon ">learning</span>
 						Learning: {pipeBigNum(attr.learning.value)}
+						<StatTooltip category="attribute" stat={AttributeType.Learning}/>
 					</div>
 					<div className="attributeLi">
 						<span className="mat-icon ">chat</span>
 						Charisma: {pipeBigNum(attr.charisma.value)}
+						<StatTooltip category="attribute" stat={AttributeType.Charisma}/>
 					</div>
 					<div className="attributeLi">
 						<span className="mat-icon ">scales</span>
 						Nobility: {pipeBigNum(attr.nobility.value)}
+						<StatTooltip category="attribute" stat={AttributeType.Nobility}/>
 					</div>
 					{attrHTML}
 				</div>

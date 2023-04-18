@@ -6,6 +6,7 @@ import {Serv} from './global-service-provider';
 import {pipeBigNum, pipeDefined} from './helpers';
 import {BagID} from './game-state/inventory';
 import {DerivativeType} from './common-types';
+import {StatTooltip} from './tooltips';
 
 export default function EquipmentPanel(){
 
@@ -47,19 +48,25 @@ export default function EquipmentPanel(){
 	
 	let foodSource : FoodSourceStatus = sv.Character.getFoodSource();
 
-	let foodSourceText = "";
+	let foodSourceHTML = null;
 	
 	switch (foodSource){
 		case FoodSourceStatus.Inventory:
 		break;
 		case FoodSourceStatus.Store:
-			foodSourceText = "carrot";
+			foodSourceHTML = (
+					<div className="cornerElement mat-icon mat-red">carrot</div>
+			)
 		break;
 		case FoodSourceStatus.Starvation:
-			foodSourceText = "STARVING";
+			foodSourceHTML = (
+				<div className="cornerElement mat-red">STARVING!</div>
+			)
 		break;
 		default:
-			foodSourceText = "ERROR";
+			foodSourceHTML = (
+				<div className="cornerElement mat-red">ERROR!</div>
+			)
 	}
 
 	return(
@@ -67,11 +74,11 @@ export default function EquipmentPanel(){
 		<div className="panel">
 			<div className="panelHeader">
 				<span className="inventoryFlexRow">
-					<span>
-					{"Equipment - ₹" + pipeBigNum(gold)}
-					</span>
-					<span className="cornerElement mat-icon mat-red">
-						{foodSourceText}
+					<span className="rowSpreader">
+						<span>
+						{"Equipment - ₹" + pipeBigNum(gold)}
+						</span>
+						{foodSourceHTML}
 					</span>
 				</span>
 			</div>
@@ -82,9 +89,19 @@ export default function EquipmentPanel(){
 				<span className="equipmentStatColumn">
 					<div className="equipmentStatsLi">
 						Attack: {pipeBigNum(attack)}
+						<StatTooltip 
+							category="derivative" 
+							stat={DerivativeType.Attack}
+							direction="left"
+						/>
 					</div>
-					<div>
+					<div className="equipmentStatsLi">
 						Defense: {pipeBigNum(defense)}
+						<StatTooltip 
+							category="derivative" 
+							stat={DerivativeType.Defense}
+							direction="left"
+						/>
 					</div>
 				</span>
 			</div>
