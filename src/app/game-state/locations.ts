@@ -3,7 +3,8 @@ import {ActivityID} from './activities';
 export enum LocationID {
 
 	CommonGrounds = "commongrounds",
-	Plantation = "plantation",	
+	Plantation = "plantation",
+	ForestOutskirts = "forestoutskirts",
 	
 }
 
@@ -49,5 +50,14 @@ LocationCollection[LocationID.Plantation] = {
 	],
 
 };
+
+LocationCollection[LocationID.ForestOutskirts] = {
+	
+	name: "Forest Outskirts",
+	activities: [
+		ActivityID.Hunting,
+	],
+
+}
 
 export default LocationCollection;

@@ -89,7 +89,31 @@ export default class WorldService{
 		
 		this.st.currentLocation = inLoc;
 
-	}	
+	}
+
+	discoverActivity(inAct : ActivityID) : void{
+
+		this.st.activityRecord[inAct].discovered = true;
+		this.st.activityRecord[inAct].meetsReqs = true;
+		this.sv.Log.pushLog("You've discovered a new activity!");
+
+	}
+
+	unlockActivity(inAct : ActivityID) : void{
+		if (this.st.activityRecord[inAct].discovered === false){
+			this.discoverActivity(inAct);
+
+		}else{
+			this.st.activityRecord[inAct].meetsReqs = true;
+		}
+	}
+
+	lockActivity(inAct : ActivityID) : void{
+		
+		this.st.activityRecord[inAct].meetsReqs = false;
+
+	}
+
 	//This also controls activity discovery
 	//Only checks activities in current Zone
 	calcActivityReqs(): void{
@@ -108,13 +132,10 @@ export default class WorldService{
 				
 				if (ActivityCollection[currAct].requirements(this.sv) === true){
 					
-					this.st.activityRecord[currAct].discovered = true;
-					this.st.activityRecord[currAct].meetsReqs = true;
-
+					this.unlockActivity(currAct);
 				}else {
 
-					this.st.activityRecord[currAct].meetsReqs = false;
-
+					this.lockActivity(currAct);
 				}
 				
 

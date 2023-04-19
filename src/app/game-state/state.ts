@@ -187,7 +187,7 @@ export function defaultState() : StateObject{
 				locations: [
 					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.Plantation],
-
+					LocationCollection[LocationID.ForestOutskirts],
 				],
 					
 				

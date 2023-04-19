@@ -1,6 +1,9 @@
 import {ServiceObject} from '../global-service-provider';
+import {meatGenItems, generateItems} from './items';
+import {BagID} from './inventory';
 import {AttributeType} from '../common-types';
 import {weightedAverage} from '../helpers';
+
 
 export enum ActivityID {
 
@@ -10,7 +13,8 @@ export enum ActivityID {
 	FieldLabor = "fieldlabor",
 	Poetry = "poetry",
 	Stargazing = "stargazing",
-	Stealing = "stealing",	
+	Stealing = "stealing",
+	Hunting = "hunting",
 };
 
 export enum ActivityType {
@@ -79,7 +83,7 @@ ActivityCollection[ActivityID.Meditation] = {
 		(sv : ServiceObject) => {
 			let targetSecret = sv.ST.currentSecretID;
 			
-			sv.Character.trainSecret(targetSecret,4.0);
+			sv.Character.trainSecret(targetSecret,0.5);
 
 		}
 	]
@@ -203,6 +207,40 @@ ActivityCollection[ActivityID.Stealing] = {
 			sv.Character.trainAttribute(AttributeType.Cunning, 0.12);
 			sv.World.decreaseReputation(workpower * 0.003);
 			sv.World.decreaseProsperity(workpower * 0.001);
+	}]
+
+}
+
+ActivityCollection[ActivityID.Hunting] = {
+
+	name: ['Hunt'],
+	aID: ActivityID.Hunting,
+	description: ["Makes food. Trains body and cunning."],
+	gerund: ["Stalking Prey"],
+	rankThreshold: [0],
+	requirements: (sv : ServiceObject)=>{
+		let attr = sv.ST.body.attributes;
+		
+		if (attr[AttributeType.Body].value >= 50 && attr[AttributeType.Cunning].value >= 75) return true
+		else return false
+
+	},
+	consequence: [
+		(sv : ServiceObject) => {
+			let workpower = sv.ST.body.attributes.body.value * 0.3 + sv.ST.body.attributes.cunning.value * 0.6;
+			workpower = workpower * 0.08;			
+
+
+			workpower = Math.min(workpower, 50);
+
+			console.log("Workpower: " + workpower);
+
+			let meatDrop = generateItems(meatGenItems, workpower);
+			sv.Character.addItemDropToBag(BagID.Inventory, meatDrop);
+
+			sv.Character.trainAttribute(AttributeType.Body, 0.04);
+			sv.Character.trainAttribute(AttributeType.Cunning, 0.08);
+
 	}]
 
 }

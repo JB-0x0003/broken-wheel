@@ -2,7 +2,7 @@ import {Subject} from 'rxjs';
 import {Body, genBody, refreshBody} from './body';
 import {AttributeType, AttributeObject, DerivativeType, DerivativeObject,ResourceType, ResourceObject} from '../common-types';
 import ItemMaskCollection, {ItemMaskID, Bag,BagContents, BagID, ItemSortID, ItemSortCollection} from './inventory';
-import ItemCollection, {Item, ItemID} from './items';
+import ItemCollection, {Item, ItemID, ItemDrop} from './items';
 import {generateJati} from './reincarnation';
 import SecretCollection, {SecretID, secretXPForRank} from './secrets';
 import {StateObject} from './state';
@@ -185,6 +185,17 @@ export default class CharacterService{
 					amount: amount,
 				};
 				return firstEmpty;
+
+		}
+
+	}
+	
+	addItemDropToBag(bagID: BagID, itemDrop: ItemDrop){
+
+		for (let key in itemDrop){
+
+			this.addItemToBag(bagID, key as ItemID, itemDrop[key]);
+			
 
 		}
 
