@@ -183,11 +183,8 @@ export function defaultState() : StateObject{
 			{
 				name: "Lateri",
 				stinger: "Marsh and Salt",
+				prosperity: 433,
 				locations: [
-					LocationCollection[LocationID.CommonGrounds],
-					LocationCollection[LocationID.CommonGrounds],
-					LocationCollection[LocationID.CommonGrounds],
-					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.Plantation],
 

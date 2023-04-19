@@ -54,6 +54,14 @@ export default class CharacterService{
 
 	}
 	
+	loseAttribute(targetAttribute: AttributeType, malus: number) : void{
+		
+		this.st.body.attributes[targetAttribute].base -= malus;
+		this.st.body.attributes[targetAttribute].value -= malus;
+		this.sumPlayerDerivatives();
+
+	}
+
 	secretRankUp(targetSecret: SecretID): void{
 
 		this.st.secrets[targetSecret].rank++;
@@ -422,7 +430,7 @@ export default class CharacterService{
 
 	dailyEat(): void{
 		
-		console.log(this.foodSource);
+		//console.log(this.foodSource);
 		let bestIndex = this.selectInvItemToEat();
 		
 		if (bestIndex === -1) {

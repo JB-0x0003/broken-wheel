@@ -17,6 +17,7 @@ export interface Body{
 	equipment: Bag;
 	jati: Jati;
 	age: number;
+	reputation: {[key: number]: number};
 
 };
 
@@ -165,6 +166,15 @@ export function genBody(inJati:JatiID): Body{
 		jati: jati,
 
 		age : 360 * 16,
+		reputation: {
+			0 : 0,
+			1 : 0,
+			2 : 0,
+			3 : 0,
+			4 : 0,
+			5 : 0,
+			6 : 0,
+		}
 	};
 	
 	

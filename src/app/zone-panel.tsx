@@ -3,6 +3,7 @@ import ErrorPanel from './error-panel';
 import {Location} from './game-state/locations';
 import {Serv} from "./global-service-provider";
 import ActivityCollection from "./game-state/activities";
+import {pipeBigNum} from "./helpers";
 
 function ZonePanel(){
 	
@@ -103,7 +104,8 @@ function ZonePanel(){
 
 	}
 
-	
+	let prosperity = sv.World.getCurrentZoneProsperity();	
+	let reputation = sv.World.getCurrentZoneReputation();
 
 	return(
 
@@ -113,6 +115,12 @@ function ZonePanel(){
 					<span className="townName">{currentZone.name}
 					</span>
 					<span className="townStinger">{currentZone.stinger}
+					</span>
+					<span className="townData">
+						{"Reputation: " + pipeBigNum(reputation)}
+					</span>
+					<span className="townData">
+						{"Prosperity: " + pipeBigNum(prosperity)}
 					</span>
 				</div>
 				<div className="scrollableWrapperOverflow">

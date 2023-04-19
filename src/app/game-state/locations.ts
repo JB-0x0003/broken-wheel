@@ -33,6 +33,7 @@ LocationCollection[LocationID.CommonGrounds] = {
 		ActivityID.Oddjobs,
 		ActivityID.Begging,
 		ActivityID.Poetry,
+		ActivityID.Stealing,
 
 	],
 

@@ -8,6 +8,7 @@ export interface Zone {
 	
 	name: string;
 	stinger: string;
+	prosperity: number;
 	locations: Location[];
 
 }
@@ -137,25 +138,73 @@ export default class WorldService{
 		
 	}
 
+	getCurrentLocationIndex():number{
+
+		return this.st.currentLocation;
+	}
+	
 	getCurrentLocation(): Location{
 
-		let locIndex = this.st.currentLocation;
+		let locIndex = this.getCurrentLocationIndex();
 		let Zone = this.getCurrentZone();
 		
 		return Zone.locations[locIndex];
 
 	}
 
-	getCurrentLocationIndex():number{
+	reputationNobilityBonus(inNob: number) : number{
 
-		return this.st.currentLocation;
+		return inNob * 0.1;	
+
 	}
-	
+
 	getCurrentZone() : Zone{
 
 		let ZoneIndex = this.st.currentZone;
 
 		return this.st.ZoneCollection[ZoneIndex]
+
+	}
+	
+	getCurrentZoneProsperity() : number{
+	
+		return this.getCurrentZone().prosperity;
+	
+	}
+	
+	increaseProsperity(bonus : number) : void{
+		this.getCurrentZone().prosperity[this.st.currentZone] += bonus;
+
+	}
+	
+	decreaseProsperity(malus : number) : void{
+		
+		this.getCurrentZone().prosperity -= malus;
+
+	}
+	
+	getCurrentZoneReputation() : number{
+		
+		return this.st.body.reputation[this.st.currentZone];
+	}
+	
+	getCurrentZoneEffectiveReputation() : number{
+
+		let baseRep = this.getCurrentZoneReputation();
+		let nobBonus = this.reputationNobilityBonus(this.st.body.attributes.nobility.value);
+		return baseRep + nobBonus;
+
+	}
+
+	increaseReputation(bonus : number) : void{
+
+		this.st.body.reputation[this.st.currentZone] += bonus;
+
+	}
+
+	decreaseReputation(malus: number) : void{
+
+		this.st.body.reputation[this.st.currentZone] -= malus;
 
 	}
 

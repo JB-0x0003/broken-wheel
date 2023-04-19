@@ -10,7 +10,7 @@ export enum ActivityID {
 	FieldLabor = "fieldlabor",
 	Poetry = "poetry",
 	Stargazing = "stargazing",
-		
+	Stealing = "stealing",	
 };
 
 export enum ActivityType {
@@ -116,10 +116,15 @@ ActivityCollection[ActivityID.FieldLabor] = {
 	gerund: ["Picking"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
-		let attr = sv.ST.body.attributes;
+		let rep = sv.World.getCurrentZoneReputation();
+		if (rep < -250) return false;
+		else {
 		
-		if (attr.body.value >= 20) return true
-		else return false
+			let attr = sv.ST.body.attributes;
+
+			if (attr.body.value >= 20) return true
+			else return false
+		}
 
 	},
 	consequence: [
@@ -176,5 +181,30 @@ ActivityCollection[ActivityID.Stargazing] = {
 
 	}],
 };
+
+ActivityCollection[ActivityID.Stealing] = {
+
+	name: ['Pickpocket'],
+	aID: ActivityID.Stealing,
+	description: ["Makes money and lowers reputation. Potentially decreases the town's prosperity. Trains cunning."],
+	gerund: ["Pickpocketing"],
+	rankThreshold: [0],
+	requirements: (sv : ServiceObject)=>{
+		let attr = sv.ST.body.attributes;
+		
+		if (attr.cunning.value >= 20) return true
+		else return false
+	},
+	consequence: [
+		(sv : ServiceObject) => {
+			let workpower = sv.ST.body.attributes.cunning.value;
+
+			sv.Character.giveMoney(workpower * 0.08);
+			sv.Character.trainAttribute(AttributeType.Cunning, 0.12);
+			sv.World.decreaseReputation(workpower * 0.003);
+			sv.World.decreaseProsperity(workpower * 0.001);
+	}]
+
+}
 
 export default ActivityCollection;
