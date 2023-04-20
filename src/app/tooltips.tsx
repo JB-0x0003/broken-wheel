@@ -1,7 +1,10 @@
 import ItemCollection, {ItemID, ItemTags} from './game-state/items';
-import {AttributeType, AttributeData, DerivativeType, DerivativeData} from './common-types';
+import {AttributeType, AttributeObject, AttributeData, DerivativeType, DerivativeData} from './common-types';
 import SecretCollection, {SecretID} from './game-state/secrets';
 import ErrorPanel from './error-panel';
+import {Serv} from './global-service-provider';
+import {pipeBigNum} from './helpers';
+
 
 interface InventoryTooltipProps {
 	
@@ -9,7 +12,7 @@ interface InventoryTooltipProps {
 
 }
 
-let working
+
 
 function traverseObject(inObj: object) {
 	
@@ -110,14 +113,27 @@ interface StatTooltipProps{
 
 }
 
+//I hate that it's a pain to type this
 export function StatTooltip({category, stat, direction = "right"}: StatTooltipProps){
-	
+
+	let sv = Serv();
+
+	if (sv === undefined) return <ErrorPanel/>
+
 	let data;
+	let bonusSegments = [];
 
 	switch (category){
 
 		case "attribute":
 			data = AttributeData;
+			let attr : AttributeObject = sv.ST.body.attributes;
+			bonusSegments.push(
+				<div key={stat+"-modifiers"} className="tooltipSegment">
+					<div>{"Current Aptitude: " + pipeBigNum(attr[stat].aptitude)}</div>
+					<div>{"Current Multiplier: " + pipeBigNum(attr[stat].mult)}</div>
+				</div>
+			);
 		break;
 		case "derivative":
 			data = DerivativeData;
@@ -138,6 +154,7 @@ export function StatTooltip({category, stat, direction = "right"}: StatTooltipPr
 				<div className="tooltipSegment">
 					{data[stat].description}
 				</div>
+				{bonusSegments}
 			</div>
 
 		</div>
@@ -177,10 +194,10 @@ export function SecretTooltip(props: SecretTooltipProps){
 	if (secret.specificBonus !== undefined){
 		let specificIndex = findNextSpecificBonus(secret.specificBonus, props.currRank);
 		if (specificIndex !== null){
-			console.log(specificIndex);
+			//console.log(specificIndex);
 			specificHTML.push(
-				<div className="tooltipSegment">
-					At Rank {specificIndex}:
+				<div key={props.ID + "-specific-bonus"} className="tooltipSegment">
+					At Level {specificIndex}:
 					{traverseObject(secret.specificBonus[specificIndex])}
 				</div>
 			);
@@ -190,7 +207,7 @@ export function SecretTooltip(props: SecretTooltipProps){
 		let overwriteIndex = findNextSpecificBonus(secret.specificOverwriteBonus, props.currRank);
 		if (overwriteIndex !== null){
 			overwriteHTML.push(
-				<div className="tooltipSegment">
+				<div key={props.ID + "-overwrite-bonus"} className="tooltipSegment">
 					At Rank {overwriteIndex}:
 					{traverseObject(secret.specificOverwriteBonus[overwriteIndex])}
 				</div>
