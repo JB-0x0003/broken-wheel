@@ -7,6 +7,8 @@ export enum SecretID{
 
 	Swords = 'swords',
 	Weapons = 'weapons',
+	
+	
 
 }
 
@@ -51,9 +53,10 @@ let SecretCollection : SecretSuite = {
 		constantBonus: {
 			attributes: {
 				[AttributeType.Nobility]: {
-					value: 15,
-					bonus: 15,
-
+					value: 5,
+					bonus: 5,
+					aptitude: 0.05,
+					aptitudeBase: 0.05,
 				}
 
 			},
@@ -62,8 +65,10 @@ let SecretCollection : SecretSuite = {
 			4: {
 				attributes: {
 					[AttributeType.Learning]: {
-						value: 100,
-						bonus: 100,
+						value: 20,
+						bonus: 20,
+						aptitude: 0.15,
+						aptitudeBase: 0.15,
 					},
 				},
 			},
@@ -77,8 +82,8 @@ let SecretCollection : SecretSuite = {
 		constantBonus: {
 			derivatives: {
 				[DerivativeType.Attack]: {
-					value: 10,
-					bonus: 10,
+					value: 3,
+					bonus: 3,
 
 				},
 
@@ -87,7 +92,7 @@ let SecretCollection : SecretSuite = {
 		specificBonus: {},
 		specificOverwriteBonus: {
 			
-			1: {
+			7: {
 				equipment: {
 					mask: {
 						1: ItemMaskID.EquipWeapon,

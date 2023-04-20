@@ -83,7 +83,7 @@ ActivityCollection[ActivityID.Meditation] = {
 		(sv : ServiceObject) => {
 			let targetSecret = sv.ST.currentSecretID;
 			
-			sv.Character.trainSecret(targetSecret,0.5);
+			sv.Character.trainSecret(targetSecret,1.0);
 
 		}
 	]
@@ -215,7 +215,7 @@ ActivityCollection[ActivityID.Hunting] = {
 
 	name: ['Hunt'],
 	aID: ActivityID.Hunting,
-	description: ["Makes food. Trains body and cunning."],
+	description: ["Hunt for food. Trains body and cunning."],
 	gerund: ["Stalking Prey"],
 	rankThreshold: [0],
 	requirements: (sv : ServiceObject)=>{
@@ -227,8 +227,9 @@ ActivityCollection[ActivityID.Hunting] = {
 	},
 	consequence: [
 		(sv : ServiceObject) => {
-			let workpower = sv.ST.body.attributes.body.value * 0.3 + sv.ST.body.attributes.cunning.value * 0.6;
-			workpower = workpower * 0.08;			
+			let attr = sv.ST.body.attributes;
+			let workpower = attr.body.value * 0.3 + attr.cunning.value * 0.6 + attr.summer.value * 1.0;
+			workpower = workpower * 0.09;			
 
 
 			workpower = Math.min(workpower, 50);
@@ -240,7 +241,7 @@ ActivityCollection[ActivityID.Hunting] = {
 
 			sv.Character.trainAttribute(AttributeType.Body, 0.04);
 			sv.Character.trainAttribute(AttributeType.Cunning, 0.08);
-
+			sv.Character.trainAttribute(AttributeType.Summer, 0.02);
 	}]
 
 }
