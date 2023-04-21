@@ -1,8 +1,9 @@
-name: on-push
+name: build-page
 on:
   push:
     branches:
       - 'main'
+      - 'actions'
 jobs:
   build:
     runs-on: ubuntu-latest
