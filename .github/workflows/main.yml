@@ -2,8 +2,7 @@ name: build-page
 on:
   push:
     branches:
-      - 'main'
-      - 'actions'
+      - 'master'
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
