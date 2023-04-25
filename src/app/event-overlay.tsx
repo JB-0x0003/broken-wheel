@@ -2,15 +2,24 @@ import React,{useState} from 'react';
 import {EventType} from './game-state/events';
 import {Serv} from './global-service-provider'
 import OptionsForm from './options-form';
+import SaveForm from './save-form';
 
-export default function EventOverlay(){
+export enum MenuType{
+	
+	Options = "options",	
+	Saves = "saves",
+	Help = "help",
+
+};
+
+export default function Overlay(){
 
 	let sv = Serv();
 	let [overlayVisible, setOverlayVisible] = useState(sv.Character.st.inEvent);
 	let [formValues, setFormValues] = useState({});	
+	let [subbed, setSubbed] = useState(false);
 
 	if (sv === undefined) return;
-
 
 	let currentEvent = sv.MainLoop.getCurrentEvent();
 	let dismissable;
@@ -18,17 +27,17 @@ export default function EventOverlay(){
 	
 	// more complicated variable declarations
 
-	if (currentEvent.dismissable === undefined || currentEvent.dismissable === true){
+	if (currentEvent.dismissable === undefined){
 		
 		dismissable = true;
 
-	} else dismissable = false;
+	} else dismissable = currentEvent.dismissable;
 
-	if (currentEvent.eType !== undefined){
+	if (currentEvent.eType === undefined){
 
-		eType = currentEvent.eType;
+		eType = EventType.Default; 
 
-	} else eType = EventType.Default; 
+	} else eType = currentEvent.eType;
 
 	//Push component state to global state
 
@@ -42,7 +51,6 @@ export default function EventOverlay(){
 		setOverlayVisible(true);
 
 	}
-
 
 	function close() : void{
 		
@@ -86,12 +94,6 @@ export default function EventOverlay(){
 
 	}
 
-	function clearFormValues() : void{
-
-		setFormValues({});	
-
-	}
-	
 	function formChangeEventHandler(key: string,event : React.ChangeEvent<HTMLInputElement>) : void{
 
 		let value = event.target.value;		
@@ -130,10 +132,13 @@ export default function EventOverlay(){
 			bodyHTML.push(
 				<input className="eventInput mat-sig signInput" onChange={(event)=>{formChangeEventHandler("name",event);}}></input>
 			);
-			break;
+		break;
 		case EventType.Options:
 			bodyHTML.push(<OptionsForm/>);
 			console.log(bodyHTML);
+			break;
+		case EventType.Save:
+			bodyHTML.push(<SaveForm/>);
 			break;
 		default:	
 			bodyHTML.push(defaultBodyHTML());
@@ -172,8 +177,8 @@ export default function EventOverlay(){
 				<div className="panelHeader">
 					{currentEvent.title()}
 				</div>
-				<div className="eventBody">
-					<div className="scrollVertical">
+				<div className="eventBody spanning">
+					<div className="scrollVertical spanning">
 						{bodyHTML}
 					</div>
 				</div>

@@ -137,6 +137,13 @@ export function refreshBody(inBod: Body): void{
 
 }
 
+function genJatiResources(inJati: Jati): ResourceObject{
+	
+	if (inJati.initialResources === undefined) return defaultResources();
+	else return JSON.parse(JSON.stringify(inJati.initialResources));
+
+}
+
 export function genBody(inJati:JatiID): Body{
 	
 	let jati = JatiCollection[inJati];
@@ -146,7 +153,7 @@ export function genBody(inJati:JatiID): Body{
 		//this is the only way I know to do deep copies lol
 		attributes: JSON.parse(JSON.stringify(jati.initialAttributes)),
 		derivatives: defaultDerivatives(),
-		resources : defaultResources(),
+		resources : genJatiResources(jati),
 		money: 0,
 		inventory : {
 			size: 30,

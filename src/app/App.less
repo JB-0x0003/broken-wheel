@@ -223,7 +223,8 @@ body{
 }
 
 .navElement{
-
+	
+	position:relative;
 	margin-left:10px;
 	display:flex;
 	justify-content:bottom;
@@ -241,13 +242,21 @@ body{
 	text-decoration:underline;
 }
 
+.butt{
+	
+	border: 1px solid;
+	border-radius: 0px 10px 0px 10px;
+	padding:2px 4px 2px 4px;
+	user-select: none;
+	cursor:pointer;
+}
 
 .iconButt{
 
 
 	border:1px solid;
 	border-radius: 3px;
-	
+	cursor:pointer;
 
 }
 
@@ -255,7 +264,7 @@ body{
 
 	text-decoration: underline;
 	user-select: none;
-
+	cursor:pointer;
 }
 
 .rowSpacer{
@@ -489,6 +498,12 @@ body{
 
 }
 
+.hidden{
+
+	display:none;
+	
+}
+
 .error{
 	background-color: var(--red);
 }
@@ -509,8 +524,7 @@ body{
 	width: 0%;
 	height: 0%;
 	opacity: 0;
-	transition: opacity 0.2s ease-in;
-	transition-delay: 1.0s;
+	transition: opacity 0.2s ease-out 0.0s;
 	z-index: 1000;
 
 }
@@ -518,6 +532,7 @@ body{
 *:hover>.tooltipContainer{
 	
 	opacity: 1;
+	transition: opacity 0.2s ease-in 1.0s;
 }
 
 .tooltipContainer.left{
@@ -798,12 +813,10 @@ body{
 }
 
 .activitySegmentTitleButton{
-
+	
+	.butt();
 	border: 1px solid var(--segmentText);
-	border-radius: 0px 10px 0px 10px;
-	padding:2px 4px 2px 4px;
 	margin-right: 5px;
-	user-select: none;
 
 }
 
@@ -1102,3 +1115,4 @@ body{
 	border-bottom: none;
 
 }
+

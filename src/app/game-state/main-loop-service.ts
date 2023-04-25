@@ -96,10 +96,10 @@ export default class MainLoopService {
 		this.world.setCurrentActivity(ActivityID.Oddjobs);
 
 		if (this.st.eFlags.script.named === false) {
-			this.pushEvent(['script',1001]);
+			this.pushEvent('script',1001);
 		}else{
 
-			this.pushEvent(['death',1001]);
+			this.pushEvent('death',1001);
 		}
 	}
 
@@ -121,12 +121,12 @@ export default class MainLoopService {
 
 	}
 
-	pushEvent(inEvent :[string,number]){
+	pushEvent(eventSpace: string,eventNum: number){
 		
 		this.st.inEvent = true;
 		this.setFrozen(true);
 		this.pause();
-		this.st.currentEvent = inEvent;
+		this.st.currentEvent = [eventSpace,eventNum];
 		this.eventHappen();
 
 	}
@@ -307,7 +307,7 @@ export default class MainLoopService {
 	
 	genDayString(): string{
 
-		return "" + this.st.dayTotal % 60;
+		return "" + Math.floor(this.st.dayTotal % 59.99999999 + 1);
 	}
 
 	genYearString(): string{

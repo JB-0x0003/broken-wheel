@@ -64,6 +64,19 @@ export function loadStateFromLocal(): StateObject{
 	return loadedSave as StateObject;
 }
 
+export function localToText(): string{
+	
+	let temp = localStorage.getItem('state');
+	return temp;
+
+}
+
+export function textToLocal(inText: string): void{
+	
+	localStorage.setItem('state', inText);
+
+}
+
 export function defaultOptions() : OptionObject{
 
 	let tempOpt : OptionObject = {
@@ -95,6 +108,9 @@ export function defaultActivityRecord() : ActivityRecord{
 
 	}
 	
+	tmpRecord[ActivityID.Oddjobs].discovered = true;
+	tmpRecord[ActivityID.Oddjobs].meetsReqs = true;
+
 	console.log("Default Activity Record Generated");
 	console.log(tmpRecord);
 	return tmpRecord;

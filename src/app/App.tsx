@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import EventOverlay from "./event-overlay";
+import Overlay from "./event-overlay";
 import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
@@ -50,7 +50,7 @@ return (
 <div id="themeWrapper" className={"themeWrapper " + st.options.theme}>
 <div id="main" className="mainContainer">
 
-<EventOverlay/>
+<Overlay/>
 
 <div className="navbar">
 	
@@ -58,20 +58,51 @@ return (
 		A Wheel {"\t"}Is Broken
 	<span className="version">v{process.env.REACT_APP_VERSION}</span>
 	</span>
-	<span className="navElement">
+	<span className=" navElement">
 		<span 
 			className="mat-icon iconButt" 
-			onClick={()=>{mainLoop.pushEvent(['system',1002])}}
-			>
+			onClick={()=>{mainLoop.pushEvent('system',1002)}}
+		>
 			question
 		</span>
+		<span className="tooltipContainer">
+			<span className="tooltip">
+				Game details. 
+			</span>
+		</span>
 	</span>
-	<span className="mat-icon navElement">
-		<span className="iconButt navElement">download</span>
-		<span className="iconButt navElement" onClick={()=>{mainLoop.save()}}>upload</span>
+	<span className=" navElement">
+		<span 
+			className="mat-icon iconButt" 
+			onClick={()=>{mainLoop.pushEvent('system',1003)}}
+		>
+			download
+		</span>
+		<span className="tooltipContainer">
+			<span className="tooltip">
+				<div className="tooltipHeader">
+					Save Management
+				</div>
+				<div className="tooltipSegment">
+					You may want to move between devices.
+				</div>
+			</span>
+		</span>
 	</span>
-	<span className="navElement textButt" onClick={()=>{mainLoop.die()}}>
-		Die
+	<span className="navElement">
+		<span className=" textButt" onClick={()=>{mainLoop.die()}}>
+			Die
+		</span>
+		<span className="tooltipContainer">
+			<span className="tooltip">
+				<div className="tooltipHeader">
+					Instantly Die
+				</div>
+				<div className="tooltipSegment">
+					Final peace is denied you, but you can speed things along from time to time.
+				</div>
+			</span>
+		</span>
 	</span>
 	<span className="navElement">
 		<label>
@@ -83,7 +114,7 @@ return (
 				Light Theme
 		</label>
 	</span>
-	<span className="mat-icon iconButt navElement" onClick={()=>{mainLoop.pushEvent(['system',1001])}}>cog</span>
+	<span className="mat-icon iconButt navElement" onClick={()=>{mainLoop.pushEvent('system',1001)}}>cog</span>
 </div>
 <div className="panelContainer">
 	<div className="panelContainerLeft">

@@ -1,4 +1,4 @@
-import {AttributeType, AttributeObject} from '../common-types';
+import {AttributeType, AttributeObject, ResourceType, ResourceObject} from '../common-types';
 
 export enum JatiID {
 	Laborer="laborer",
@@ -15,6 +15,7 @@ export type Jati = {
 	description: string,
 	karma: number,
 	initialAttributes: AttributeObject,
+	initialResources?: ResourceObject,
 
 
 };
@@ -49,6 +50,37 @@ const defaultAspectValues : AttributeObject[AttributeType.Body] = {
 	aptitudeBonus: 0,
 }
 
+const defaultStaminaValues : ResourceObject[ResourceType.Stamina] = {
+	
+	value: 100,
+	maxValue: 100,
+	maxBase: 100,
+	maxBonus: 0,
+	maxMult: 1.0,
+	
+
+}
+const defaultHealthValues : ResourceObject[ResourceType.Health] = {
+	
+	value: 33,
+	maxValue: 100,
+	maxBase: 100,
+	maxBonus: 0,
+	maxMult: 1.0,
+	
+
+}
+const defaultLifeValues : ResourceObject[ResourceType.Life] = {
+	
+	value: 100,
+	maxValue: 100,
+	maxBase: 100,
+	maxBonus: 0,
+	maxMult: 1.0,
+	
+
+}
+
 export const JatiCollection : JC = {
 		
 	[JatiID.Laborer]:  {
@@ -68,16 +100,16 @@ export const JatiCollection : JC = {
 				aptitudeBonus: 0,
 					
 			},
-			cunning: {
+			[AttributeType.Cunning]: {
 				...defaultAttributeValues,
 			},
-			learning: {
+			[AttributeType.Learning]: {
 				...defaultAttributeValues,
 			},
-			charisma: {
+			[AttributeType.Charisma]: {
 				...defaultAttributeValues,
 			},
-			nobility: {
+			[AttributeType.Nobility]: {
 				value: -10,
 				base: 1,
 				bonus: 0,
@@ -86,10 +118,10 @@ export const JatiCollection : JC = {
 				aptitudeBase: 0.8,
 				aptitudeBonus: 0,
 			},
-			summer: {
+			[AttributeType.Summer]: {
 				...defaultAspectValues,
 			},
-			shine: {
+			[AttributeType.Shine]: {
 				...defaultAspectValues,
 			},
 			
@@ -107,19 +139,19 @@ export const JatiCollection : JC = {
 		karma: 100,
 		initialAttributes: {	
 	
-			body: {
+			[AttributeType.Body]: {
 				...defaultAttributeValues,
 			},
-			cunning: {
+			[AttributeType.Cunning]: {
 				...defaultAttributeValues,
 			},
-			learning: {
+			[AttributeType.Learning]: {
 				...defaultAttributeValues,
 			},
-			charisma: {
+			[AttributeType.Charisma]: {
 				...defaultAttributeValues,
 			},
-			nobility: {
+			[AttributeType.Nobility]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -128,7 +160,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			summer: {
+			[AttributeType.Summer]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -137,7 +169,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			shine: {
+			[AttributeType.Shine]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -161,7 +193,7 @@ export const JatiCollection : JC = {
 		karma: -300,
 		initialAttributes: {	
 	
-			body: {
+			[AttributeType.Body]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -170,7 +202,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			cunning: {
+			[AttributeType.Cunning]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -179,7 +211,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			learning: {
+			[AttributeType.Learning]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -188,7 +220,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			charisma: {
+			[AttributeType.Charisma]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -197,7 +229,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			nobility: {
+			[AttributeType.Nobility]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -206,7 +238,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			summer: {
+			[AttributeType.Summer]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -215,7 +247,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			shine: {
+			[AttributeType.Shine]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -239,7 +271,7 @@ export const JatiCollection : JC = {
 		karma: -1000000,
 		initialAttributes: {	
 	
-			body: {
+			[AttributeType.Body]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -248,7 +280,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			cunning: {
+			[AttributeType.Cunning]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -257,7 +289,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			learning: {
+			[AttributeType.Learning]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -266,7 +298,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			charisma: {
+			[AttributeType.Charisma]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -275,7 +307,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			nobility: {
+			[AttributeType.Nobility]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -284,7 +316,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			summer: {
+			[AttributeType.Summer]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -293,7 +325,7 @@ export const JatiCollection : JC = {
 				aptitudeBase: 1,
 				aptitudeBonus: 0,
 			},
-			shine: {
+			[AttributeType.Shine]: {
 				value: 0,
 				base: 1,
 				bonus: 0,
@@ -303,6 +335,25 @@ export const JatiCollection : JC = {
 				aptitudeBonus: 0,
 			},
 
+
+		},
+		initialResources: {
+			[ResourceType.Stamina] : {
+				...defaultStaminaValues
+
+			},
+			health: {
+				...defaultHealthValues
+
+			},
+			[ResourceType.Life] : {
+				value: 3,
+				maxValue: 100,
+				maxBase: 100,
+				maxBonus: 100,
+				maxMult: 1.0,
+
+			}
 
 		},
 
