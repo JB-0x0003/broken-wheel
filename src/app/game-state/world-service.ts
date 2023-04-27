@@ -40,7 +40,13 @@ export default class WorldService{
 
 	}
 
-	
+	resetDefaultActivity() : void{	
+		
+		this.setCurrentLocation(0);
+		this.st.currentActivityID = ActivityID.Oddjobs;
+		
+
+	}
 
 	getCurrentActivityID(): ActivityID{
 
@@ -158,6 +164,8 @@ export default class WorldService{
 		}
 		
 	}
+	
+	
 
 	getCurrentLocationIndex():number{
 

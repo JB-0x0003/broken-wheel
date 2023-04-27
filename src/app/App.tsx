@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import Overlay from "./event-overlay";
+import Overlay from "./overlay";
 import TimePanel from "./time-panel";
 import AttributePanel from "./attribute-panel";
 import Center1Panel from './center-1-panel';
@@ -55,7 +55,7 @@ return (
 <div className="navbar">
 	
 	<span className="gameTitle">
-		A Wheel {"\t"}Is Broken
+		Broken Wheel
 	<span className="version">v{process.env.REACT_APP_VERSION}</span>
 	</span>
 	<span className=" navElement">

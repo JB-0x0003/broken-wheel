@@ -77,6 +77,12 @@ export function textToLocal(inText: string): void{
 
 }
 
+export function deleteLocal(): void{
+
+	localStorage.removeItem('state');
+
+}
+
 export function defaultOptions() : OptionObject{
 
 	let tempOpt : OptionObject = {
@@ -204,6 +210,7 @@ export function defaultState() : StateObject{
 					LocationCollection[LocationID.CommonGrounds],
 					LocationCollection[LocationID.Plantation],
 					LocationCollection[LocationID.ForestOutskirts],
+					LocationCollection[LocationID.TownAcademy],
 				],
 					
 				

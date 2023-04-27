@@ -5,7 +5,7 @@ export enum LocationID {
 	CommonGrounds = "commongrounds",
 	Plantation = "plantation",
 	ForestOutskirts = "forestoutskirts",
-	
+	TownAcademy = "townacademy",
 }
 
 
@@ -57,6 +57,15 @@ LocationCollection[LocationID.ForestOutskirts] = {
 	activities: [
 		ActivityID.Hunting,
 	],
+
+}
+
+LocationCollection[LocationID.TownAcademy] = {
+	
+	name: "Academy",
+	activities: [
+		ActivityID.Tutoring,
+	]
 
 }
 

@@ -272,12 +272,12 @@ export const JatiCollection : JC = {
 		initialAttributes: {	
 	
 			[AttributeType.Body]: {
-				value: 0,
+				value: 1,
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Cunning]: {
@@ -285,8 +285,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Learning]: {
@@ -294,8 +294,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Charisma]: {
@@ -303,8 +303,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Nobility]: {
@@ -312,8 +312,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Summer]: {
@@ -321,8 +321,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 			[AttributeType.Shine]: {
@@ -330,8 +330,8 @@ export const JatiCollection : JC = {
 				base: 1,
 				bonus: 0,
 				mult: 1,
-				aptitude: 1,
-				aptitudeBase: 1,
+				aptitude: 0.1,
+				aptitudeBase: 0.1,
 				aptitudeBonus: 0,
 			},
 
@@ -347,7 +347,7 @@ export const JatiCollection : JC = {
 
 			},
 			[ResourceType.Life] : {
-				value: 3,
+				value: 1,
 				maxValue: 100,
 				maxBase: 100,
 				maxBonus: 100,

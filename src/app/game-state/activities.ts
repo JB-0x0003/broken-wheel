@@ -2,7 +2,6 @@ import {ServiceObject} from '../global-service-provider';
 import {meatGenItems, generateItems} from './items';
 import {BagID} from './inventory';
 import {AttributeType} from '../common-types';
-import {weightedAverage} from '../helpers';
 
 
 export enum ActivityID {
@@ -15,6 +14,8 @@ export enum ActivityID {
 	Stargazing = "stargazing",
 	Stealing = "stealing",
 	Hunting = "hunting",
+	Tutoring = "tutoring",
+	Academia = "academia",
 };
 
 export enum ActivityType {
@@ -245,5 +246,32 @@ ActivityCollection[ActivityID.Hunting] = {
 	}]
 
 }
+
+const studyCost = 5;
+
+ActivityCollection[ActivityID.Tutoring] = {
+	
+	name: ['Get Tutoring'],
+	aID: ActivityID.Academia,
+	description: [`Pay ₹${studyCost} to be taught by faculty from the local academy. Trains learning.`],
+	gerund: ["Studying"],
+	rankThreshold: [0],
+	requirements: (sv : ServiceObject)=>{
+		let attr = sv.ST.body.attributes;
+		
+		if (attr.learning.value >= 5 && sv.ST.body.money > studyCost) return true
+		else return false
+
+	},
+	consequence: [
+		
+		(sv : ServiceObject)=>{
+			sv.Character.trainAttribute(AttributeType.Learning, 0.2);
+			sv.Character.payMoney(studyCost);
+		}
+	],
+
+}
+
 
 export default ActivityCollection;

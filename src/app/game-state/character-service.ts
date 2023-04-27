@@ -113,6 +113,16 @@ export default class CharacterService{
 		this.st.body.money += amount;
 
 	}
+	
+	payMoney(amount: number): void{
+
+		if (this.st.body.money >= amount){
+			
+			this.st.body.money -= amount;
+
+
+		} else this.st.body.money = 0;
+	}
 
 	getMoney() : number{
 
@@ -432,7 +442,7 @@ export default class CharacterService{
 		if (this.st.body.money >= price){
 			let index = this.addItemToBag(BagID.Inventory, ItemID.Rice, 1);
 			if (index !== -1){
-				this.st.body.money -= price;
+				this.payMoney(price);
 			}	
 			return index;
 			
@@ -656,6 +666,22 @@ export default class CharacterService{
 
 	}
 	
+	act() : void{
+		
+		let currAct = this.sv.World.getCurrentActivity();
+		
+		if (currAct.requirements(this.sv) === true){
+			currAct.consequence[0](this.sv);
+		} else {
+			this.st.activityRecord[currAct.aID].meetsReqs = false;
+			this.sv.World.resetDefaultActivity();
+			this.sv.Log.pushLog("You no longer meet the requirements for this activity!");
+			this.sv.MainLoop.pause();
+		}
+
+
+	}
+
 	//This is called by MainLoopService
 	injectDep(inSV : ServiceObject) : void{
 		

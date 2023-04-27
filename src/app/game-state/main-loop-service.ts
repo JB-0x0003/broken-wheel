@@ -156,11 +156,6 @@ export default class MainLoopService {
 		return event;
 	}
 
-	act() : void{
-		//TODO make rank work
-		this.world.getCurrentActivity().consequence[0](this.sv);
-
-	}
 	
 	pulse(): void{
 		
@@ -184,7 +179,7 @@ export default class MainLoopService {
 			this.advanceCounter = 0;
 			this.longPulse();
 		}
-		this.act();
+		this.character.act();
 		this.advanceDay();
 		
 
