@@ -12,6 +12,7 @@ export default function EquipmentPanel(){
 
 
 	let [,dummyState] = React.useState({});
+	let [subbed, setSubbed] = React.useState(false);
 	let sv = Serv()
 	
 	if (sv === undefined) return <ErrorPanel/>;
@@ -24,7 +25,10 @@ export default function EquipmentPanel(){
 
 	}
 	
-	sv.MainLoop.subscribeToTick(refresh);
+	if (!subbed){
+		sv.MainLoop.subscribeToTick(refresh);
+		setSubbed(true);
+	}
 
 
 	let deriv = sv.Character.st.body.derivatives;

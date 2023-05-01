@@ -1,6 +1,6 @@
 import React from 'react';
 import ErrorPanel from './error-panel';
-import {Location} from './game-state/locations';
+import LocationCollection, {Location} from './game-state/locations';
 import {Serv} from "./global-service-provider";
 import ActivityCollection from "./game-state/activities";
 import {pipeBigNum} from "./helpers";
@@ -10,7 +10,8 @@ function ZonePanel(){
 	let sv = Serv();
 
 	//TODO Replace dumb refresh system w/ updating every time activityRecord updates
-	let [, dummyState] = React.useState({});
+	const [, dummyState] = React.useState({});
+	const [subbed, setSubbed] = React.useState(false);
 
 	//Abort if state isn't done loading
 	if (sv === undefined) return <ErrorPanel/>;
@@ -22,8 +23,13 @@ function ZonePanel(){
 		dummyState({});
 
 	}
+	
 
-	sv.MainLoop.subscribeToLongTick(refresh);
+	if (subbed === false){
+		sv.MainLoop.subscribeToLongTick(refresh);
+		setSubbed(true);
+
+	}
 	
 
 	//Prepare to render
@@ -45,7 +51,8 @@ function ZonePanel(){
 		//this is absolute, including non-visible activities
 		//must be sanity-checked when list changes
 		//TODO memoize
-		let possibleActivities = possibleLocations[i].activities;
+		let currentSchema = LocationCollection[possibleLocations[i].ID];
+		let possibleActivities = currentSchema.activities;
 		let activityContent : React.ReactNode[] = [];
 		
 		//begin enumerating possible activities within this location

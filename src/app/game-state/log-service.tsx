@@ -25,7 +25,15 @@ export default class LogService{
 		this.logSubject.subscribe((v)=>callback(v));
 		
 	}
-	
+
+	getLog() :LogMessage[]{
+
+		return this.textLog;
+
+	}
+
+
+
 	pushLog(text: string, type: LogType = LogType.Normal){
 		
 		console.log("LOG ACTIVATED");

@@ -8,6 +8,7 @@ export default function TimePanel(){
 	const [pauseDesire, setPauseDesire] = useState(false);
 	const [desiredSpeedChange, setDesiredSpeedChange] = useState(0);
 	const [, dummyState] = useState({});
+	const [subbed, setSubbed] = useState(false);
 	let sv = Serv();
 
 	//Abort if state isn't done loading
@@ -28,9 +29,12 @@ export default function TimePanel(){
 		dummyState({});
 
 	}
-
-	sv.MainLoop.subscribeToLongTick(refresh);
-
+	
+	if (subbed === false){
+		
+		sv.MainLoop.subscribeToLongTick(refresh);
+		setSubbed(true);
+	}
 
 	if (desiredSpeedChange === 1){
 

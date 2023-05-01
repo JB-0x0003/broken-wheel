@@ -8,15 +8,21 @@ export default function PersonalPanel(){
 	
 	let sv = Serv();
 	if (sv === undefined) return <ErrorPanel/>;
+	
+	let secretHTML = [];
+
+	for (let key in SecretID){
+	
+		secretHTML.push(<SecretElement key={"secret-" + key} ID={SecretID[key]}/>);
+	}
 
 	return (
 		<div className="panel spanning">
 			<div className="panelHeader">
-				Personal Information
+				Secrets
 			</div>
 			<div className="secretFlexbox">
-				<SecretElement ID={SecretID.Weapons}/>
-				<SecretElement ID={SecretID.Swords}/>
+				{secretHTML}
 			</div>
 		</div>
 

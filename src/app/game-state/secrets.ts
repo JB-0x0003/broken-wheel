@@ -1,4 +1,4 @@
-import {AttributeType,BonusObject,BonusObjectRanks, DerivativeType} from '../common-types';
+import {AttributeType,ResourceType,BonusObject,BonusObjectRanks, DerivativeType} from '../common-types';
 import {ItemMaskID} from './inventory';
 
 export const __SECRET_XP_EXPONENT = 1.4;
@@ -7,6 +7,7 @@ export enum SecretID{
 
 	Swords = 'swords',
 	Weapons = 'weapons',
+	Anatomy = 'anatomy',
 	
 	
 
@@ -49,7 +50,7 @@ let SecretCollection : SecretSuite = {
 	
 	[SecretID.Swords]: {
 		name: ["Noble Edges"],
-		description: ["TODO"],
+		description: ["Just like the proper steps to a dance, or a swallow's wing in flight, the tip of a sword is a moment more than an object or a point in space. Everything in its place."],
 		constantBonus: {
 			attributes: {
 				[AttributeType.Nobility]: {
@@ -78,7 +79,7 @@ let SecretCollection : SecretSuite = {
 	},
 	[SecretID.Weapons]: {
 		name: ["Weapon Mastery"],	
-		description: ["TODO"],
+		description: ["Know the steps of war like the beat of your heart. Wield an unreasonable number of weapons."],
 		constantBonus: {
 			derivatives: {
 				[DerivativeType.Attack]: {
@@ -101,12 +102,65 @@ let SecretCollection : SecretSuite = {
 				}
 
 			},
+			12: {
+				equipment: {
+					mask: {
+						1: ItemMaskID.EquipWeapon,
+						2: ItemMaskID.EquipWeapon,
+					}
+				}
+			},
+			17: {
+				equipment: {
+					mask: {
+						1: ItemMaskID.EquipWeapon,
+						2: ItemMaskID.EquipWeapon,
+						3: ItemMaskID.EquipWeapon,
+					}
+				}
+			},
 
 		},
 		baseXP: 100,
 		XPExponent: __SECRET_XP_EXPONENT,
 
 	},
+	[SecretID.Anatomy]: {
+		name: ["Bodily Secrets"],
+		description: ["With enough cuts, you can know many things."],
+		constantBonus: {
+			attributes: {
+				[AttributeType.Learning]: {
+					value: 5,
+					bonus: 5,
+					aptitude: 0.05,
+					aptitudeBase: 0.05,
+				},
+			},
+			resources: {
+				[ResourceType.Health] : {
+					maxValue: 5,
+					maxBonus: 5,
+				},
+			},
+		},
+		specificBonus: {
+			
+			5: {
+				derivatives: {
+					[DerivativeType.Attack]: {
+						value: 10,
+						bonus: 10,	
+					}
+				},
+			},
+		},
+		baseXP: 100,
+		XPExponent: __SECRET_XP_EXPONENT,
+
+	},
+
+	
 }
 
 export function secretXPForRank(secret: SecretID, rank: number) : number{

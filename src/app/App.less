@@ -430,10 +430,22 @@ body{
 	display:flex;
 	flex-direction:row;
 	justify-content:right;
+	background: var(--panelBackground);
 	margin-right: calc(var(--panelTopRightOffset) + 16px);
 	top:0;
 	right:0;
 }
+
+/*.panelTabContainer::after{
+	
+	position:absolute;
+	bottom:-10px;
+	min-height: 1px;
+	width:200%;
+	background: var(--panelBorderLight);
+	content: " ";
+
+}*/
 
 .panelTab{
 	
@@ -444,6 +456,7 @@ body{
 	padding: 0px 3px 0 3px;
 	border-width: 2px 1px 2px 0px;
 	border-style: solid; 
+	border-radius: 0px 0px 0px 0px;
 	border-color: var(--panelBorderLight);
 	border-top: 2px solid var(--panelBackground);
 	text-align: center;
@@ -486,6 +499,14 @@ body{
 .spanning{
 	height: 100%;
 	width:100%;
+	flex-shrink: 1;
+	flex-grow: 1
+}
+
+.growNormallyIDK{
+	
+	flex-grow: 1;
+
 }
 
 .cornerElement{
@@ -695,11 +716,11 @@ body{
 .signInput{
 	
 	color: transparent;
-	text-shadow: 0px 0px 1px var(--panelText);
+	text-shadow: 0px 0px 0px var(--panelText);
 	background: none;
+	width: 90%;
 	border: none;
 	font-size: 40px;
-	position: relative;
 	outline: none;
 	margin-top: 20px;
 
@@ -878,8 +899,7 @@ body{
 
 	display:flex;
 	justify-content:space-between;
-	height:100%;
-
+	
 }
 
 .attributeFlexColumn{
@@ -887,8 +907,8 @@ body{
 	display:flex;
 	flex-direction:column;
 	margin-right:auto;
-	flex: 1 0 50%;
-	height:100%;
+	flex: 1 1 50%;
+	//border-left: 1px solid var(--panelBorderLight);
 }
 
 .attributeLi{
@@ -972,15 +992,33 @@ body{
 
 }
 
+.progressFill.stamina.overcharge{
+
+	background: var(--blue-dim);
+
+}
+
 .progressFill.health{
 
 	background: var(--red-dim);
 
 }
 
+.progressFill.health.overcharge{
+
+	background: var(--green-dim);
+
+}
+
 .progressFill.lifespan{
 	
 	background: var(--yellow-dim);
+
+}
+
+.progressFill.lifespan.overcharge{
+	
+	background: var(--orange-dim);
 
 }
 
@@ -1038,6 +1076,34 @@ body{
 
 }
 
+.storeLi{
+	
+	position:relative;
+	overflow:visible;
+	display: flex;
+	flex-direction:row;
+	justify-content: space-between;
+	font-size: 14px;
+	user-select: none;
+
+}
+
+.storeSlot{
+
+	flex-grow: 1;
+	position: relative;
+	display: flex;
+	flex-direction:row;
+	justify-content: space-between;
+	padding-left: 4px;
+	padding-right: 4px;
+	margin-top: 3px;
+	margin-bottom: 3px;
+	margin-right: 4px;
+	background: var(--panelBorderLight);
+
+}
+
 .equipmentStatColumn{
 	display:flex;
 	flex-direction:column;
@@ -1074,6 +1140,17 @@ body{
 
 }
 
+@logRadius: 0px 10px 10px 20px;
+@logRadiusInner: 0px 15px 15px 20px;
+
+.logDisplayContainer{
+	
+	position:relative;
+	height: 100%;
+	overflow: hidden;
+	border-radius: @logRadius;
+}
+
 .logDisplayWrapper{
 	
 		
@@ -1082,21 +1159,24 @@ body{
 	height: 100%;	
 	font-size: 14px;
 	padding: 0px 0px 0px 0px;
-	border-radius: 0px 10px 0px 10px;
+	border-radius: @logRadius;
 	background: var(--panelBorderDark);
 
 }
 
 .logDisplay{
 	
-
 	.scrollable();
+	position:relative;
+	display:flex;
 	min-height: 100%;
+	flex-shrink: 0;
+	flex-direction:column;
+	flex-justify: flex-end;
 	background: var(--panelDarkenedBackground);
 	margin: 0px 5px 0px 5px;
-	border: 1px solid var(--panelBorderLight);
-	border-width: 0px 1px 0px 0px;
-	border-radius: 0px 10px 0px 10px;
+	border-right: 1px solid var(--panelBorderLight);
+	border-radius: @logRadiusInner;
 }
 
 

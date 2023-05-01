@@ -1,4 +1,5 @@
 import {ActivityID} from './activities';
+import {ItemID} from './items';
 
 export enum LocationID {
 
@@ -8,18 +9,32 @@ export enum LocationID {
 	TownAcademy = "townacademy",
 }
 
+export type SupplyObject = {
+	
+	[key in ItemID]?: boolean;
+
+}
+
 
 
 export interface Location {
 	
 	name : string;
-	activities : ActivityID[];
+	ID: LocationID;
+
+}
+
+export interface LocationSchema {
+	
+	name: string;
+	activities: ActivityID[];
+	supply : SupplyObject;
 
 }
 
 interface LocationSuite {
 
-	[key: string]: Location;
+	[key: string]: LocationSchema;
 
 }
 
@@ -34,10 +49,12 @@ LocationCollection[LocationID.CommonGrounds] = {
 		ActivityID.Oddjobs,
 		ActivityID.Begging,
 		ActivityID.Poetry,
-		ActivityID.Stealing,
+		ActivityID.Theft,
 
 	],
-
+	supply: {
+		[ItemID.HouseGrain]: true,
+	},
 };
 
 LocationCollection[LocationID.Plantation] = {
@@ -48,6 +65,14 @@ LocationCollection[LocationID.Plantation] = {
 		ActivityID.FieldLabor,
 
 	],
+	supply: {
+		[ItemID.Soybeans]: true,
+		[ItemID.Barley]: true,
+		[ItemID.Wheat]: true,
+		[ItemID.Millet]: true,
+		[ItemID.Rice]: true,
+		
+	},
 
 };
 
@@ -57,6 +82,10 @@ LocationCollection[LocationID.ForestOutskirts] = {
 	activities: [
 		ActivityID.Hunting,
 	],
+	supply: {
+
+
+	},
 
 }
 
@@ -65,8 +94,19 @@ LocationCollection[LocationID.TownAcademy] = {
 	name: "Academy",
 	activities: [
 		ActivityID.Tutoring,
-	]
-
+	],
+	supply: {
+	
+	},
 }
 
 export default LocationCollection;
+
+export function genLocation(inID: LocationID) : Location {
+
+	return {
+		name: LocationCollection[inID].name,
+		ID: inID,
+	}
+
+}

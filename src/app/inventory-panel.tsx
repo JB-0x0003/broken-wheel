@@ -1,12 +1,15 @@
 import React from 'react';
 import ErrorPanel from './error-panel';
 import BagSlot from './bag-slot';
+import StoreSlot from './store-slot';
 import {Serv} from './global-service-provider';
 import {BagID} from './game-state/inventory';
+import {ItemID} from './game-state/items';
 
 export default function InventoryPanel(){
 
-	let [,dummyState] = React.useState({});
+	const [,dummyState] = React.useState({});
+	const [subbed, setSubbed] = React.useState(false);
 
 	let sv = Serv();
 	
@@ -19,7 +22,12 @@ export default function InventoryPanel(){
 		dummyState({});
 
 	}
-	sv.MainLoop.subscribeToLongTick(refresh);
+
+	if (!subbed){
+		sv.MainLoop.subscribeToLongTick(refresh);
+		setSubbed(true);
+
+	}
 	
 
 	let stackHTML = [[],[]];
@@ -31,6 +39,20 @@ export default function InventoryPanel(){
 		);
 
 		
+	}
+
+	let storeHTML = [];
+	let storeItems = sv.World.getCurrentZoneStoreItems();
+	let i = 0;
+
+	for (let key in storeItems){
+		
+		storeHTML.push(
+			<StoreSlot key = {"store" + i} ID={key as ItemID}/>
+
+		);
+		++i;
+
 	}
 
 	return(
@@ -48,6 +70,9 @@ export default function InventoryPanel(){
 						</span>
 						<span className="inventoryFlexColumn">
 							{stackHTML[1]}
+						</span>
+						<span className="inventoryFlexColumn">
+							{storeHTML}
 						</span>
 					</div>
 				</div>

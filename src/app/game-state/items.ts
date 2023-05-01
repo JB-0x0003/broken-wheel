@@ -1,8 +1,15 @@
 import {AttributeType, DerivativeType, ResourceType, BonusObject} from '../common-types';
 import {ServiceObject} from '../global-service-provider';
 
-export const enum ItemID{
+export const __ITEM_LARGE_STACK = 1000;
 
+export const enum ItemID{
+	
+	HouseGrain = "housegrain",
+	Soybeans = "soybeans",
+	Wheat = "wheat",
+	Barley = "barley",
+	Millet = "millet",
 	Rice = "rice",
 	Rabbit = "rabbit",
 	Venison = "venison",
@@ -94,31 +101,116 @@ export function addItemToDropObject(drop: ItemDrop, inputID: ItemID, inputAmount
 
 let ItemCollection : ItemObject = {
 
+	//may say that this is hemp
+	[ItemID.HouseGrain] : {
+		
+		name: "House Grain",
+		ID: ItemID.HouseGrain,
+		type: ItemType.Generic,
+		description: "Virtueless specks of brown and black. There are many schemes to make it palatable, but you don't care for any of them.",
+		value: 1,
+		maxStack: __ITEM_LARGE_STACK,
+		consumable: true,
+		edible: true,
+		consumeBonus: {
+			resources: {[ResourceType.Health]: {value: 1.5}},
+		},
+
+
+	},
+	
+	[ItemID.Soybeans] : {
+
+		name:"Soybeans",
+		ID: ItemID.Soybeans,
+		type: ItemType.Generic,
+		description: "One of the fundamental grains. Scholars are unanimous that it is the lowest of them. Difficult to digest.",
+		value: 2,
+		maxStack: __ITEM_LARGE_STACK,
+		consumable: true,
+		edible: true,
+		consumeBonus: {
+			resources: {[ResourceType.Health]: {value: 2}},
+		},
+	},
+
+	[ItemID.Barley] : {
+		
+		name:"Barley",
+		ID: ItemID.Barley,
+		type: ItemType.Generic,
+		description: "One of the fundamental grains. Its position is disputed, but agreed to be lower. You don't dislike it.",
+		value: 4,
+		maxStack: __ITEM_LARGE_STACK,
+		consumable: true,
+		edible: true,
+		consumeBonus: {
+			resources: {[ResourceType.Health]: {value: 2.5}},
+		},
+
+	},
+
+	[ItemID.Wheat] : {
+		name:"Wheat",
+		ID: ItemID.Wheat,
+		type: ItemType.Generic,
+		description: "One of the fundamental grains. Its position among them is disputed, but known to be lower. It's at least palatable.",
+		value: 8,
+		maxStack: __ITEM_LARGE_STACK,
+		consumable: true,
+		edible: true,
+		consumeBonus: {
+			resources: {[ResourceType.Health]: {value: 3}},
+		},
+
+	},
+
+	[ItemID.Millet] : {
+		
+		name:"Millet",
+		ID: ItemID.Millet,
+		type: ItemType.Generic,
+		description: "The lowest of the fundamental grains. It's not much, but it's something.",
+		value: 16,
+		maxStack: __ITEM_LARGE_STACK,
+		consumable: true,
+		edible: true,
+		consumeBonus: {
+			resources: {[ResourceType.Health]: {value: 4}},
+		},
+
+	},
+
+
 	[ItemID.Rice] : {
 
 		name:"Rice",
 		ID: ItemID.Rice,
 		type: ItemType.Generic,
-		description: "Raw calories. It keeps you alive.",
-		value: 1,
-		maxStack: 1000,
+		description: "The highest of the fundamental grains. Its virtue is known in the little prep required to feed one.",
+		value: 30,
+		maxStack: __ITEM_LARGE_STACK,
 		consumable: true,
+		edible: true,
 		consumeBonus: {
-			resources: {[ResourceType.Health]: {value: 2}},
+			resources: {[ResourceType.Health]: {value: 5}},
 			
 		},
 	},
+
+
 
 	[ItemID.Rabbit]:{
 		name:"Rabbit Meat",
 		ID: ItemID.Rabbit,
 		type: ItemType.Generic,
 		description:"Fresh and lively. You can almost see it twitching. You really can hunt now.",
-		value: 10,
-		maxStack: 1000,
+		value: 50,
+		maxStack: __ITEM_LARGE_STACK,
 		consumable: true,
+		edible: true,
 		consumeBonus: {
-			resources: {[ResourceType.Health]: {value: 3}},
+			resources: {[ResourceType.Health]: {value: 6}},
 		},
 	},
 
@@ -127,13 +219,14 @@ let ItemCollection : ItemObject = {
 		ID: ItemID.Venison,
 		type: ItemType.Generic,
 		description: "Gamey with occasional rank hairs, but red and full of life. There's meat on your bones now.",
-		value: 25,
-		maxStack: 1000,
+		value: 100,
+		maxStack: __ITEM_LARGE_STACK,
 		consumable: true,
+		edible: true,
 		consumeBonus: {
 			resources: {
 				[ResourceType.Health]: {
-					value: 4,
+					value: 8,
 					maxBase: 0.01,
 				}
 			},
@@ -152,8 +245,9 @@ let ItemCollection : ItemObject = {
 		type: ItemType.Generic,
 		description: "Trash.",
 		value: 0,
-		maxStack: 1000,
+		maxStack: __ITEM_LARGE_STACK,
 		consumable: true,
+		edible: true,
 		consumeBonus: {
 			resources: {[ResourceType.Health]: {value: 0.8}},
 			

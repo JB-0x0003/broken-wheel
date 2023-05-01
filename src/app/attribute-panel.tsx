@@ -10,7 +10,8 @@ export default function AttributePanel(){
 	
 	let sv = Serv();
 	const [, dummyState] = React.useState({});
-	
+	const [subbed, setSubbed] = React.useState(false);
+
 	//check if state is done being created; if not, die
 	if (sv === undefined) return <ErrorPanel/>;
 
@@ -19,8 +20,11 @@ export default function AttributePanel(){
 		dummyState({});
 
 	}
-
-	sv.MainLoop.subscribeToTick(refresh);
+	
+	if (subbed === false){
+		sv.MainLoop.subscribeToTick(refresh);
+		setSubbed(true);
+	}
 
 	let name = sv.Character.getName();
 	let jati = sv.Character.getBody().jati;

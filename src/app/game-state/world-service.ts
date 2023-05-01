@@ -1,7 +1,9 @@
 import {StateObject} from './state';
 import CharacterService from './character-service';
+import ItemCollection, {ItemID} from './items';
+import {BagID} from './inventory';
 import ActivityCollection, {Activity, ActivityID, ActivityIndex} from './activities';
-import {Location} from './locations';
+import LocationCollection, {LocationSchema, Location, SupplyObject} from './locations';
 import {ServiceObject} from '../global-service-provider';
 
 export interface Zone {
@@ -20,6 +22,7 @@ export default class WorldService{
 	st: StateObject;
 	sv: ServiceObject = undefined!;
 	character: CharacterService;
+	
 
 	reqStartAct(inLoc : number, inAct : ActivityID) : void{
 		
@@ -40,10 +43,10 @@ export default class WorldService{
 
 	}
 
-	resetDefaultActivity() : void{	
+	resetActivity() : void{	
 		
 		this.setCurrentLocation(0);
-		this.st.currentActivityID = ActivityID.Oddjobs;
+		this.st.currentActivityID = ActivityID.None;
 		
 
 	}
@@ -125,22 +128,24 @@ export default class WorldService{
 	calcActivityReqs(): void{
 		
 		let currZone = this.st.ZoneCollection[this.st.currentZone];
-		let currLoc;
-		let currAct;
+		let currLoc : Location;
+		let currLocSchema : LocationSchema;
+		let currAct : ActivityID;
 
 		for (let i = 0; i < currZone.locations.length; ++i){
 			
 			currLoc = currZone.locations[i];
+			currLocSchema = LocationCollection[currLoc.ID];
+			
+			for (let j = 0; j < currLocSchema.activities.length; ++j){
 
-			for (let j = 0; j < currLoc.activities.length; ++j){
-
-				currAct = currLoc.activities[j];
-				
+				currAct = currLocSchema.activities[j];
+				//console.log(currAct);		
 				if (ActivityCollection[currAct].requirements(this.sv) === true){
 					
 					this.unlockActivity(currAct);
 				}else {
-
+			
 					this.lockActivity(currAct);
 				}
 				
@@ -149,6 +154,11 @@ export default class WorldService{
 		}
 	
 
+	}
+	
+	act() : void {
+
+		this.getCurrentActivity().consequence[0](this.sv);
 	}
 
 	//only changes the 'meetsReqs' property. Doesn't undiscover activities
@@ -194,7 +204,81 @@ export default class WorldService{
 		return this.st.ZoneCollection[ZoneIndex]
 
 	}
+
+	getCurrentZoneStoreItems() : SupplyObject{
+		
+		let locations = this.getCurrentZone().locations;
+		let supply : SupplyObject = {};
+
+		for (let i in locations){
+			let id = locations[i].ID;
+			supply = {...supply, ...LocationCollection[id].supply};
+
+		}
+		
+		return supply;
+
+	}
 	
+	//return index of item bought
+	//otherwise returns -1
+	//TODO add caching
+	attemptBuyItem(inItem : ItemID, quantity: number) : number{
+		
+		//console.log("Attemping to buy " + inItem);
+
+		let availableItems : SupplyObject = this.getCurrentZoneStoreItems();
+		let targetAvailable = false;
+
+		console.log(availableItems);
+		if (availableItems[inItem] !== true) {
+
+			//console.log("Item Unavailable: " + inItem);
+			//console.log("Available items =");
+			//console.log(availableItems);
+			return -1;
+		}
+
+		let price = ItemCollection[inItem].value;
+		
+		if (this.st.body.money >= price * quantity){
+			let index = this.character.addItemToBag(BagID.Inventory, inItem, quantity);	
+			if (index !== -1){
+				this.character.payMoney(price * quantity);
+
+			}
+			return index;
+		} else {
+			//console.log("Can't afford item");
+			return -1;
+		}
+		
+
+	};
+
+	//NOTE: MAY RETURN UNDEFINED
+	getCheapestBuyableFood() : ItemID{
+		
+		let availableItems = this.getCurrentZoneStoreItems();
+		let cheapestFood = undefined;	
+		let cheapestValue = 999999999999;
+
+		for (let id in availableItems){
+			
+			let item = ItemCollection[id];
+			if (item.edible === true && item.value < cheapestValue){
+
+				cheapestFood = id;
+				cheapestValue = item.value;
+
+			}
+			
+		}
+		
+		return cheapestFood;
+
+	}
+
 	getCurrentZoneProsperity() : number{
 	
 		return this.getCurrentZone().prosperity;

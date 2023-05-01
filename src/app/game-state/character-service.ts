@@ -14,6 +14,7 @@ import {LogType} from './log-service';
 export const __DAILY_LIFE_DRAIN = 0.076;
 export const __DAILY_HEALTH_DRAIN_BASE = 0.5;
 export const __DAILY_HEALTH_DRAIN_PERCENT = 0.0454545;
+export const __DAILY_HEALTH_DRAIN_PERCENT_OVERCHARGE = 0.001;
 
 export enum FoodSourceStatus{
 	Inventory = "inventory",
@@ -288,8 +289,18 @@ export default class CharacterService{
 	getDailyHealthDrain():number{
 		
 		let currHealth = this.st.body.resources[ResourceType.Health].value; 
+		let maxHealth = this.st.body.resources[ResourceType.Health].maxValue;	
+
+
+		let drain = __DAILY_HEALTH_DRAIN_BASE + currHealth * __DAILY_HEALTH_DRAIN_PERCENT;
 		
-		return __DAILY_HEALTH_DRAIN_BASE + currHealth * __DAILY_HEALTH_DRAIN_PERCENT; 
+		if (currHealth > maxHealth){
+			
+			drain += Math.pow(currHealth - maxHealth, 2.0) * __DAILY_HEALTH_DRAIN_PERCENT_OVERCHARGE;
+
+		}
+
+		return  drain;
 
 
 
@@ -362,7 +373,7 @@ export default class CharacterService{
 			
 			if (inv.contents[i] === undefined || inv.contents[i].ID ===undefined) continue;
 			let item = ItemCollection[inv.contents[i].ID];
-			if (item.consumable !== true) continue;
+			if (item.edible !== true || item.consumable !== true) continue;
 			
 			//TODO add option to use different sorting methods
 			let value = ItemSortCollection[ItemSortID.HighestValue](inv, i);
@@ -420,7 +431,6 @@ export default class CharacterService{
 
 	onStarve(): void{
 		if (this.foodSource !== FoodSourceStatus.Starvation){
-		
 			this.setFoodSource(FoodSourceStatus.Starvation);
 			this.sv.MainLoop.pause();
 			this.sv.Log.pushLog("You are starving", LogType.Danger);
@@ -433,21 +443,7 @@ export default class CharacterService{
 		this.starveSubject.subscribe((v)=>{callback(v)});	
 
 	}
-	//returns index of item if item is bought
-	//otherwise returns -1
-	autoBuyFood(): number{
-		
-		let price = ItemCollection[ItemID.Rice].value;
-		
-		if (this.st.body.money >= price){
-			let index = this.addItemToBag(BagID.Inventory, ItemID.Rice, 1);
-			if (index !== -1){
-				this.payMoney(price);
-			}	
-			return index;
-			
-		} else return -1;
-	}
+
 
 	dailyEat(): void{
 		
@@ -455,7 +451,7 @@ export default class CharacterService{
 		let bestIndex = this.selectInvItemToEat();
 		
 		if (bestIndex === -1) {
-			let newIndex = this.autoBuyFood();
+			let newIndex = this.sv.World.attemptBuyItem(ItemID.Wheat, 1);
 			if (newIndex !== -1){
 				newIndex = this.consumeItem(BagID.Inventory, newIndex);	
 			}
@@ -500,7 +496,7 @@ export default class CharacterService{
 	calcSecretBonuses(): void{
 	
 		let sRecord = this.st.secrets;
-		console.log(sRecord);
+		//console.log(sRecord);
 		for (let id in sRecord){
 			let currentSecret = SecretCollection[id];
 			let rank = sRecord[id].rank;
@@ -666,23 +662,6 @@ export default class CharacterService{
 
 	}
 	
-	act() : void{
-		
-		let currAct = this.sv.World.getCurrentActivity();
-		
-		if (currAct.requirements(this.sv) === true){
-			currAct.consequence[0](this.sv);
-		} else {
-			this.st.activityRecord[currAct.aID].meetsReqs = false;
-			this.sv.World.resetDefaultActivity();
-			this.sv.Log.pushLog("You no longer meet the requirements for this activity!");
-			this.sv.MainLoop.pause();
-		}
-
-
-	}
-
-	//This is called by MainLoopService
 	injectDep(inSV : ServiceObject) : void{
 		
 		this.sv = inSV;

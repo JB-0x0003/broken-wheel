@@ -3,7 +3,7 @@ import {SecretID, SecretObject, SecretRecord} from './secrets';
 import EventSuite, {FlagCollection} from './events';
 import { ActivityID, ActivityRecord} from './activities';
 import {Zone} from './world-service';
-import LocationCollection, {LocationID} from './locations';
+import LocationCollection, {LocationID, genLocation} from './locations';
 import {mergeObjects} from '../helpers';
 import {ThemeType} from '../common-types';
 
@@ -23,7 +23,7 @@ export interface StateObject{
 	lifeTotal: number;
 	trueYear: number;
 	activityRecord: ActivityRecord;
-
+	
 	inEvent: boolean;
 	currentEvent: [string,number];
 	eFlags: FlagCollection;
@@ -107,7 +107,7 @@ export function defaultActivityRecord() : ActivityRecord{
 
 		tmpRecord[currID] = {
 			
-			aID: currID as ActivityID,
+			ID: currID as ActivityID,
 			discovered : false,
 			meetsReqs: false,
 		}
@@ -189,28 +189,17 @@ export function defaultState() : StateObject{
 		currentSecretID : SecretID.Swords,
 		
 		body: initialBody(),
-		secrets: {
-			[SecretID.Swords]: {
-				ID: SecretID.Swords,
-				rank: 0,
-				XP: 0,
-			},
-			[SecretID.Weapons]: {
-				ID: SecretID.Weapons,
-				rank: 0,
-				XP: 0,
-			}
-		},
+		secrets: defaultSecretRecord(),
 		ZoneCollection : [
 			{
 				name: "Lateri",
 				stinger: "Marsh and Salt",
 				prosperity: 433,
 				locations: [
-					LocationCollection[LocationID.CommonGrounds],
-					LocationCollection[LocationID.Plantation],
-					LocationCollection[LocationID.ForestOutskirts],
-					LocationCollection[LocationID.TownAcademy],
+					genLocation(LocationID.CommonGrounds),
+					genLocation(LocationID.Plantation),
+					genLocation(LocationID.ForestOutskirts),
+					genLocation(LocationID.TownAcademy),
 				],
 					
 				

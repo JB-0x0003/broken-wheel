@@ -33,6 +33,7 @@ export default class MainLoopService {
 	autosaveTimer;
 	prevTime : number = new Date().getTime();
 	advanceCounter: number = 0;
+	owedAdvances : number = 0;
 	paused : boolean = true;
 	frozen : boolean = false;
 	died : boolean = false;
@@ -105,8 +106,29 @@ export default class MainLoopService {
 
 	advanceDay() : void{
 		
-		this.sv.Character.dailyEat();
+		
+		//check if current activity is still valid
+		let currAct = this.sv.World.getCurrentActivity();
 
+		if (currAct.requirements(this.sv) === true){
+			this.world.act();
+		} else {
+			
+			this.st.activityRecord[currAct.ID].meetsReqs = false;
+			this.world.resetActivity();
+			
+			this.sv.MainLoop.pause();
+			//stops the loop iterating through this tick's advances
+			this.owedAdvances = 0;
+			if (currAct.ID === ActivityID.None) {
+				this.log.pushLog("Please select an activity.");
+			} else this.log.pushLog(`You can no longer ${currAct.name}!`);
+
+			return
+		}
+
+		this.sv.Character.dailyEat();
+		
 		if (this.st.body.resources[ResourceType.Life].value <= 0){
 				
 			this.died = true;
@@ -179,7 +201,6 @@ export default class MainLoopService {
 			this.advanceCounter = 0;
 			this.longPulse();
 		}
-		this.character.act();
 		this.advanceDay();
 		
 
@@ -188,9 +209,10 @@ export default class MainLoopService {
 	tick() : void{
 		
 		let currentTime = new Date().getTime();
-		let timeDiff = currentTime - this.prevTime;
-		let owedAdvances = Math.floor(timeDiff / (__BASE_ADVANCE_MS / this.speedMult));
-		
+		let timeDelta = currentTime - this.prevTime;
+		this.owedAdvances = Math.floor(timeDelta / (__BASE_ADVANCE_MS / this.speedMult));
+		let quantizedDelta = this.owedAdvances * (__BASE_ADVANCE_MS / this.speedMult);
+
 		//console.log("Previous time = " + this.prevTime + "\nNew Time = " + currentTime + "\nTime Diff = " + timeDiff + "\nOwed Advances = " + owedAdvances);
 		
 		//check if died since start of last tick
@@ -199,14 +221,14 @@ export default class MainLoopService {
 
 		}
 		if (this.paused === false ){
-			for(let i = 0; i < owedAdvances; ++i){
+			for(let i = 0; i < this.owedAdvances; ++i){
 
 				this.advance();
 
 			}
 		}	
 
-		this.prevTime = this.prevTime + (owedAdvances * (__BASE_ADVANCE_MS / this.speedMult));
+		this.prevTime = this.prevTime + quantizedDelta;
 		
 
 

@@ -11,7 +11,7 @@ export interface ProgressBarProps{
 export default function ProgressBar(props : ProgressBarProps){
 
 	let percent = props.value / props.max * 100;
-	let className = "progressFill " + props.colorType;
+	let percentOverflow = percent > 100? percent - 100 : 0;
 
 	return(
 	
@@ -22,9 +22,10 @@ export default function ProgressBar(props : ProgressBarProps){
 							""	
 					}
 				</span>
-				<span className={className} style={{width: percent + "%"}}>
+				<span className={"progressFill " + props.colorType} style={{width: percent + "%"}}>
 				</span>
-			
+				<span className={"progressFill " + props.colorType + " overcharge"} style={{width: percentOverflow + "%"}}>
+				</span>
 			</span>
 
 	);

@@ -1,4 +1,5 @@
 import {Jati,JatiCollection, JatiID} from './reincarnation';
+import {SkillCollection, SkillObject, SkillID} from './activities';
 import {ItemID} from './items';
 import {ItemMaskID, Bag} from './inventory'; 
 import {DerivativeType, ResourceType, AttributeObject, DerivativeObject, ResourceObject} from '../common-types';
@@ -12,6 +13,7 @@ export interface Body{
 	attributes: AttributeObject;
 	derivatives: DerivativeObject;
 	resources: ResourceObject;
+	skills: SkillObject;
 	money: number;
 	inventory: Bag;
 	equipment: Bag;
@@ -71,6 +73,26 @@ export function defaultResources(): ResourceObject{
 			maxMult: 1,
 		},
 	};
+
+}
+
+export function defaultSkills(): SkillObject{
+	
+	let tempObject = {} as SkillObject;
+
+	for (let key in SkillCollection){
+		
+		tempObject[key] = {
+			ID: key as SkillID,
+			discovered: false,
+			rank: 0,
+			xp: 0,
+
+		}
+
+	}
+	
+	return tempObject;
 
 }
 //TODO
@@ -154,6 +176,7 @@ export function genBody(inJati:JatiID): Body{
 		attributes: JSON.parse(JSON.stringify(jati.initialAttributes)),
 		derivatives: defaultDerivatives(),
 		resources : genJatiResources(jati),
+		skills: defaultSkills(),
 		money: 0,
 		inventory : {
 			size: 30,

@@ -5,6 +5,23 @@ import ErrorPanel from './error-panel';
 import {Serv} from './global-service-provider';
 import {pipeBigNum} from './helpers';
 
+interface TooltipProps {
+	
+	children: React.ReactNode;
+
+}
+
+export function Tooltip(props: TooltipProps){
+	
+	return(
+		<div className="tooltipContainer">
+			<div className="tooltip">
+				{props.children}
+			</div>
+		</div>
+	);
+
+}
 
 interface InventoryTooltipProps {
 	
@@ -12,17 +29,16 @@ interface InventoryTooltipProps {
 
 }
 
-
-
-function traverseObject(inObj: object) {
+function traverseObject(inObj: object, isResource: boolean = false) {
 	
 	let elements = [];
 
 	for (let key in inObj){
+		if ( (isResource) && (key === "value" || key === "maxValue" || key === "aptitude")) continue;
 		if (typeof inObj[key] === 'object'){
 			elements.push(
 				<div className="tooltipElement">
-					{key} {traverseObject(inObj[key])}
+					{key} {traverseObject(inObj[key], (key === 'resource') )}
 				</div>
 			);
 		} else {
@@ -208,7 +224,7 @@ export function SecretTooltip(props: SecretTooltipProps){
 		if (overwriteIndex !== null){
 			overwriteHTML.push(
 				<div key={props.ID + "-overwrite-bonus"} className="tooltipSegment">
-					At Rank {overwriteIndex}:
+					At Level {overwriteIndex}:
 					{traverseObject(secret.specificOverwriteBonus[overwriteIndex])}
 				</div>
 			);

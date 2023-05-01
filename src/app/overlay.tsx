@@ -106,7 +106,7 @@ export default function Overlay(){
 	function defaultBodyHTML() : React.ReactNode{
 
 		return ( 
-			<div className="eventBodyText">
+			<div>
 				{currentEvent.bodyText(sv)}
 			</div>
 					
@@ -130,7 +130,11 @@ export default function Overlay(){
 			bodyHTML.push(defaultBodyHTML());
 			bodyHTML.push(<span className="signInput">X</span>)
 			bodyHTML.push(
-				<input className="eventInput mat-sig signInput" onChange={(event)=>{formChangeEventHandler("name",event);}}></input>
+				<input
+					className="eventInput mat-sig signInput" 
+					maxLength={20} 
+					onChange={(event)=>{formChangeEventHandler("name",event);}}
+				/>
 			);
 		break;
 		case EventType.Options:
@@ -178,7 +182,7 @@ export default function Overlay(){
 					{currentEvent.title()}
 				</div>
 				<div className="eventBody spanning">
-					<div className="scrollVertical spanning">
+					<div className="scrollVertical growNormallyIDK">
 						{bodyHTML}
 					</div>
 				</div>

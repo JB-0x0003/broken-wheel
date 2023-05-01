@@ -146,7 +146,8 @@ EventSuite.script[1001] = {
 		{
 			text: ()=>{return "Sign. You have nothing to lose."},
 			consequence: (sv : ServiceObject, formData)=>{
-				sv.Character.setName(pipeName(formData.name));
+				let name = pipeName(formData.name);
+				sv.Character.setName(name);
 				sv.Character.st.eFlags.script.named = true;
 			},
 		},

@@ -7,6 +7,7 @@ export enum ThemeType {
 
 }
 
+
 interface StatRecord {
 	
 	name: string;

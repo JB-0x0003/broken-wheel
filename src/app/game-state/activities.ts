@@ -3,33 +3,40 @@ import {meatGenItems, generateItems} from './items';
 import {BagID} from './inventory';
 import {AttributeType} from '../common-types';
 
+export const __SKILL_XP_EXPONENT = 1.5;
+export const __SKILL_BASE_XP = 100;
 
 export enum ActivityID {
-
+	
+	None = "none",
 	Oddjobs = "oddjobs",
 	Meditation = "meditation",
 	Begging = "begging",
 	FieldLabor = "fieldlabor",
 	Poetry = "poetry",
 	Stargazing = "stargazing",
-	Stealing = "stealing",
+	Theft = "theft",
 	Hunting = "hunting",
 	Tutoring = "tutoring",
 	Academia = "academia",
 };
 
-export enum ActivityType {
+export enum SkillID {
 		
-	Oddjobs = "oddjobs",
+	None = "none",
 	Farming = "farming",
-
+	Begging = "begging",
+	Academia = "academia",
+	Theft = "theft",
+	
 };
 
 
 export interface Activity{
 
 	name: string[],
-	aID: ActivityID,
+	ID: ActivityID,
+	skill: SkillID,
 	description: string[],
 	gerund: string[],
 	rankThreshold: number[],
@@ -37,9 +44,19 @@ export interface Activity{
 	consequence: ((sv : ServiceObject) => void)[],
 };
 
+export interface Skill{
+	
+	name: string,
+	ID: SkillID,
+	baseXP: number,
+	XPExponent: number,
+
+
+}
+
 export type ActivityIndex = {
 
-	aID: ActivityID;
+	ID: ActivityID;
 	discovered: boolean;
 	meetsReqs: boolean;
 
@@ -51,12 +68,42 @@ export type ActivityRecord = {
 
 }
 
-let ActivityCollection : {[key: string] : Activity}= {};
+export type SkillIndex = {
+	
+	ID: SkillID;
+	discovered: boolean;
+	rank: number;
+	xp: number;
+
+}
+
+export type SkillObject = {
+	
+	[key in SkillID] : SkillIndex;
+
+}
+
+let ActivityCollection : {[key in ActivityID]? : Activity} = {};
+
+ActivityCollection[ActivityID.None] = {
+	//Activity that should never activate and should prevent player from advancing time
+	name: ['None'],
+	ID: ActivityID.None,
+	skill: SkillID.None,
+	description: ['!!ERROR: PLAYER SHOULD NOT SEE THIS!!'],
+	gerund: [''],
+	rankThreshold: [],
+	requirements: ()=>{return false},
+	consequence: [()=>{}],
+
+
+};
 
 ActivityCollection[ActivityID.Oddjobs] = {
 	//default activity, probably important to make give this no side-effects
 	name: ['Odd Jobs'],
-	aID: ActivityID.Oddjobs,
+	ID: ActivityID.Oddjobs,
+	skill: SkillID.None,
 	description: ['Errands, cleaning latrines, last-second grunt work. Anything no-skill that makes a little money. Increases ignoble attributes by a small amount.'],
 	gerund: ['Doing odd jobs'],
 	rankThreshold: [],
@@ -75,7 +122,8 @@ ActivityCollection[ActivityID.Oddjobs] = {
 ActivityCollection[ActivityID.Meditation] = {
 	
 	name: ['Meditation'],
-	aID: ActivityID.Meditation,
+	ID: ActivityID.Meditation,
+	skill: SkillID.None,
 	description: ['PLAYER SHOULD NOT SEE THIS'],
 	gerund: ['Meditating'],
 	rankThreshold: [],
@@ -93,7 +141,8 @@ ActivityCollection[ActivityID.Meditation] = {
 ActivityCollection[ActivityID.Begging] = {
 
 	name: ['Begging'],
-	aID: ActivityID.Begging,
+	ID: ActivityID.Begging,
+	skill: SkillID.Begging,
 	description: ['Pitifully beg for pocket change. Increases charisma. Very ignoble.'],
 	gerund: ['Begging'],
 	rankThreshold: [],
@@ -116,7 +165,8 @@ ActivityCollection[ActivityID.Begging] = {
 
 ActivityCollection[ActivityID.FieldLabor] = {
 	name: ['Field Labor'],
-	aID: ActivityID.FieldLabor,
+	ID: ActivityID.FieldLabor,
+	skill: SkillID.Farming,
 	description: ['Work someone else\'s land. Disabled at low reputation. Makes a little money and makes a little food. Increases body.'],
 	gerund: ["Picking"],
 	rankThreshold: [0],
@@ -146,7 +196,8 @@ ActivityCollection[ActivityID.FieldLabor] = {
 
 ActivityCollection[ActivityID.Poetry] = {
 	name: ['Study Poetry'],
-	aID: ActivityID.Poetry,
+	ID: ActivityID.Poetry,
+	skill: SkillID.Academia,
 	description: ["Grind yourself against the wheel of literature until you shine as a diamond in the rough"],
 	rankThreshold: [0],
 	gerund: ["Exploring the classics"],
@@ -168,7 +219,8 @@ ActivityCollection[ActivityID.Poetry] = {
 
 ActivityCollection[ActivityID.Stargazing] = {
 	name: ['Gaze At The Stars'],
-	aID: ActivityID.Poetry,
+	ID: ActivityID.Poetry,
+	skill: SkillID.None,
 	description: ["TODO"],
 	gerund: ["Gazing"],
 	rankThreshold: [0],
@@ -187,10 +239,11 @@ ActivityCollection[ActivityID.Stargazing] = {
 	}],
 };
 
-ActivityCollection[ActivityID.Stealing] = {
+ActivityCollection[ActivityID.Theft] = {
 
 	name: ['Pickpocket'],
-	aID: ActivityID.Stealing,
+	ID: ActivityID.Theft,
+	skill: SkillID.Theft,
 	description: ["Makes money and lowers reputation. Potentially decreases the town's prosperity. Trains cunning."],
 	gerund: ["Pickpocketing"],
 	rankThreshold: [0],
@@ -215,7 +268,8 @@ ActivityCollection[ActivityID.Stealing] = {
 ActivityCollection[ActivityID.Hunting] = {
 
 	name: ['Hunt'],
-	aID: ActivityID.Hunting,
+	ID: ActivityID.Hunting,
+	skill: SkillID.None,
 	description: ["Hunt for food. Trains body and cunning."],
 	gerund: ["Stalking Prey"],
 	rankThreshold: [0],
@@ -230,12 +284,12 @@ ActivityCollection[ActivityID.Hunting] = {
 		(sv : ServiceObject) => {
 			let attr = sv.ST.body.attributes;
 			let workpower = attr.body.value * 0.3 + attr.cunning.value * 0.6 + attr.summer.value * 1.0;
-			workpower = workpower * 0.09;			
+			workpower = workpower * 0.22;			
 
 
-			workpower = Math.min(workpower, 50);
+			workpower = Math.min(workpower, 100);
 
-			console.log("Workpower: " + workpower);
+			//console.log("Workpower: " + workpower);
 
 			let meatDrop = generateItems(meatGenItems, workpower);
 			sv.Character.addItemDropToBag(BagID.Inventory, meatDrop);
@@ -252,7 +306,8 @@ const studyCost = 5;
 ActivityCollection[ActivityID.Tutoring] = {
 	
 	name: ['Get Tutoring'],
-	aID: ActivityID.Academia,
+	ID: ActivityID.Academia,
+	skill: SkillID.Academia,
 	description: [`Pay ₹${studyCost} to be taught by faculty from the local academy. Trains learning.`],
 	gerund: ["Studying"],
 	rankThreshold: [0],
@@ -273,5 +328,55 @@ ActivityCollection[ActivityID.Tutoring] = {
 
 }
 
+let SkillCollection : {[key in SkillID]? :Skill} = {};
 
+SkillCollection[SkillID.None] = {
+	
+	name: "Error",
+	ID: SkillID.None,
+	baseXP: 99999,
+	XPExponent: 99,
+
+
+}
+
+SkillCollection[SkillID.Farming] = {
+
+	name: 'Farming',
+	ID: SkillID.Farming,
+	baseXP: __SKILL_BASE_XP,
+	XPExponent: __SKILL_XP_EXPONENT,
+
+}
+
+SkillCollection[SkillID.Begging] = {
+	
+	name: 'Begging',
+	ID: SkillID.Begging,
+	baseXP: __SKILL_BASE_XP,
+	XPExponent: __SKILL_XP_EXPONENT,
+
+}
+
+SkillCollection[SkillID.Academia] = {
+	
+	name: 'Academia',
+	ID: SkillID.Academia,
+	baseXP: __SKILL_BASE_XP,
+	XPExponent: __SKILL_XP_EXPONENT,
+
+}
+
+SkillCollection[SkillID.Theft] = {
+
+	name: 'Theft',
+	ID: SkillID.Theft,
+	baseXP: __SKILL_BASE_XP,
+	XPExponent: __SKILL_XP_EXPONENT,
+
+}
+
+
+
+export {SkillCollection};
 export default ActivityCollection;
